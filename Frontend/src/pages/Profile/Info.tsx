@@ -1,6 +1,6 @@
 interface UserData {
 	firstName: string;
-	secondName: string;
+	lastName: string;
 	username: string;
 	email: string;
 	age: number;

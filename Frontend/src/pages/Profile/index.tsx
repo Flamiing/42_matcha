@@ -10,7 +10,7 @@ import TagSection from "./TagSection";
 interface UserData {
 	username: string;
 	firstName: string;
-	secondName: string;
+	lastName: string;
 	age: number;
 	biography: string;
 	fame: number;
@@ -29,7 +29,7 @@ const index = () => {
 		username: "alaparic",
 		email: "testing@matcha.com",
 		firstName: "Dennis",
-		secondName: "Bateman",
+		lastName: "Bateman",
 		age: 27,
 		location: "Vancouver, BC",
 		biography:

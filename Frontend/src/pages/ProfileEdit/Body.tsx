@@ -4,7 +4,7 @@ import FormSelect from "../../components/common/FormSelect";
 
 interface UserData {
 	firstName: string;
-	secondName: string;
+	lastName: string;
 	username: string;
 	email: string;
 	age: number;

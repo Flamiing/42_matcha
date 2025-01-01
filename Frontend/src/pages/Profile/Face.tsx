@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 interface UserData {
 	firstName: string;
-	secondName: string;
+	lastName: string;
 	username: string;
 	email: string;
 	age: number;
@@ -49,7 +49,7 @@ const Face = ({ user, editable = false }: FaceProps) => {
 					</p>
 
 					<div className="flex gap-1 flex-wrap justify-center font-light text-gray-500">
-						<p>{user.firstName + " " + user.secondName}</p>
+						<p>{user.firstName + " " + user.lastName}</p>
 					</div>
 
 					<div>
