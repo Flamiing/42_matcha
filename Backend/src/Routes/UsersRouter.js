@@ -10,17 +10,11 @@ export default class UsersRouter {
 
         // GET:
         router.get('/', UsersController.getAllUsers);
-        router.get('/test', UsersController.testController);
-        router.get('/:id', UsersController.getUserById);
-
-        // POST:
-        router.post('/', UsersController.createUser);
+        router.get('/:username', UsersController.getUserProfile)
+        //router.get('/:id', UsersController.getUserById);
 
         // PATCH:
         router.patch('/:id', UsersController.updateUser);
-
-        // DELETE:
-        router.delete('/:id', UsersController.deleteUser);
 
         return router;
     }
