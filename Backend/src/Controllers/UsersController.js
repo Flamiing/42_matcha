@@ -9,7 +9,7 @@ export default class UsersController {
         if (users) {
             const publicUsers = users.map((user) => {
                 return getPublicUser(user);
-            })
+            });
             return res.json({ msg: publicUsers });
         }
         return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
