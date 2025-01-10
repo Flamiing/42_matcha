@@ -41,4 +41,5 @@ export default class StatusMessage {
     static INVALID_JSON = 'Invalid JSON payload.';
     static CANNOT_CHANGE_PASS =
         'Your account is linked to 42 School. Please manage your password on their site.';
+    static CANNOT_EDIT_OTHER_PROFILE = 'You do not have permission to modify another user\'s profile.'
 }
