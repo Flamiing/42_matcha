@@ -63,13 +63,21 @@ export default class UsersController {
         }
 
         const input = validatedUser.data;
-        if (Object.keys(input).length === 0) return res.status(400).json({ msg: StatusMessage.NO_PROFILE_INFO_TO_EDIT })
+        if (Object.keys(input).length === 0)
+            return res
+                .status(400)
+                .json({ msg: StatusMessage.NO_PROFILE_INFO_TO_EDIT });
 
         const { email, username } = input;
         const isUnique = await userModel.isUnique({ email, username });
         if (!isUnique) {
-            if (email) return res.status(400).json({ msg: StatusMessage.DUPLICATE_EMAIL })
-            return res.status(400).json({ msg: StatusMessage.DUPLICATE_USERNAME })
+            if (email)
+                return res
+                    .status(400)
+                    .json({ msg: StatusMessage.DUPLICATE_EMAIL });
+            return res
+                .status(400)
+                .json({ msg: StatusMessage.DUPLICATE_USERNAME });
         }
 
         const user = await userModel.update({ input, id });
