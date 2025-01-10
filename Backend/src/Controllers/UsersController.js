@@ -70,7 +70,8 @@ export default class UsersController {
                 return res
                     .status(404)
                     .json({ msg: StatusMessage.USER_NOT_FOUND });
-            return res.json({ msg: user });
+            const publicUser = getPublicUser(user);
+            return res.json({ msg: publicUser });
         }
         return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
     }
