@@ -1,7 +1,7 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-CREATE TYPE gender_enum AS ENUM('Male', 'Female');
-CREATE TYPE gender_preference_enum AS ENUM('Male', 'Female', 'Bisexual');
+CREATE TYPE gender_enum AS ENUM('male', 'female');
+CREATE TYPE gender_preference_enum AS ENUM('male', 'female', 'bisexual');
 
 CREATE TABLE users (
 	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,

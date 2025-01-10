@@ -90,12 +90,12 @@ const userSchema = z.object({
         .nullable()
         .optional(),
     location: z.string({ invalid_type_error: 'Invalid location.' }).optional(),
-    fame: z.number({ invalid_type_error: 'Invalid fame rating.' }).optional(),
     last_online: z.string().optional(),
     is_online: z.string().optional(),
-    gender: z.array(z.enum(['Male', 'Female'])).optional(),
-    sexual_preference: z
-        .array(z.enum(['Male', 'Female', 'Bisexual']))
+    gender: z.enum(['male', 'female'], {
+        errorMap: () => ({ message: 'Invalid gender.' })}).optional(),
+    sexual_preference: z.enum(['male', 'female', 'bisexual'], {
+        errorMap: () => ({ message: 'Invalid sexual preference.' })})
         .optional(),
 });
 
