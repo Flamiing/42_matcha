@@ -1,5 +1,6 @@
 // Local Imports:
 import userModel from '../Models/UserModel.js';
+import { validatePartialUser } from '../Schemas/userSchema.js';
 import getPublicUser from '../Utils/getPublicUser.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 
@@ -46,55 +47,25 @@ export default class UsersController {
     }
 
     static async updateUser(req, res) {
-        const {
-            email,
-            username,
-            first_name,
-            last_name,
-            password,
-            age,
-            biography,
-            profile_picture,
-            location,
-            fame,
-            last_online,
-            is_online,
-            gender,
-            sexual_preference,
-        } = req.body;
-
+        if (!req.session.data) return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN })
+        
         const { id } = req.params;
+        if (req.session.data.id !== id) return res.status(400).json({ msg: StatusMessage.BAD_REQUEST })
 
-        let input = {
-            email: email,
-            username: username,
-            first_name: first_name,
-            last_name: last_name,
-            password: password,
-            age: age,
-            biography: biography,
-            profile_picture: profile_picture,
-            location: location,
-            fame: fame,
-            last_online: last_online,
-            is_online: is_online,
-            gender: gender,
-            sexual_preference: sexual_preference,
-        };
+        const validatedUser = validatePartialUser(req.body);
+        if (!validatedUser.success) {
+            const errorMessage = validatedUser.error.errors[0].message;
+            return res.status(400).json({ msg: errorMessage });
+        }
 
-        input = Object.keys(input).reduce((acc, key) => {
-            if (input[key] !== undefined) {
-                acc[key] = input[key];
-            }
-            return acc;
-        }, {});
+        const input = validatedUser.data;
 
         const user = await userModel.update({ input, id });
         if (user) {
             if (user.length === 0)
                 return res
                     .status(404)
-                    .json({ msg: StatusMessage.NOT_FOUND_BY_ID }); // TODO: Change error msg
+                    .json({ msg: StatusMessage.USER_NOT_FOUND });
             return res.json({ msg: user });
         }
         return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
