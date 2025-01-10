@@ -47,10 +47,12 @@ export default class UsersController {
     }
 
     static async updateUser(req, res) {
-        if (!req.session.data) return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN })
-        
+        if (!req.session.data)
+            return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
+
         const { id } = req.params;
-        if (req.session.data.id !== id) return res.status(400).json({ msg: StatusMessage.BAD_REQUEST })
+        if (req.session.data.id !== id)
+            return res.status(400).json({ msg: StatusMessage.BAD_REQUEST });
 
         const validatedUser = validatePartialUser(req.body);
         if (!validatedUser.success) {
