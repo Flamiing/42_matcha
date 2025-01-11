@@ -12,6 +12,7 @@ export default class UsersController {
             const publicUsers = users.map((user) => {
                 return getPublicUser(user);
             });
+            await Promise.all(publicUsers);
             return res.json({ msg: publicUsers });
         }
         return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
@@ -35,13 +36,13 @@ export default class UsersController {
     static async getUserProfile(req, res) {
         const { username } = req.params;
 
-        const user = await userModel.getByReference({ username: username });
+        const user = await userModel.getByReference({ username: username }, 1);
         if (user) {
             if (user.length === 0)
                 return res
                     .status(404)
                     .json({ msg: StatusMessage.USER_NOT_FOUND });
-            const publicUser = getPublicUser(user);
+            const publicUser = await getPublicUser(user);
             return res.json({ msg: publicUser });
         }
         return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
@@ -101,8 +102,10 @@ export default class UsersController {
         if (!user)
             return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
         if (user.length === 0)
-            return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
-        const publicUser = getPublicUser(user);
+            return res
+                .status(404)
+                .json({ msg: StatusMessage.USER_NOT_FOUND });
+        const publicUser = await getPublicUser(user);
         return res.json({ msg: publicUser });
     }
 }
