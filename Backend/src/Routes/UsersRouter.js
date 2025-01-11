@@ -13,8 +13,8 @@ export default class UsersRouter {
         router.get('/:username', UsersController.getUserProfile);
         //router.get('/:id', UsersController.getUserById);
 
-        // PATCH:
-        router.patch('/:id', UsersController.updateUser);
+        // POST:
+        router.post('/:id', UsersController.updateUser);
 
         return router;
     }
