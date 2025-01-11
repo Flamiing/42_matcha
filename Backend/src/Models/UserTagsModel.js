@@ -13,7 +13,7 @@ class UserTagsModel extends Model {
             if (!validTag) return null;
             if (validTag.length === 0) return [];
 
-            const input = { user_id: userId, tag_id: id }
+            const input = { user_id: userId, tag_id: id };
             const userTag = await this.getByReference(input);
             if (!userTag) return null;
             if (userTag.length !== 0) continue;

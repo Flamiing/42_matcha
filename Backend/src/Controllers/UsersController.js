@@ -84,8 +84,12 @@ export default class UsersController {
         }
 
         const tagsUpdateResult = await userTagsModel.updateUserTags(id, tags);
-        if (!tagsUpdateResult) return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
-        if (tagsUpdateResult.length === 0) return res.status(400).json({ msg: StatusMessage.INVALID_USER_TAG })
+        if (!tagsUpdateResult)
+            return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+        if (tagsUpdateResult.length === 0)
+            return res
+                .status(400)
+                .json({ msg: StatusMessage.INVALID_USER_TAG });
 
         let user = null;
         if (!inputHasNoContent) {
@@ -97,9 +101,7 @@ export default class UsersController {
         if (!user)
             return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
         if (user.length === 0)
-            return res
-                .status(404)
-                .json({ msg: StatusMessage.USER_NOT_FOUND });
+            return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
         const publicUser = getPublicUser(user);
         return res.json({ msg: publicUser });
     }
