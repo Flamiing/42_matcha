@@ -98,7 +98,28 @@ export default class Model {
         }
     }
 
-    async getByReference(reference, recordsToGet) {
+    async deleteByReference(reference) {
+        const fields = Object.keys(reference)
+            .map((key, index) => `${key} = $${index + 1}`)
+            .join(' AND ');
+        const values = Object.values(reference);
+
+        const query = {
+            text: `DELETE FROM ${this.table} WHERE ${fields} RETURNING *;`,
+            values: values,
+        };
+
+        try {
+            const result = await this.db.query(query);
+            if (result.rows[0] === undefined) return false;
+            return true;
+        } catch (error) {
+            console.error('Error making the query: ', error.message);
+            return null;
+        }
+    }
+
+    async getByReference(reference, onlyOneRecord) {
         const fields = Object.keys(reference)
             .map((key, index) => `${key} = $${index + 1}`)
             .join(' AND ');
@@ -112,7 +133,7 @@ export default class Model {
         try {
             const result = await this.db.query(query);
             if (result.rows.length === 0) return [];
-            if (recordsToGet === 1)
+            if (onlyOneRecord)
                 return result.rows[0];
             return result.rows;
         } catch (error) {

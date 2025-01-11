@@ -36,7 +36,7 @@ export default class UsersController {
     static async getUserProfile(req, res) {
         const { username } = req.params;
 
-        const user = await userModel.getByReference({ username: username }, 1);
+        const user = await userModel.getByReference({ username: username }, true);
         if (user) {
             if (user.length === 0)
                 return res
@@ -94,7 +94,6 @@ export default class UsersController {
 
         let user = null;
         if (!inputHasNoContent) {
-            console.log('HERE!');
             user = await userModel.update({ input, id });
         } else {
             user = await userModel.getById({ id });

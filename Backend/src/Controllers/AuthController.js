@@ -53,7 +53,7 @@ export default class AuthController {
     static async loginOAuth(res, validatedUser) {
         const user = await userModel.getByReference({
             username: validatedUser.data.username,
-        }, 1);
+        }, true);
         if (!user) {
             res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
             return true;
@@ -231,7 +231,7 @@ export default class AuthController {
         if (!email)
             return res.status(400).json({ msg: StatusMessage.BAD_REQUEST });
 
-        const user = await userModel.getByReference({ email: email }, 1);
+        const user = await userModel.getByReference({ email: email }, true);
         if (!user)
             return res
                 .status(500)

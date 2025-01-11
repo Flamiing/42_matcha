@@ -8,23 +8,44 @@ class UserTagsModel extends Model {
     }
 
     async updateUserTags(userId, tags) {
+        const addResult = await this.addTags(userId, tags);
+        if (!addResult) return null;
+        if (!addResult.length === 0) return [];
+        
+        const removeResult = await this.removeTags(userId, tags);
+        if (!removeResult) return null;
+
+        return true;
+    }
+
+    async addTags(userId, tags) {
         for (const id of tags) {
             const validTag = await tagsModel.getById({ id });
             if (!validTag) return null;
             if (validTag.length === 0) return [];
 
-<<<<<<< HEAD
-            const input = { user_id: userId, tag_id: id };
-            const userTag = await this.getByReference(input);
-=======
             const input = { user_id: userId, tag_id: id }
-            const userTag = await this.getByReference(input, 1);
->>>>>>> 81ec544 (user tags returned with public user info implemented)
+            const userTag = await this.getByReference(input, true);
             if (!userTag) return null;
             if (userTag.length !== 0) continue;
             const result = await this.create({ input });
             if (!result) return null;
         }
+
+        return true;
+    }
+
+    async removeTags(userId, tags) {
+        const currentTagsResult = await this.getByReference({ user_id: userId }, false);
+        if (!currentTagsResult) return null;
+        const currentTags = currentTagsResult.map(item => item.tag_id);
+        
+        const tagsToDelete = currentTags.filter(item => !tags.includes(item));
+        for (const id of tagsToDelete) {
+            const deleteResult = await this.deleteByReference({ tag_id: id });
+            if (!deleteResult) return null;
+        }
+
         return true;
     }
 
