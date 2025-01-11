@@ -81,7 +81,7 @@ const userSchema = z.object({
         .string({
             invalid_type_error: 'Invalid biography.',
         })
-        .max(500, 'First name must be 500 characters or fewer.')
+        .max(500, 'Biography must be 500 characters or fewer.')
         .optional(),
     profile_picture: z
         .number({ invalid_type_error: 'Invalid profile picture.' })

@@ -11,7 +11,7 @@ CREATE TABLE users (
 	last_name VARCHAR(50),
 	password VARCHAR(255) DEFAULT NULL,
 	age INTEGER CHECK (age >= 0),
-	biography TEXT,
+	biography VARCHAR(500),
 	profile_picture UUID,
 	location VARCHAR(100),
 	fame INTEGER DEFAULT 0,
