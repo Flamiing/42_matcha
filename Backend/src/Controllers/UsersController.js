@@ -1,5 +1,6 @@
 // Local Imports:
 import userModel from '../Models/UserModel.js';
+import userTagsModel from '../Models/UserTagsModel.js';
 import { validatePartialUser } from '../Schemas/userSchema.js';
 import getPublicUser from '../Utils/getPublicUser.js';
 import StatusMessage from '../Utils/StatusMessage.js';
@@ -62,8 +63,10 @@ export default class UsersController {
             return res.status(400).json({ msg: errorMessage });
         }
 
+        const { tags } = req.body;
         const input = validatedUser.data;
-        if (Object.keys(input).length === 0)
+        const inputHasNoContent = Object.keys(input).length === 0;
+        if (inputHasNoContent && (!tags || tags.length === 0))
             return res
                 .status(400)
                 .json({ msg: StatusMessage.NO_PROFILE_INFO_TO_EDIT });
@@ -80,15 +83,24 @@ export default class UsersController {
                 .json({ msg: StatusMessage.DUPLICATE_USERNAME });
         }
 
-        const user = await userModel.update({ input, id });
-        if (user) {
-            if (user.length === 0)
-                return res
-                    .status(404)
-                    .json({ msg: StatusMessage.USER_NOT_FOUND });
-            const publicUser = getPublicUser(user);
-            return res.json({ msg: publicUser });
+        const tagsUpdateResult = await userTagsModel.updateUserTags(id, tags);
+        if (!tagsUpdateResult) return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+        if (tagsUpdateResult.length === 0) return res.status(400).json({ msg: StatusMessage.INVALID_USER_TAG })
+
+        let user = null;
+        if (!inputHasNoContent) {
+            console.log('HERE!');
+            user = await userModel.update({ input, id });
+        } else {
+            user = await userModel.getById({ id });
         }
-        return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+        if (!user)
+            return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+        if (user.length === 0)
+            return res
+                .status(404)
+                .json({ msg: StatusMessage.USER_NOT_FOUND });
+        const publicUser = getPublicUser(user);
+        return res.json({ msg: publicUser });
     }
 }
