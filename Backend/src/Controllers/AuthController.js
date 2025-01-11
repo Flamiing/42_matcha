@@ -81,7 +81,7 @@ export default class AuthController {
                 .json({ msg: StatusMessage.ALREADY_LOGGED_IN });
 
         // Validate and clean input
-        var validatedUser = validateUser(req.body);
+        let validatedUser = validateUser(req.body);
         if (!validatedUser.success) {
             const errorMessage = validatedUser.error.errors[0].message;
             return res.status(400).json({ msg: errorMessage });
