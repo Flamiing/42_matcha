@@ -133,8 +133,7 @@ export default class Model {
         try {
             const result = await this.db.query(query);
             if (result.rows.length === 0) return [];
-            if (onlyOneRecord)
-                return result.rows[0];
+            if (onlyOneRecord) return result.rows[0];
             return result.rows;
         } catch (error) {
             console.error('Error making the query: ', error.message);

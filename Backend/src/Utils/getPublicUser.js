@@ -19,7 +19,7 @@ export default async function getPublicUser(user) {
         is_online: user.is_online,
         gender: user.gender,
         sexual_preference: user.sexual_preference,
-        tags: userTags
+        tags: userTags,
     };
 
     return publicUser;

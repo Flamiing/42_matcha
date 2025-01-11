@@ -36,7 +36,10 @@ export default class UsersController {
     static async getUserProfile(req, res) {
         const { username } = req.params;
 
-        const user = await userModel.getByReference({ username: username }, true);
+        const user = await userModel.getByReference(
+            { username: username },
+            true
+        );
         if (user) {
             if (user.length === 0)
                 return res
@@ -101,9 +104,7 @@ export default class UsersController {
         if (!user)
             return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
         if (user.length === 0)
-            return res
-                .status(404)
-                .json({ msg: StatusMessage.USER_NOT_FOUND });
+            return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
         const publicUser = await getPublicUser(user);
         return res.json({ msg: publicUser });
     }
