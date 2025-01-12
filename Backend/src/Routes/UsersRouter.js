@@ -14,10 +14,18 @@ export default class UsersRouter {
         router.get('/:username', UsersController.getUserProfile);
 
         // PATCH:
-        router.patch('/:id', checkValidUserIdMiddleware(), UsersController.updateUser);
+        router.patch(
+            '/:id',
+            checkValidUserIdMiddleware(),
+            UsersController.updateUser
+        );
 
         // PUT:
-        router.put('/:id/profile-picture', checkValidUserIdMiddleware(), UsersController.changeProfilePicture)
+        router.put(
+            '/:id/profile-picture',
+            checkValidUserIdMiddleware(),
+            UsersController.changeProfilePicture
+        );
 
         return router;
     }

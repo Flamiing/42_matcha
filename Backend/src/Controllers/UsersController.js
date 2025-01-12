@@ -131,7 +131,5 @@ export default class UsersController {
     static async changeProfilePicture(req, res) {
         if (!req.session.user)
             return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
-
-        
     }
 }
