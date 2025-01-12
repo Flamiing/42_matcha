@@ -1,3 +1,6 @@
+// Third-Party Imports:
+import path from 'path';
+
 // Local Imports:
 import userModel from '../Models/UserModel.js';
 import userTagsModel from '../Models/UserTagsModel.js';
@@ -132,5 +135,32 @@ export default class UsersController {
     static async changeProfilePicture(req, res) {
         if (!req.session.user)
             return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
+
+        try {
+            const { id } = req.params;
+            const input = { profile_picture: req.file.path }
+            const updateResult = await userModel.update({ input, id })
+            return res.json({ message: 'File uploaded successfully!', file: req.file });
+        } catch (error) {
+            return res.status(400).json({ message: 'Error uploading file', error });
+        }
+    }
+
+    static async getProfilePicture(req, res) {
+        if (!req.session.user)
+            return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
+
+        const { id } = req.params;
+        const user = await userModel.getById({ id })
+        if (!user) return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+        if (user.length === 0) return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND })
+
+        const profilePicturePath = user.profile_picture;
+        const imagePath = path.join(profilePicturePath);
+        res.sendFile(imagePath, (err) => {
+            if (err) {
+                res.status(404).send('Image not found');
+            }
+        });
     }
 }

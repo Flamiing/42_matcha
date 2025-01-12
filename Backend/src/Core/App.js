@@ -2,6 +2,8 @@
 import express, { json } from 'express';
 import 'dotenv/config';
 import cookieParser from 'cookie-parser';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Middleware Imports:
 import { corsMiddleware } from '../Middlewares/corsMiddleware.js';
