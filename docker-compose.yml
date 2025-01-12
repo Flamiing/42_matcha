@@ -33,6 +33,7 @@ services:
             dockerfile: Dockerfile
         volumes:
             - ./Backend:/backend
+            - ./uploads:/uploads
         networks:
             - matcha-network
         depends_on:

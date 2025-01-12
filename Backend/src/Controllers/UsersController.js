@@ -59,7 +59,8 @@ export default class UsersController {
         const isValidData = await UsersController.validateData(req, res);
         if (!isValidData) return res;
 
-        const { input, id, inputHasNoContent } = isValidData;
+        const { id } = req.params;
+        const { input, inputHasNoContent } = isValidData;
 
         const tagsUpdateResult = await UsersController.updateTags(req, res);
         if (!tagsUpdateResult) return res;
@@ -92,14 +93,6 @@ export default class UsersController {
     }
 
     static async validateData(req, res) {
-        const { id } = req.params;
-        if (req.session.user.id !== id)
-            return returnErrorStatus(
-                res,
-                400,
-                StatusMessage.CANNOT_EDIT_OTHER_PROFILE
-            );
-
         const validatedUser = validatePartialUser(req.body);
         if (!validatedUser.success) {
             const errorMessage = validatedUser.error.errors[0].message;
@@ -132,6 +125,11 @@ export default class UsersController {
             );
         }
 
-        return { input, id, inputHasNoContent };
+        return { input, inputHasNoContent };
+    }
+
+    static async updateProfilePicture(req, res) {
+        if (!req.session.user)
+            return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
     }
 }
