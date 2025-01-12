@@ -10,10 +10,11 @@ export default class UsersController {
     static async getAllUsers(req, res) {
         const users = await userModel.getAll();
         if (users) {
-            const publicUsers = users.map((user) => {
-                return getPublicUser(user);
-            });
-            await Promise.all(publicUsers);
+            const publicUsers = [];
+            for (const user of users) {
+                const publicUser = await getPublicUser(user);
+                publicUsers.push(publicUser);
+            }
             return res.json({ msg: publicUsers });
         }
         return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
@@ -131,5 +132,7 @@ export default class UsersController {
     static async changeProfilePicture(req, res) {
         if (!req.session.user)
             return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
+
+
     }
 }

@@ -44,6 +44,7 @@ export default class App {
     #setupMiddleware() {
         this.app.disable('x-powered-by'); // Disable 'x-powered-by' header
         this.app.use(json());
+        this.app.use(express.urlencoded({ extended: true }));
         this.app.use(corsMiddleware());
         this.app.use(cookieParser());
         this.app.use(sessionMiddleware());
