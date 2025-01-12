@@ -9,7 +9,7 @@ export default class AuthRouter {
     static createRouter() {
         const router = Router();
 
-        // MIDDLEWARE: 
+        // MIDDLEWARE:
         router.use('/password/reset', controllerDeciderMiddleware());
 
         // GET:
