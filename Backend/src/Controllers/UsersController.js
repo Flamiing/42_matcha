@@ -91,7 +91,7 @@ export default class UsersController {
         return true;
     }
 
-    static async validateData() {
+    static async validateData(req, res) {
         const { id } = req.params;
         if (req.session.user.id !== id)
             return returnErrorStatus(

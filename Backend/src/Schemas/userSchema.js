@@ -83,12 +83,6 @@ const userSchema = z.object({
         })
         .max(500, 'Biography must be 500 characters or fewer.')
         .optional(),
-    profile_picture: z
-        .number({ invalid_type_error: 'Invalid profile picture.' })
-        .int()
-        .positive()
-        .nullable()
-        .optional(),
     location: z.string({ invalid_type_error: 'Invalid location.' }).optional(),
     last_online: z.string().optional(),
     is_online: z.string().optional(),
