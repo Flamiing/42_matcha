@@ -48,4 +48,6 @@ export default class StatusMessage {
     static NO_PROFILE_INFO_TO_EDIT = 'There was no profile info to edit.';
     static INVALID_USER_TAG = 'Invalid user tag.';
     static ERROR_UPLOADING_IMAGE = 'Error uploading image.';
+    static ONLY_IMAGES_ALLOWED = 'Invalid file type. Only JPEG, JPG and PNG files are allowed.'
+    static UNEXPECTED_ERROR = 'An unexpected error occured.'
 }

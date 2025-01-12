@@ -10,6 +10,9 @@ export default class UsersRouter {
     static createRouter() {
         const router = Router();
 
+        // USE:
+        //router.use(imageUploadErrorHandlerMiddleware)
+
         // GET:
         router.get('/', UsersController.getAllUsers);
         router.get('/:username', UsersController.getUserProfile);

@@ -1,7 +1,11 @@
+// Third-Party Imports:
 import multer from 'multer';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import fsExtra from 'fs-extra';
+
+// Local Imports:
+import StatusMessage from '../Utils/StatusMessage.js';
 
 const ensureUserFolderExists = (userId) => {
     const { IMAGES_PATH } = process.env;
@@ -28,18 +32,5 @@ export const imageUploadMiddleware = () => {
     return multer({
         storage: storage,
         limits: { fileSize: 1024 * 1024 * 10 }, // 10MB file size limit
-        fileFilter: function (req, file, cb) {
-            const fileTypes = /jpeg|jpg|png|gif/;
-            const extName = fileTypes.test(
-                path.extname(file.originalname).toLowerCase()
-            );
-            const mimeType = fileTypes.test(file.mimetype);
-
-            if (extName && mimeType) {
-                cb(null, true);
-            } else {
-                cb(new Error('Only image files are allowed!'));
-            }
-        },
     }).single('file');
 };
