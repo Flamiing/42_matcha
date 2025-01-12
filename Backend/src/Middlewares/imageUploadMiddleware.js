@@ -4,9 +4,6 @@ import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import fsExtra from 'fs-extra';
 
-// Local Imports:
-import StatusMessage from '../Utils/StatusMessage.js';
-
 const ensureUserFolderExists = (userId) => {
     const { IMAGES_PATH } = process.env;
 
@@ -17,7 +14,6 @@ const ensureUserFolderExists = (userId) => {
 };
 
 export const imageUploadMiddleware = () => {
-    // Multer storage configuration
     const storage = multer.diskStorage({
         destination: function (req, file, cb) {
             const { id } = req.params;
@@ -31,6 +27,5 @@ export const imageUploadMiddleware = () => {
 
     return multer({
         storage: storage,
-        limits: { fileSize: 1024 * 1024 * 10 }, // 10MB file size limit
-    }).single('file');
+    }).array('files', 4);
 };

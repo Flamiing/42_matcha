@@ -140,11 +140,13 @@ export default class UsersController {
         try {
             const { id } = req.params;
 
+            if (req.files.length !== 1) return res.status(400).json({ msg: StatusMessage.BAD_REQUEST })
+
             const deleteResult =
                 await UsersController.deletePreviousProfilePicture(res, id);
             if (!deleteResult) return res;
 
-            const input = { profile_picture: req.file.path };
+            const input = { profile_picture: req.files[0].path };
             const updateResult = await userModel.update({ input, id });
             if (!updateResult)
                 return res
