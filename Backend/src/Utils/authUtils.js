@@ -86,7 +86,6 @@ export async function hashPassword(password) {
     return encryptedPassword;
 }
 
-// TODO: Replace all errors with this
 export function returnErrorStatus(res, statusCode, errorMsg) {
     res.status(statusCode).json({ msg: errorMsg });
     return false;
