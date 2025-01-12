@@ -3,24 +3,36 @@ import { Router } from 'express';
 
 // Local Imports:
 import UsersController from '../Controllers/UsersController.js';
+import { checkValidUserIdMiddleware } from '../Middlewares/checkValidUserIdMiddleware.js';
+import { imageUploadMiddleware } from '../Middlewares/imageUploadMiddleware.js';
 
 export default class UsersRouter {
     static createRouter() {
         const router = Router();
 
+        // USE:
+        //router.use(imageUploadErrorHandlerMiddleware)
+
         // GET:
         router.get('/', UsersController.getAllUsers);
-        router.get('/test', UsersController.testController);
-        router.get('/:id', UsersController.getUserById);
-
-        // POST:
-        router.post('/', UsersController.createUser);
+        router.get('/:username', UsersController.getUserProfile);
+        router.get('/:id/profile-picture', UsersController.getProfilePicture);
 
         // PATCH:
-        router.patch('/:id', UsersController.updateUser);
+        router.patch(
+            '/:id',
+            checkValidUserIdMiddleware(),
+            UsersController.updateUser
+        );
 
-        // DELETE:
-        router.delete('/:id', UsersController.deleteUser);
+        // PUT:
+        router.put(
+            '/:id/profile-picture',
+            checkValidUserIdMiddleware(),
+            //imagesValidationMiddleware(),
+            imageUploadMiddleware(),
+            UsersController.changeProfilePicture
+        );
 
         return router;
     }
