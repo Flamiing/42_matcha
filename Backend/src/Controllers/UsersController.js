@@ -138,11 +138,19 @@ export default class UsersController {
 
         try {
             const { id } = req.params;
-            const input = { profile_picture: req.file.path }
-            const updateResult = await userModel.update({ input, id })
-            if (!updateResult) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
-            if (updateResult.length === 0) return res.status(400).json({ msg: StatusMessage.USER_NOT_FOUND });
-            return res.json({ message: 'Profile picture changed successfully!' });
+            const input = { profile_picture: req.file.path };
+            const updateResult = await userModel.update({ input, id });
+            if (!updateResult)
+                return res
+                    .status(500)
+                    .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+            if (updateResult.length === 0)
+                return res
+                    .status(400)
+                    .json({ msg: StatusMessage.USER_NOT_FOUND });
+            return res.json({
+                message: 'Profile picture changed successfully!',
+            });
         } catch (error) {
             return res
                 .status(400)
