@@ -46,28 +46,30 @@ export default class UsersRouter {
 
         // Multer storage configuration
         this.storage = multer.diskStorage({
-        destination: function (req, file, cb) {
-            cb(null, path.join(__dirname, IMAGES_PATH)); // Save files to the "uploads" folder
-        },
-        filename: function (req, file, cb) {
-            cb(null, Date.now() + path.extname(file.originalname)); // Add timestamp to avoid name collisions
-        },
+            destination: function (req, file, cb) {
+                cb(null, path.join(__dirname, IMAGES_PATH)); // Save files to the "uploads" folder
+            },
+            filename: function (req, file, cb) {
+                cb(null, Date.now() + path.extname(file.originalname)); // Add timestamp to avoid name collisions
+            },
         });
 
         this.upload = multer({
             storage: this.storage,
             limits: { fileSize: 1024 * 1024 * 10 }, // 10MB file size limit
             fileFilter: function (req, file, cb) {
-              const fileTypes = VALID_IMAGE_FORMATS;
-              const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
-              const mimeType = fileTypes.test(file.mimetype);
-          
-              if (extName && mimeType) {
-                cb(null, true);
-              } else {
-                cb(new Error('Only image files are allowed!'));
-              }
+                const fileTypes = VALID_IMAGE_FORMATS;
+                const extName = fileTypes.test(
+                    path.extname(file.originalname).toLowerCase()
+                );
+                const mimeType = fileTypes.test(file.mimetype);
+
+                if (extName && mimeType) {
+                    cb(null, true);
+                } else {
+                    cb(new Error('Only image files are allowed!'));
+                }
             },
-          });
+        });
     }
 }
