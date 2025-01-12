@@ -128,8 +128,10 @@ export default class UsersController {
         return { input, inputHasNoContent };
     }
 
-    static async updateProfilePicture(req, res) {
+    static async changeProfilePicture(req, res) {
         if (!req.session.user)
             return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
+
+        
     }
 }

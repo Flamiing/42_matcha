@@ -9,23 +9,15 @@ export default class UsersRouter {
     static createRouter() {
         const router = Router();
 
-        // MIDDLEWARE:
-
         // GET:
         router.get('/', UsersController.getAllUsers);
         router.get('/:username', UsersController.getUserProfile);
 
         // PATCH:
-        router.patch(
-            '/:id',
-            checkValidUserIdMiddleware(),
-            UsersController.updateUser
-        );
-        router.patch(
-            '/profile-picture/:id',
-            checkValidUserIdMiddleware(),
-            UsersController.updateProfilePicture
-        );
+        router.patch('/:id', checkValidUserIdMiddleware(), UsersController.updateUser);
+
+        // PUT:
+        router.put('/:id/profile-picture', checkValidUserIdMiddleware(), UsersController.changeProfilePicture)
 
         return router;
     }

@@ -12,7 +12,7 @@ CREATE TABLE users (
 	password VARCHAR(255) DEFAULT NULL,
 	age INTEGER CHECK (age >= 0),
 	biography VARCHAR(500),
-	profile_picture UUID,
+	profile_picture VARCHAR(255) DEFAULT NULL,
 	location VARCHAR(100),
 	fame INTEGER DEFAULT 0,
 	last_online TIMESTAMP,
