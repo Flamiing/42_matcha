@@ -7,7 +7,7 @@ const ensureUserFolderExists = (userId) => {
     const { IMAGES_PATH } = process.env;
 
     const userFolderPath = path.join(IMAGES_PATH, userId);
-  
+
     // Use fs-extra to create the folder recursively if it doesn't exist
     fsExtra.ensureDirSync(userFolderPath);
     return userFolderPath;
@@ -31,7 +31,9 @@ export const imageUploadMiddleware = () => {
         limits: { fileSize: 1024 * 1024 * 10 }, // 10MB file size limit
         fileFilter: function (req, file, cb) {
             const fileTypes = /jpeg|jpg|png|gif/;
-            const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
+            const extName = fileTypes.test(
+                path.extname(file.originalname).toLowerCase()
+            );
             const mimeType = fileTypes.test(file.mimetype);
 
             if (extName && mimeType) {

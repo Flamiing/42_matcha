@@ -14,9 +14,11 @@ export const refreshTokenMiddleware =
         if (authStatus.isAuthorized) return next();
 
         const isIgnored = (path) => {
-            return IGNORED_ROUTES.some(pattern => {
-              const regex = new RegExp('^' + pattern.replace(/\*/g, '[^/]+') + '$');
-              return regex.test(path);
+            return IGNORED_ROUTES.some((pattern) => {
+                const regex = new RegExp(
+                    '^' + pattern.replace(/\*/g, '[^/]+') + '$'
+                );
+                return regex.test(path);
             });
         };
 
