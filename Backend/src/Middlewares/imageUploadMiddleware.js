@@ -8,7 +8,6 @@ const ensureUserFolderExists = (userId) => {
 
     const userFolderPath = path.join(IMAGES_PATH, userId);
 
-    // Use fs-extra to create the folder recursively if it doesn't exist
     fsExtra.ensureDirSync(userFolderPath);
     return userFolderPath;
 };

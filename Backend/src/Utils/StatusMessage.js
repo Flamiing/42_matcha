@@ -47,4 +47,5 @@ export default class StatusMessage {
         "You do not have permission to modify another user's profile.";
     static NO_PROFILE_INFO_TO_EDIT = 'There was no profile info to edit.';
     static INVALID_USER_TAG = 'Invalid user tag.';
+    static ERROR_UPLOADING_IMAGE = 'Error uploading image.';
 }

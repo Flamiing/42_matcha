@@ -3,6 +3,7 @@ import userTagsModel from '../Models/UserTagsModel.js';
 
 export default async function getPublicUser(user) {
     const userTags = await userTagsModel.getUserTags(user.id);
+    const profilePicture = `/api/v${process.env.API_VERSION}/users/${user.id}/profile-picture`;
 
     const publicUser = {
         id: user.id,
@@ -12,7 +13,7 @@ export default async function getPublicUser(user) {
         last_name: user.last_name,
         age: user.age,
         biography: user.biography,
-        profile_picture: user.profile_picture,
+        profile_picture: profilePicture,
         location: user.location,
         fame: user.fame,
         last_online: user.last_online,

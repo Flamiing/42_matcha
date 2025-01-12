@@ -1,5 +1,6 @@
 // Third-Party Imports:
 import path from 'path';
+import fsExtra from 'fs-extra';
 
 // Local Imports:
 import userModel from '../Models/UserModel.js';
@@ -138,6 +139,10 @@ export default class UsersController {
 
         try {
             const { id } = req.params;
+
+            const deleteResult = await UsersController.deletePreviousProfilePicture(res, id);
+            if (!deleteResult) return res;
+
             const input = { profile_picture: req.file.path };
             const updateResult = await userModel.update({ input, id });
             if (!updateResult)
@@ -152,9 +157,25 @@ export default class UsersController {
                 message: 'Profile picture changed successfully!',
             });
         } catch (error) {
+            console.error('Error uploading file: ', error)
             return res
                 .status(400)
-                .json({ message: 'Error uploading file', error });
+                .json({ msg: StatusMessage.ERROR_UPLOADING_IMAGE });
+        }
+    }
+
+    static async deletePreviousProfilePicture(res, id) {
+        const user = await userModel.getById({ id });
+        if (!user) return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+        if (user.length === 0) return returnErrorStatus(res, 404, StatusMessage.USER_NOT_FOUND);
+        if (!user.profile_picture) return true;
+
+        try {
+            await fsExtra.remove(user.profile_picture);
+            return true;
+        } catch (error) {
+            console.error('Error deleting file: ', error);
+            return false;
         }
     }
 
