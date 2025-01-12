@@ -13,7 +13,14 @@ export const refreshTokenMiddleware =
         const authStatus = await checkAuthStatus(req);
         if (authStatus.isAuthorized) return next();
 
-        if (IGNORED_ROUTES.includes(req.path)) return next();
+        const isIgnored = (path) => {
+            return IGNORED_ROUTES.some(pattern => {
+              const regex = new RegExp('^' + pattern.replace(/\*/g, '[^/]+') + '$');
+              return regex.test(path);
+            });
+        };
+
+        if (isIgnored(req.path)) return next();
 
         const refreshToken = req.cookies.refreshToken;
         try {

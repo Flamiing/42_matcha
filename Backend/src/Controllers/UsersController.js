@@ -1,17 +1,26 @@
+// Third-Party Imports:
+import path from 'path';
+
 // Local Imports:
 import userModel from '../Models/UserModel.js';
+import userTagsModel from '../Models/UserTagsModel.js';
+import { validatePartialUser } from '../Schemas/userSchema.js';
+import { returnErrorStatus } from '../Utils/authUtils.js';
+import getPublicUser from '../Utils/getPublicUser.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 
 export default class UsersController {
-    static async testController(req, res) {
-        const result = await userModel.getByReference(req.query);
-        return res.json({ result });
-    }
-
     static async getAllUsers(req, res) {
         const users = await userModel.getAll();
-        if (users) return res.json({ users: users });
-        return res.status(500).json({ error: StatusMessage.QUERY_ERROR });
+        if (users) {
+            const publicUsers = [];
+            for (const user of users) {
+                const publicUser = await getPublicUser(user);
+                publicUsers.push(publicUser);
+            }
+            return res.json({ msg: publicUsers });
+        }
+        return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
     }
 
     static async getUserById(req, res) {
@@ -22,131 +31,136 @@ export default class UsersController {
             if (user.length === 0)
                 return res
                     .status(404)
-                    .json({ error: StatusMessage.NOT_FOUND_BY_ID });
-            return res.json({ user: user });
+                    .json({ msg: StatusMessage.NOT_FOUND_BY_ID });
+            const publicUser = getPublicUser(user);
+            return res.json({ msg: publicUser });
         }
-        return res.status(500).json({ error: StatusMessage.QUERY_ERROR });
+        return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
     }
 
-    static async createUser(req, res) {
-        const {
-            email,
-            username,
-            first_name,
-            last_name,
-            password,
-            age,
-            biography,
-            profile_picture,
-            location,
-            fame,
-            last_online,
-            is_online,
-            gender,
-            sexual_preference,
-        } = req.body;
+    static async getUserProfile(req, res) {
+        const { username } = req.params;
 
-        let input = {
-            email: email,
-            username: username,
-            first_name: first_name,
-            last_name: last_name,
-            password: password,
-            age: age,
-            biography: biography,
-            profile_picture: profile_picture,
-            location: location,
-            fame: fame,
-            last_online: last_online,
-            is_online: is_online,
-            gender: gender,
-            sexual_preference: sexual_preference,
-        };
-
-        input = Object.keys(input).reduce((acc, key) => {
-            if (input[key] !== undefined) {
-                acc[key] = input[key];
-            }
-            return acc;
-        }, {});
-
-        const user = await userModel.create({ input });
+        const user = await userModel.getByReference(
+            { username: username },
+            true
+        );
         if (user) {
             if (user.length === 0)
                 return res
                     .status(404)
-                    .json({ error: StatusMessage.NOT_FOUND_BY_ID }); // TODO: Change error msg
-            return res.json({ user: user });
+                    .json({ msg: StatusMessage.USER_NOT_FOUND });
+            const publicUser = await getPublicUser(user);
+            return res.json({ msg: publicUser });
         }
-        return res.status(500).json({ error: StatusMessage.QUERY_ERROR });
+        return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
     }
 
     static async updateUser(req, res) {
-        const {
-            email,
-            username,
-            first_name,
-            last_name,
-            password,
-            age,
-            biography,
-            profile_picture,
-            location,
-            fame,
-            last_online,
-            is_online,
-            gender,
-            sexual_preference,
-        } = req.body;
+        if (!req.session.user)
+            return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
+
+        const isValidData = await UsersController.validateData(req, res);
+        if (!isValidData) return res;
 
         const { id } = req.params;
+        const { input, inputHasNoContent } = isValidData;
 
-        let input = {
-            email: email,
-            username: username,
-            first_name: first_name,
-            last_name: last_name,
-            password: password,
-            age: age,
-            biography: biography,
-            profile_picture: profile_picture,
-            location: location,
-            fame: fame,
-            last_online: last_online,
-            is_online: is_online,
-            gender: gender,
-            sexual_preference: sexual_preference,
-        };
+        const tagsUpdateResult = await UsersController.updateTags(req, res);
+        if (!tagsUpdateResult) return res;
 
-        input = Object.keys(input).reduce((acc, key) => {
-            if (input[key] !== undefined) {
-                acc[key] = input[key];
-            }
-            return acc;
-        }, {});
-
-        const user = await userModel.update({ input, id });
-        if (user) {
-            if (user.length === 0)
-                return res
-                    .status(404)
-                    .json({ error: StatusMessage.NOT_FOUND_BY_ID }); // TODO: Change error msg
-            return res.json({ user: user });
+        let user = null;
+        if (!inputHasNoContent) {
+            user = await userModel.update({ input, id });
+        } else {
+            user = await userModel.getById({ id });
         }
-        return res.status(500).json({ error: StatusMessage.QUERY_ERROR });
+        if (!user)
+            return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+        if (user.length === 0)
+            return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
+        const publicUser = await getPublicUser(user);
+        return res.json({ msg: publicUser });
     }
 
-    static async deleteUser(req, res) {
+    static async updateTags(req, res) {
         const { id } = req.params;
+        const { tags } = req.body;
 
-        const user = await userModel.delete({ id });
-        if (user !== null) {
-            if (user === false)
-                return res
-                    .status(404)
-                    .json({ error: StatusMessage.NOT_FOUND_BY_ID });
-            return res.json({ user: user });
+        const tagsUpdateResult = await userTagsModel.updateUserTags(id, tags);
+        if (!tagsUpdateResult)
+            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+        if (tagsUpdateResult.length === 0)
+            return returnErrorStatus(res, 400, StatusMessage.INVALID_USER_TAG);
+
+        return true;
+    }
+
+    static async validateData(req, res) {
+        const validatedUser = validatePartialUser(req.body);
+        if (!validatedUser.success) {
+            const errorMessage = validatedUser.error.errors[0].message;
+            return returnErrorStatus(res, 400, errorMessage);
         }
-        return res.status(500).json({ error: StatusMessage.QUERY_ERROR });
+
+        const { tags } = req.body;
+        const input = validatedUser.data;
+        const inputHasNoContent = Object.keys(input).length === 0;
+        if (inputHasNoContent && (!tags || tags.length === 0))
+            return returnErrorStatus(
+                res,
+                400,
+                StatusMessage.NO_PROFILE_INFO_TO_EDIT
+            );
+
+        const { email, username } = input;
+        const isUnique = await userModel.isUnique({ email, username });
+        if (!isUnique) {
+            if (email)
+                return returnErrorStatus(
+                    res,
+                    400,
+                    StatusMessage.DUPLICATE_EMAIL
+                );
+            return returnErrorStatus(
+                res,
+                400,
+                StatusMessage.DUPLICATE_USERNAME
+            );
+        }
+
+        return { input, inputHasNoContent };
+    }
+
+    static async changeProfilePicture(req, res) {
+        if (!req.session.user)
+            return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
+
+        try {
+            const { id } = req.params;
+            const input = { profile_picture: req.file.path }
+            const updateResult = await userModel.update({ input, id })
+            return res.json({ message: 'File uploaded successfully!', file: req.file });
+        } catch (error) {
+            return res.status(400).json({ message: 'Error uploading file', error });
+        }
+    }
+
+    static async getProfilePicture(req, res) {
+        if (!req.session.user)
+            return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
+
+        const { id } = req.params;
+        const user = await userModel.getById({ id })
+        if (!user) return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+        if (user.length === 0) return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND })
+
+        const profilePicturePath = user.profile_picture;
+        const imagePath = path.join(profilePicturePath);
+        res.sendFile(imagePath, (err) => {
+            if (err) {
+                res.status(404).send('Image not found');
+            }
+        });
     }
 }
