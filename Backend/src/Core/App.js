@@ -12,6 +12,7 @@ import { invalidJSONMiddleware } from '../Middlewares/invalidJSONMiddleware.js';
 // Router Imports:
 import AuthRouter from '../Routes/AuthRouter.js';
 import UsersRouter from '../Routes/UsersRouter.js';
+import TagsRouter from '../Routes/TagsRouter.js';
 
 export default class App {
     constructor() {
@@ -27,6 +28,7 @@ export default class App {
             `${this.API_PREFIX}/auth/password/reset`,
             `${this.API_PREFIX}/auth/password/change`,
             `${this.API_PREFIX}/auth/oauth`,
+            `${this.API_PREFIX}/tags`,
         ];
 
         this.#setupMiddleware();
@@ -52,5 +54,6 @@ export default class App {
     #setupRoutes() {
         this.app.use(`${this.API_PREFIX}/auth`, AuthRouter.createRouter());
         this.app.use(`${this.API_PREFIX}/users`, UsersRouter.createRouter());
+        this.app.use(`${this.API_PREFIX}/tags`, TagsRouter.createRouter());
     }
 }

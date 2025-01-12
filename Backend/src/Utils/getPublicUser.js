@@ -1,4 +1,9 @@
-export default function getPublicUser(user) {
+// Local Imports:
+import userTagsModel from '../Models/UserTagsModel.js';
+
+export default async function getPublicUser(user) {
+    const userTags = await userTagsModel.getUserTags(user.id);
+
     const publicUser = {
         id: user.id,
         email: user.email,
@@ -14,6 +19,7 @@ export default function getPublicUser(user) {
         is_online: user.is_online,
         gender: user.gender,
         sexual_preference: user.sexual_preference,
+        tags: userTags,
     };
 
     return publicUser;
