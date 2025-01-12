@@ -98,19 +98,43 @@ export default class Model {
         }
     }
 
-    async getByReference(reference) {
-        const referenceName = Object.keys(reference)[0];
-        const referenceValue = Object.values(reference)[0];
+    async deleteByReference(reference) {
+        const fields = Object.keys(reference)
+            .map((key, index) => `${key} = $${index + 1}`)
+            .join(' AND ');
+        const values = Object.values(reference);
 
         const query = {
-            text: `SELECT * FROM ${this.table} WHERE ${referenceName} = $1;`,
-            values: [referenceValue],
+            text: `DELETE FROM ${this.table} WHERE ${fields} RETURNING *;`,
+            values: values,
+        };
+
+        try {
+            const result = await this.db.query(query);
+            if (result.rows[0] === undefined) return false;
+            return true;
+        } catch (error) {
+            console.error('Error making the query: ', error.message);
+            return null;
+        }
+    }
+
+    async getByReference(reference, onlyOneRecord) {
+        const fields = Object.keys(reference)
+            .map((key, index) => `${key} = $${index + 1}`)
+            .join(' AND ');
+        const values = Object.values(reference);
+
+        const query = {
+            text: `SELECT * FROM ${this.table} WHERE ${fields};`,
+            values: values,
         };
 
         try {
             const result = await this.db.query(query);
             if (result.rows.length === 0) return [];
-            return result.rows[0];
+            if (onlyOneRecord) return result.rows[0];
+            return result.rows;
         } catch (error) {
             console.error('Error making the query: ', error.message);
             return null;

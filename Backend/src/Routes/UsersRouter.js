@@ -3,6 +3,7 @@ import { Router } from 'express';
 
 // Local Imports:
 import UsersController from '../Controllers/UsersController.js';
+import { checkValidUserIdMiddleware } from '../Middlewares/checkValidUserIdMiddleware.js';
 
 export default class UsersRouter {
     static createRouter() {
@@ -10,17 +11,13 @@ export default class UsersRouter {
 
         // GET:
         router.get('/', UsersController.getAllUsers);
-        router.get('/test', UsersController.testController);
-        router.get('/:id', UsersController.getUserById);
-
-        // POST:
-        router.post('/', UsersController.createUser);
+        router.get('/:username', UsersController.getUserProfile);
 
         // PATCH:
-        router.patch('/:id', UsersController.updateUser);
+        router.patch('/:id', checkValidUserIdMiddleware(), UsersController.updateUser);
 
-        // DELETE:
-        router.delete('/:id', UsersController.deleteUser);
+        // PUT:
+        router.put('/:id/profile-picture', checkValidUserIdMiddleware(), UsersController.changeProfilePicture)
 
         return router;
     }
