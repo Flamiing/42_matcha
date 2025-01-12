@@ -140,7 +140,8 @@ export default class UsersController {
         try {
             const { id } = req.params;
 
-            if (req.files.length !== 1) return res.status(400).json({ msg: StatusMessage.BAD_REQUEST })
+            if (req.files.length !== 1)
+                return res.status(400).json({ msg: StatusMessage.BAD_REQUEST });
 
             const deleteResult =
                 await UsersController.deletePreviousProfilePicture(res, id);
