@@ -94,7 +94,11 @@ export default class UsersController {
     static async validateData() {
         const { id } = req.params;
         if (req.session.user.id !== id)
-            return returnErrorStatus(res, 400, StatusMessage.CANNOT_EDIT_OTHER_PROFILE);
+            return returnErrorStatus(
+                res,
+                400,
+                StatusMessage.CANNOT_EDIT_OTHER_PROFILE
+            );
 
         const validatedUser = validatePartialUser(req.body);
         if (!validatedUser.success) {
@@ -106,16 +110,28 @@ export default class UsersController {
         const input = validatedUser.data;
         const inputHasNoContent = Object.keys(input).length === 0;
         if (inputHasNoContent && (!tags || tags.length === 0))
-            return returnErrorStatus(res, 400, StatusMessage.NO_PROFILE_INFO_TO_EDIT);
+            return returnErrorStatus(
+                res,
+                400,
+                StatusMessage.NO_PROFILE_INFO_TO_EDIT
+            );
 
         const { email, username } = input;
         const isUnique = await userModel.isUnique({ email, username });
         if (!isUnique) {
             if (email)
-                return returnErrorStatus(res, 400, StatusMessage.DUPLICATE_EMAIL);
-            return returnErrorStatus(res, 400, StatusMessage.DUPLICATE_USERNAME);
+                return returnErrorStatus(
+                    res,
+                    400,
+                    StatusMessage.DUPLICATE_EMAIL
+                );
+            return returnErrorStatus(
+                res,
+                400,
+                StatusMessage.DUPLICATE_USERNAME
+            );
         }
 
-        return { input, id, inputHasNoContent }
+        return { input, id, inputHasNoContent };
     }
 }
