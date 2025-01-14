@@ -9,15 +9,15 @@ import TagSection from "./TagSection";
 
 interface UserData {
 	username: string;
-	firstName: string;
-	lastName: string;
+	first_name: string;
+	last_name: string;
 	age: number;
 	biography: string;
 	fame: number;
-	lastOnline: number;
-	profilePicture: string;
+	last_online: number;
+	profile_picture: string;
 	gender: string;
-	sexualPreference: string;
+	sexual_preference: string;
 	tags: string[];
 	images: string[];
 }
@@ -28,18 +28,18 @@ const index = () => {
 	const [userData, setUserData] = useState<UserData>({
 		username: "alaparic",
 		email: "testing@matcha.com",
-		firstName: "Dennis",
-		lastName: "Bateman",
+		first_name: "Dennis",
+		last_name: "Bateman",
 		age: 27,
 		location: "Vancouver, BC",
 		biography:
 			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime iusto accusamus quae. Tenetur sed temporibus odio consectetur natus perferendis atque facilis tempore velit quidem magnam delectus, quam ex qui architecto?",
 		fame: 125,
-		lastOnline: Date.now(),
-		/* lastOnline: Date.now() - 5 * 60 * 1000, */
+		last_online: Date.now(),
+		/* last_online: Date.now() - 5 * 60 * 1000, */
 		gender: "Male",
-		sexualPreference: "Female",
-		profilePicture: "/person.png",
+		sexual_preference: "Female",
+		profile_picture: "/person.png",
 		tags: ["gaming", "programer", "photography"],
 		images: [
 			"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn1.matadornetwork.com%2Fblogs%2F1%2F2024%2F02%2Fcherry-blossoms-bike-ride-1.jpg&f=1&nofb=1&ipt=154498e6af1a251026eb3331fbe588f58febbbf00d3e4d1e82356aa4df179b2a&ipo=images",

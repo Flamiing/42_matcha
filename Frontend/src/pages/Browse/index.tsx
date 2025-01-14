@@ -3,12 +3,12 @@ import UserCard from "./UserCard";
 const index = () => {
 	const user = {
 		username: "alaparic",
-		firstName: "Maria",
+		first_name: "Maria",
 		age: 27,
 		biography:
 			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime iusto accusamus quae. Tenetur sed temporibus odio consectetur natus perferendis atque facilis tempore velit quidem magnam delectus, quam ex qui architecto?",
-		lastOnline: Date.now(),
-		profilePicture: "/person2.png",
+		last_online: Date.now(),
+		profile_picture: "/person2.png",
 		tags: ["gaming", "programer", "photography"]
 	};
 

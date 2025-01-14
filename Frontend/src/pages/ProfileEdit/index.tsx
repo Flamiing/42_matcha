@@ -9,16 +9,16 @@ import TagSection from "./TagSection"; */
 
 interface ProfileFormData {
 	username: string;
-	firstName: string;
-	lastName: string;
+	first_name: string;
+	last_name: string;
 	email: string;
 	age: number;
 	biography: string;
 	gender: string;
-	sexualPreference: string;
+	sexual_preference: string;
 	location: string;
 	images: string[];
-	profilePicture: string;
+	profile_picture: string;
 }
 
 const index = () => {
@@ -27,15 +27,15 @@ const index = () => {
 	const [formData, setFormData] = useState<UserData>({
 		username: "alaparic",
 		email: "test@test.com",
-		firstName: "Dennis",
-		lastName: "Bateman",
+		first_name: "Dennis",
+		last_name: "Bateman",
 		age: 27,
 		biography:
 			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime iusto accusamus quae. Tenetur sed temporibus odio consectetur natus perferendis atque facilis tempore velit quidem magnam delectus, quam ex qui architecto?",
 		gender: "",
-		sexualPreference: "",
+		sexual_preference: "",
 		location: "",
-		profilePicture: "/person.png",
+		profile_picture: "/person.png",
 		images: [
 			"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn1.matadornetwork.com%2Fblogs%2F1%2F2024%2F02%2Fcherry-blossoms-bike-ride-1.jpg&f=1&nofb=1&ipt=154498e6af1a251026eb3331fbe588f58febbbf00d3e4d1e82356aa4df179b2a&ipo=images",
 			"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.wallpaperflare.com%2Fstatic%2F173%2F680%2F888%2Fvancouver-canada-panoramic-view-city-river-wallpaper.jpg&f=1&nofb=1&ipt=40cea784189c2794d599d5e1fd0445710add1807e0d89d8445dca03c6bcf04af&ipo=images",

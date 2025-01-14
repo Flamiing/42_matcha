@@ -6,13 +6,13 @@ import Tag from "../../components/common/Tag";
 interface UserCardProps {
 	user: {
 		username: string;
-		firstName: string;
+		first_name: string;
 		age: number;
-		lastOnline: number;
+		last_online: number;
 		images: string[];
 		biography: string;
 		tags: string[];
-		profilePicture: string;
+		profile_picture: string;
 	};
 }
 
@@ -29,13 +29,13 @@ const UserCard = ({ user }: UserCardProps) => {
 		<Link
 			to={`/profile/${user.username}`}
 			className={"block w-80 h-96 relative group cursor-pointer"}
-			title={`View ${user.firstName}'s profile`}
+			title={`View ${user.first_name}'s profile`}
 		>
 			<div className="relative h-full bg-white rounded-xl shadow-md overflow-hidden group-hover:shadow-xl">
 				<div className="absolute inset-0">
 					<img
-						src={user.profilePicture}
-						alt={`${user.firstName}'s profile`}
+						src={user.profile_picture}
+						alt={`${user.first_name}'s profile`}
 						className="w-full h-full object-cover"
 					/>
 					<div className="absolute inset-0 bg-gradient-to-t xl:opacity-0 from-black/80 via-black/30 to-transparent transition-opacity duration-300 xl:group-hover:opacity-100" />
@@ -57,11 +57,11 @@ const UserCard = ({ user }: UserCardProps) => {
 				<div className="absolute xl:translate-y-24 bottom-0 left-0 right-0 p-4 text-white transition-transform duration-300 transform xl:group-hover:translate-y-0 group-hover:translate-y-20">
 					<div className="flex items-center justify-between mb-2">
 						<h2 className="text-xl font-semibold">
-							{user.firstName}, {user.age}
+							{user.first_name}, {user.age}
 						</h2>
 
 						<div className="flex items-center gap-2 text-sm">
-							{Date.now() - user.lastOnline < 5 * 60 * 1000 ? ( // 5 minutes
+							{Date.now() - user.last_online < 5 * 60 * 1000 ? ( // 5 minutes
 								<div className="flex items-center gap-1">
 									<div className="w-2 h-2 bg-green-500 rounded-full ring-2 ring-green-400" />
 									<span>Online</span>
@@ -71,7 +71,7 @@ const UserCard = ({ user }: UserCardProps) => {
 									<span className="fa fa-clock-o w-4 h-4" />
 									<span>
 										{"Last seen " +
-											timeAgo(user.lastOnline)}
+											timeAgo(user.last_online)}
 									</span>
 								</div>
 							)}

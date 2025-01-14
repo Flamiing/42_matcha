@@ -2,7 +2,7 @@ import { useState } from "react";
 import Modal from "../../components/common/Modal";
 
 interface User {
-	firstName: string;
+	first_name: string;
 	images: string[]; // array of image URLs
 }
 

@@ -10,7 +10,7 @@ import RegularButton from "../../components/common/RegularButton";
 const Form: React.FC = () => {
 	const [formData, setFormData] = useState({
 		username: "",
-		firstName: "",
+		first_name: "",
 		last_name: "",
 		email: "",
 		password: "",
@@ -35,7 +35,7 @@ const Form: React.FC = () => {
 		if (success) {
 			setFormData({
 				username: "",
-				firstName: "",
+				first_name: "",
 				last_name: "",
 				email: "",
 				password: "",
@@ -71,9 +71,9 @@ const Form: React.FC = () => {
 					placeholder="Username*"
 				/>
 				<FormInput
-					name="firstName"
+					name="first_name"
 					onChange={handleChange}
-					value={formData.firstName}
+					value={formData.first_name}
 					placeholder="First Name*"
 				/>
 				<FormInput

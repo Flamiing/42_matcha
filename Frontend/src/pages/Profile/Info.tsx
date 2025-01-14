@@ -1,14 +1,14 @@
 interface UserData {
-	firstName: string;
-	lastName: string;
+	first_name: string;
+	last_name: string;
 	username: string;
 	email: string;
 	age: number;
 	biography: string;
 	fame: number;
-	lastOnline: number;
+	last_online: number;
 	gender: string;
-	sexualPreference: string;
+	sexual_preference: string;
 }
 
 interface InfoProps {
@@ -17,9 +17,9 @@ interface InfoProps {
 
 const Info: React.FC<InfoProps> = ({ user }) => {
 	const preferenceDisplay =
-		user.sexualPreference === "Bisexual"
+		user.sexual_preference === "Bisexual"
 			? "Male & Female"
-			: user.sexualPreference;
+			: user.sexual_preference;
 
 	return (
 		<section className="container max-w-4xl mx-auto pt-12 px-4">

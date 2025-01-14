@@ -28,17 +28,17 @@ const LoginForm: React.FC = () => {
 
 	const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const response = await login(formData);
+		const { success, message } = await login(formData);
 
-		if (response.success) {
+		if (success) {
 			setFormData({
 				username: "",
 				password: "",
 			});
 		}
 		setMsg({
-			type: response.success ? "success" : "error",
-			message: response.message,
+			type: success ? "success" : "error",
+			message: message,
 			key: Date.now(),
 		});
 	};

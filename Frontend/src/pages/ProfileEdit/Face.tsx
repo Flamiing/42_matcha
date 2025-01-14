@@ -3,17 +3,17 @@ import FormInput from "../../components/common/FormInput";
 import Images from "./Images";
 
 interface UserData {
-	firstName: string;
-	lastName: string;
+	first_name: string;
+	last_name: string;
 	username: string;
 	email: string;
 	age: number;
 	biography: string;
 	fame: number;
-	lastOnline: number;
-	profilePicture: string;
+	last_online: number;
+	profile_picture: string;
 	gender: string;
-	sexualPreference: string;
+	sexual_preference: string;
 }
 
 interface FaceProps {
@@ -35,9 +35,9 @@ const Face = ({ user, handleImageUpload }: FaceProps) => {
 				<div className="flex flex-col lg:flex-row lg:items-start items-center gap-10">
 					<div className="flex flex-col justify-center items-center">
 						<div className="relative w-fit">
-							{user.profilePicture ? (
+							{user.profile_picture ? (
 								<img
-									src={user.profilePicture}
+									src={user.profile_picture}
 									alt="UserProfile"
 									className="w-36 rounded-full border shadow-lg h-36 object-cover"
 								/>
@@ -68,17 +68,17 @@ const Face = ({ user, handleImageUpload }: FaceProps) => {
 						</div>
 						<div className="flex gap-2 lg:gap-5 flex-wrap">
 							<div className="w-full lg:w-auto">
-								<label htmlFor="firstName">First Name</label>
+								<label htmlFor="first_name">First Name</label>
 								<FormInput
-									name="firstName"
+									name="first_name"
 									value="alex"
 									onChange={handleChange}
 								/>
 							</div>
 							<div className="w-full lg:w-auto">
-								<label htmlFor="lastName">Last Name</label>
+								<label htmlFor="last_name">Last Name</label>
 								<FormInput
-									name="lastName"
+									name="last_name"
 									value="apa"
 									onChange={handleChange}
 								/>

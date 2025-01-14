@@ -2,7 +2,7 @@ import apiRequest from "./config";
 
 interface RegisterData {
 	username: string;
-	firstName: string;
+	first_name: string;
 	last_name: string;
 	email: string;
 	password: string;
@@ -17,17 +17,17 @@ interface User {
 	id: string;
 	email: string;
 	username: string;
-	firstName: string;
+	first_name: string;
 	last_name: string;
 	age: number | null;
 	biography: string | null;
-	profilePicture: string | null;
+	profile_picture: string | null;
 	location: string | null;
 	fame: number;
-	lastOnline: number;
+	last_online: number;
 	is_online: boolean;
 	gender: string | null;
-	sexualPreference: string | null;
+	sexual_preference: string | null;
 }
 
 interface AuthResponse {
@@ -47,7 +47,10 @@ export const authApi = {
 				method: "POST",
 				body: JSON.stringify(userData),
 			});
-			return response;
+			return {
+				success: true,
+				message: "Registration successful",
+			};
 		} catch (error: any) {
 			return {
 				success: false,
@@ -63,7 +66,10 @@ export const authApi = {
 				method: "POST",
 				body: JSON.stringify(userData),
 			});
-			return response;
+			return {
+				success: true,
+				message: "Login successful",
+			};
 		} catch (error: any) {
 			return {
 				success: false,
@@ -92,7 +98,7 @@ export const authApi = {
 	checkAuth: async (): Promise<boolean> => {
 		try {
 			const response = await apiRequest("auth/status");
-			return response.status === 200;
+			return response.msg;
 		} catch {
 			return false;
 		}
@@ -100,9 +106,7 @@ export const authApi = {
 
 	oauth: async (code: string): Promise<AuthResponse> => {
 		try {
-			const response = await apiRequest(
-				`auth/oauth?code=${code}`
-			);
+			const response = await apiRequest(`auth/oauth?code=${code}`);
 			return response;
 		} catch (error: any) {
 			return {

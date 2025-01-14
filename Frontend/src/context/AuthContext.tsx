@@ -55,17 +55,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 						id: "1",
 						email: "test@test.com",
 						username: "magnitopic",
-						firstName: "alex",
+						first_name: "alex",
 						last_name: "magnito",
 						age: 20,
 						biography: "Cool guy who likes to code 😎",
-						profilePicture: null,
+						profile_picture: null,
 						location: null,
 						fame: 150,
-						lastOnline: Date.now(),
+						last_online: Date.now(),
 						is_online: true,
 						gender: "male",
-						sexualPreference: "female",
+						sexual_preference: "female",
 					});
 				} else {
 					setUser(null);

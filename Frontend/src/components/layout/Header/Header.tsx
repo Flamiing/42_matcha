@@ -65,18 +65,28 @@ const Header: React.FC = () => {
 									</button>
 								</Link>
 							</nav>
-							<div className="flex items-center gap-1 text-sm">
-								<Link to="/login">
-									<button className="text-font-main btn whitespace-nowrap text-sm px-6 py-2 rounded-full hover:ease-in-out duration-300 hover:bg-secondary-light">
-										Login
+							{!isAuthenticated && (
+								<div className="flex items-center gap-1 text-sm">
+									<Link to="/login">
+										<button className="text-font-main btn whitespace-nowrap text-sm px-6 py-2 rounded-full hover:ease-in-out duration-300 hover:bg-secondary-light">
+											Login
+										</button>
+									</Link>
+									<Link to="/register">
+										<button className="text-font-main btn whitespace-nowrap text-sm px-6 py-2 rounded-full hover:ease-in-out duration-300 hover:bg-secondary-light">
+											Register
+										</button>
+									</Link>
+								</div>
+							)}
+							{isAuthenticated && (
+									<button
+										onClick={handleLogout}
+										className="text-font-main btn whitespace-nowrap text-sm px-6 py-2 rounded-full hover:ease-in-out duration-300 hover:bg-primary-monochromatic hover:text-white"
+									>
+										Logout
 									</button>
-								</Link>
-								<Link to="/register">
-									<button className="text-font-main btn whitespace-nowrap text-sm px-6 py-2 rounded-full hover:ease-in-out duration-300 hover:bg-secondary-light">
-										Register
-									</button>
-								</Link>
-							</div>
+							)}
 						</>
 					)}
 					{(isMobile || isTablet) && (

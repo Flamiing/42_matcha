@@ -11,20 +11,32 @@ import Oauth from "../pages/Callbacks/Oauth";
 import ConfirmEmail from "../pages/Callbacks/ConfirmEmail";
 import Browse from "../pages/Browse";
 
+import AuthTestPage from "../pages/AuthTestPage";
+
 const protectedRoutes = {
 	profile: {
 		path: "profile",
-		element: <Profile />,
+		element: (
+			<ProtectedRoute>
+				<Profile />
+			</ProtectedRoute>
+		),
 	},
 	profileEdit: {
 		path: "profile/edit",
 		element: (
+			<ProtectedRoute>
 				<ProfileEdit />
+			</ProtectedRoute>
 		),
 	},
 	browse: {
 		path: "browse",
-		element: <Browse />,
+		element: (
+			<ProtectedRoute>
+				<Browse />
+			</ProtectedRoute>
+		),
 	},
 };
 
@@ -40,6 +52,10 @@ const publicRoutes = {
 	register: {
 		path: "register",
 		element: <Register />,
+	},
+	authtestpage: {
+		path: "test",
+		element: <AuthTestPage />,
 	},
 };
 

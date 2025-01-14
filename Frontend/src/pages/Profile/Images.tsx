@@ -2,7 +2,7 @@ import { useState } from "react";
 import Modal from "../../components/common/Modal";
 
 interface User {
-	firstName: string;
+	first_name: string;
 	images: string[];
 }
 
@@ -20,7 +20,7 @@ const ImageGallery = ({ user }: ImageGalleryProps) => {
 				<div className="flex items-center justify-between p-4 border-b">
 					<h3 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
 						<span className="fa fa-image" />
-						{user.firstName}'s Images
+						{user.first_name}'s Images
 					</h3>
 					<button
 						onClick={() => setIsModalOpen(false)}
@@ -42,7 +42,7 @@ const ImageGallery = ({ user }: ImageGalleryProps) => {
 									<div className="relative pt-[100%]">
 										<img
 											src={imageUrl}
-											alt={`${user.firstName}'s image ${
+											alt={`${user.first_name}'s image ${
 												index + 1
 											}`}
 											className="absolute inset-0 w-full h-full object-cover rounded-lg hover:opacity-90 transition-opacity cursor-pointer"
@@ -67,7 +67,7 @@ const ImageGallery = ({ user }: ImageGalleryProps) => {
 			>
 				<span className="flex items-center gap-2 rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0">
 					<span className="fa fa-image" />
-					{user.firstName}'s Images
+					{user.first_name}'s Images
 				</span>
 			</button>
 		</div>

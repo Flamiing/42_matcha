@@ -3,7 +3,7 @@ import Modal from "../../components/common/Modal";
 import LikesAndViewsCard from "./LikesAndViewsCard";
 
 const mockUserData = {
-	firstName: "Dennis",
+	first_name: "Dennis",
 	likedProfiles: Array(15)
 		.fill(null)
 		.map((_, index) => ({
@@ -21,13 +21,13 @@ const mockUserData = {
 };
 
 interface OtherUsers {
-	firstName: string;
+	first_name: string;
 	profilePicture: string;
 	time: string;
 }
 
 interface User {
-	firstName: string;
+	first_name: string;
 	likes: number;
 	likedProfiles: OtherUsers[];
 	views: number;
