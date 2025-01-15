@@ -2,8 +2,10 @@
 import userTagsModel from '../Models/UserTagsModel.js';
 
 export default async function getPublicUser(user) {
+    const { API_HOST, API_PORT, API_VERSION } = process.env;
+
     const userTags = await userTagsModel.getUserTags(user.id);
-    const profilePicture = `/api/v${process.env.API_VERSION}/users/${user.id}/profile-picture`;
+    const profilePicture = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${user.id}/profile-picture`;
 
     const publicUser = {
         id: user.id,

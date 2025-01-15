@@ -16,8 +16,6 @@ volumes:
 	@mkdir -p $(POSTGRESQL_VOLUME_PATH)
 	@mkdir -p $(UPLOADS_PATH)
 	@mkdir -p $(UPLOADS_PATH)/users
-	@chmod -R a-x $(UPLOADS_PATH)
-	@chmod 600 $(UPLOADS_PATH)
 
 build: volumes
 	@echo "$(GREEN)<+> BUILDING CONTAINERS <+> $(COLOR_OFF)"

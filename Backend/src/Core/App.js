@@ -20,7 +20,8 @@ import TagsRouter from '../Routes/TagsRouter.js';
 export default class App {
     constructor() {
         this.app = express();
-        this.PORT = process.env.BACKEND_PORT ?? 3001;
+        this.HOST = process.env.API_PORT ?? 'localhost'
+        this.PORT = process.env.API_PORT ?? 3001;
         this.API_VERSION = process.env.API_VERSION;
         this.API_PREFIX = `/api/v${this.API_VERSION}`;
         this.IGNORED_ROUTES = [
@@ -40,7 +41,7 @@ export default class App {
 
     startApp() {
         this.app.listen(this.PORT, () => {
-            console.log(`Server listening on http://localhost:${this.PORT}`);
+            console.log(`Server listening on http://${this.HOST}:${this.PORT}`);
         });
     }
 
