@@ -6,6 +6,7 @@ import UsersController from '../Controllers/UsersController.js';
 import { checkValidUserIdMiddleware } from '../Middlewares/checkValidUserIdMiddleware.js';
 import { imageUploadMiddleware } from '../Middlewares/imageUploadMiddleware.js';
 import { imagesValidationMiddleware } from '../Middlewares/imagesValidationMiddleware.js';
+import { removeImageOnFailureMiddleware } from '../Middlewares/removeImageOnFailureMiddleware.js';
 
 export default class UsersRouter {
     static createRouter() {
@@ -32,7 +33,8 @@ export default class UsersRouter {
             checkValidUserIdMiddleware(),
             imageUploadMiddleware(),
             imagesValidationMiddleware(),
-            UsersController.changeProfilePicture
+            UsersController.changeProfilePicture,
+            removeImageOnFailureMiddleware
         );
 
         return router;

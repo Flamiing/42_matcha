@@ -5,14 +5,22 @@ import path from 'path';
 import StatusMessage from '../Utils/StatusMessage.js';
 
 export const imagesValidationMiddleware = () => (req, res, next) => {
-    // Validate the image
-    if (!req.files || res.files.length === 0)
+    if (!req.files || req.files.length === 0)
         return res.status(400).json({ msg: StatusMessage.NO_IMAGE_UPLOADED })
-    for (image of req.files) {
-        if (!validExtension(image.originalname)) return res.status(400).json({ msg: StatusMessage.INVALID_IMAGE_EXTENSION })
-        if (!valid)
+    for (const image of req.files) {
+        if (!validExtension(image.originalname)) {
+            res.status(400).json({ msg: StatusMessage.INVALID_IMAGE_EXTENSION })
+            return next(new Error(StatusMessage.INVALID_IMAGE_EXTENSION));
+        }
+        if (!validMimeType(image.mimetype)) {
+            res.status(400).json({ msg: StatusMessage.INVALID_MIME_TYPE })
+            return next(new Error(StatusMessage.INVALID_MIME_TYPE))
+        }
+        if (image.size > 5242880) {
+            res.status(400).json({ msg: StatusMessage.INVALID_IMAGE_SIZE })
+            return next(new Error(StatusMessage.INVALID_IMAGE_SIZE))
+        }
     }
-    console.log('TEST: ', path.extname(req.files[0].originalname));
     next();
 };
 
@@ -26,6 +34,18 @@ function validExtension(fileName) {
     const extension = path.extname(fileName).slice(1).toLowerCase();
 
     if (!VALID_EXTENSIONS.includes(extension))
+        return false;
+    return true;
+}
+
+function validMimeType(mimeType) {
+    const VALID_MIME_TYPE = [
+        'image/jpeg',
+        'image/jpg',
+        'image/png'
+    ]
+
+    if (!VALID_MIME_TYPE.includes(mimeType))
         return false;
     return true;
 }

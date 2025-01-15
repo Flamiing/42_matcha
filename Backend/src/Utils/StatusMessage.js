@@ -52,5 +52,7 @@ export default class StatusMessage {
         'Invalid file type. Only JPEG, JPG and PNG files are allowed.';
     static UNEXPECTED_ERROR = 'An unexpected error occured.';
     static NO_IMAGE_UPLOADED = 'No image uploaded.'
-    static INVALID_IMAGE_EXTENSION = 'Invalid image format. Only jpeg, jpg and png are accepted.'
+    static INVALID_IMAGE_EXTENSION = 'Invalid file extension. Only .jpeg, .jpg and .png are accepted.'
+    static INVALID_MIME_TYPE = 'Invalid Mime type. Only \'image/jpeg\', \'image/jpg\' and \'image/png\' are accepted.'
+    static INVALID_IMAGE_SIZE = 'Image size exceeds the 5MB limit.'
 }

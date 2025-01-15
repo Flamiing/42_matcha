@@ -10,6 +10,7 @@ import { corsMiddleware } from '../Middlewares/corsMiddleware.js';
 import { sessionMiddleware } from '../Middlewares/sessionMiddleware.js';
 import { refreshTokenMiddleware } from '../Middlewares/refreshTokenMiddleware.js';
 import { invalidJSONMiddleware } from '../Middlewares/invalidJSONMiddleware.js';
+import { captureResponseDataMiddleware } from '../Middlewares/captureResponseDataMiddleware.js';
 
 // Router Imports:
 import AuthRouter from '../Routes/AuthRouter.js';
@@ -52,6 +53,7 @@ export default class App {
         this.app.use(sessionMiddleware());
         this.app.use(refreshTokenMiddleware(this.IGNORED_ROUTES));
         this.app.use(invalidJSONMiddleware());
+        this.app.use(captureResponseDataMiddleware);
     }
 
     #setupRoutes() {
