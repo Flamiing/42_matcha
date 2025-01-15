@@ -51,4 +51,6 @@ export default class StatusMessage {
     static ONLY_IMAGES_ALLOWED =
         'Invalid file type. Only JPEG, JPG and PNG files are allowed.';
     static UNEXPECTED_ERROR = 'An unexpected error occured.';
+    static NO_IMAGE_UPLOADED = 'No image uploaded.'
+    static INVALID_IMAGE_EXTENSION = 'Invalid image format. Only jpeg, jpg and png are accepted.'
 }

@@ -5,6 +5,7 @@ import { Router } from 'express';
 import UsersController from '../Controllers/UsersController.js';
 import { checkValidUserIdMiddleware } from '../Middlewares/checkValidUserIdMiddleware.js';
 import { imageUploadMiddleware } from '../Middlewares/imageUploadMiddleware.js';
+import { imagesValidationMiddleware } from '../Middlewares/imagesValidationMiddleware.js';
 
 export default class UsersRouter {
     static createRouter() {
@@ -29,8 +30,8 @@ export default class UsersRouter {
         router.put(
             '/:id/profile-picture',
             checkValidUserIdMiddleware(),
-            //imagesValidationMiddleware(),
             imageUploadMiddleware(),
+            imagesValidationMiddleware(),
             UsersController.changeProfilePicture
         );
 
