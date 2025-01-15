@@ -14,6 +14,10 @@ volumes:
 	@echo "$(GREEN)<+> CREATING VOLUMES <+> $(COLOR_OFF)"
 	@mkdir -p $(DATA_PATH)
 	@mkdir -p $(POSTGRESQL_VOLUME_PATH)
+	@mkdir -p $(UPLOADS_PATH)
+	@mkdir -p $(UPLOADS_PATH)/users
+	@chmod -R a-x $(UPLOADS_PATH)
+	@chmod 600 $(UPLOADS_PATH)
 
 build: volumes
 	@echo "$(GREEN)<+> BUILDING CONTAINERS <+> $(COLOR_OFF)"
@@ -46,6 +50,7 @@ down: stop
 remove_data:
 	@echo "$(GREEN)<+> REMOVING DATA <+> $(COLOR_OFF)"
 	@rm -rf $(DATA_PATH)
+	@rm -rf $(UPLOADS_PATH)
 
 destroy: down remove_data
 	@echo "$(GREEN)<+> REMOVING ALL IMAGES <+> $(COLOR_OFF)"
