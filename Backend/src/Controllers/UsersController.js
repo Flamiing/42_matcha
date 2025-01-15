@@ -136,15 +136,25 @@ export default class UsersController {
 
     static async changeProfilePicture(req, res, next) {
         if (!req.session.user)
-            return returnErrorWithNext(res, next, 401, StatusMessage.NOT_LOGGED_IN);
+            return returnErrorWithNext(
+                res,
+                next,
+                401,
+                StatusMessage.NOT_LOGGED_IN
+            );
 
-        const { API_HOST, API_PORT, API_VERSION } = process.env
+        const { API_HOST, API_PORT, API_VERSION } = process.env;
 
         try {
             const { id } = req.params;
 
             if (req.files.length !== 1)
-                return returnErrorWithNext(res, next, 400, StatusMessage.BAD_REQUEST)
+                return returnErrorWithNext(
+                    res,
+                    next,
+                    400,
+                    StatusMessage.BAD_REQUEST
+                );
 
             const deleteResult =
                 await UsersController.deletePreviousProfilePicture(res, id);
@@ -159,15 +169,30 @@ export default class UsersController {
             const input = { profile_picture: req.files[0].path };
             const updateResult = await userModel.update({ input, id });
             if (!updateResult)
-                return returnErrorWithNext(res, next, 500, StatusMessage.INTERNAL_SERVER_ERROR)
+                return returnErrorWithNext(
+                    res,
+                    next,
+                    500,
+                    StatusMessage.INTERNAL_SERVER_ERROR
+                );
             if (updateResult.length === 0)
-                return returnErrorWithNext(res, next, 400, StatusMessage.USER_NOT_FOUND)
+                return returnErrorWithNext(
+                    res,
+                    next,
+                    400,
+                    StatusMessage.USER_NOT_FOUND
+                );
             return res.json({
-                msg: `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${id}/profile-picture`
+                msg: `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${id}/profile-picture`,
             });
         } catch (error) {
             console.error('Error uploading file: ', error);
-            return returnErrorWithNext(res, next, 400, StatusMessage.ERROR_UPLOADING_IMAGE)
+            return returnErrorWithNext(
+                res,
+                next,
+                400,
+                StatusMessage.ERROR_UPLOADING_IMAGE
+            );
         }
     }
 

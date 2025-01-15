@@ -20,7 +20,7 @@ import TagsRouter from '../Routes/TagsRouter.js';
 export default class App {
     constructor() {
         this.app = express();
-        this.HOST = process.env.API_PORT ?? 'localhost'
+        this.HOST = process.env.API_PORT ?? 'localhost';
         this.PORT = process.env.API_PORT ?? 3001;
         this.API_VERSION = process.env.API_VERSION;
         this.API_PREFIX = `/api/v${this.API_VERSION}`;
