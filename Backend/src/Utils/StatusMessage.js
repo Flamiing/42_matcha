@@ -12,6 +12,8 @@ export default class StatusMessage {
     static ALREADY_LOGGED_IN = 'Already logged in.';
     static ACCESS_NOT_AUTHORIZED = 'Access not authorized.';
     static DUPLICATE_USERNAME_OR_EMAIL = 'Username or email already in use.';
+    static DUPLICATE_USERNAME = 'Username already in use.';
+    static DUPLICATE_EMAIL = 'Email already in use.';
     static LOGOUT_SUCCESS = 'Logout successful!';
     static ACC_CONFIRMATION_REQUIRED =
         'Please confirm your account before sign in. A confirmation link was sent to your email.';
@@ -41,4 +43,18 @@ export default class StatusMessage {
     static INVALID_JSON = 'Invalid JSON payload.';
     static CANNOT_CHANGE_PASS =
         'Your account is linked to 42 School. Please manage your password on their site.';
+    static CANNOT_EDIT_OTHER_PROFILE =
+        "You do not have permission to modify another user's profile.";
+    static NO_PROFILE_INFO_TO_EDIT = 'There was no profile info to edit.';
+    static INVALID_USER_TAG = 'Invalid user tag.';
+    static ERROR_UPLOADING_IMAGE = 'Error uploading image.';
+    static ONLY_IMAGES_ALLOWED =
+        'Invalid file type. Only JPEG, JPG and PNG files are allowed.';
+    static UNEXPECTED_ERROR = 'An unexpected error occured.';
+    static NO_IMAGE_UPLOADED = 'No image uploaded.';
+    static INVALID_IMAGE_EXTENSION =
+        'Invalid file extension. Only .jpeg, .jpg and .png are accepted.';
+    static INVALID_MIME_TYPE =
+        "Invalid Mime type. Only 'image/jpeg', 'image/jpg' and 'image/png' are accepted.";
+    static INVALID_IMAGE_SIZE = 'Image size exceeds the 5MB limit.';
 }
