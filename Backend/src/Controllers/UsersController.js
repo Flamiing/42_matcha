@@ -13,7 +13,7 @@ import { returnErrorWithNext } from '../Utils/errorUtils.js';
 import imagesModel from '../Models/ImagesModel.js';
 
 export default class UsersController {
-    static MAX_NUM_USER_IMAGES = 4
+    static MAX_NUM_USER_IMAGES = 4;
 
     static async getAllUsers(req, res) {
         const users = await userModel.getAll();
@@ -269,20 +269,41 @@ export default class UsersController {
             );
 
         const { API_HOST, API_PORT, API_VERSION } = process.env;
-    
+
         const { id } = req.params;
 
         // Check if the user has space for the images
-        const exceedsImageLimit = await UsersController.exceedsImageLimit(res, id, req.files.length);
-        if (exceedsImageLimit) return returnErrorWithNext(res, next, res.statusCode, res.responseData.body);
+        const exceedsImageLimit = await UsersController.exceedsImageLimit(
+            res,
+            id,
+            req.files.length
+        );
+        if (exceedsImageLimit)
+            return returnErrorWithNext(
+                res,
+                next,
+                res.statusCode,
+                res.responseData.body
+            );
 
         let images = [];
         for (const image of req.files) {
             const imageId = path.parse(image.filename).name;
             const imageLink = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${id}/images/${imageId}`;
             images.push(imageLink);
-            const result = await UsersController.saveImageToDB(res, id, imageId, image.path);
-            if (!result) return returnErrorWithNext(res, next, res.statusCode, res.responseData.body);
+            const result = await UsersController.saveImageToDB(
+                res,
+                id,
+                imageId,
+                image.path
+            );
+            if (!result)
+                return returnErrorWithNext(
+                    res,
+                    next,
+                    res.statusCode,
+                    res.responseData.body
+                );
         }
 
         return res.json({ msg: images });
@@ -290,11 +311,13 @@ export default class UsersController {
 
     static async exceedsImageLimit(res, userId, numImagesUploaded) {
         if (numImagesUploaded > UsersController.MAX_NUM_USER_IMAGES) {
-            res.status(400).json({ msg: StatusMessage.BAD_REQUEST })
+            res.status(400).json({ msg: StatusMessage.BAD_REQUEST });
             return true;
         }
 
-        const numImagesDB = await imagesModel.countRecordsByReference({ user_id: userId });
+        const numImagesDB = await imagesModel.countRecordsByReference({
+            user_id: userId,
+        });
         if (numImagesDB === null) {
             res.status(400).json({ msg: StatusMessage.QUERY_ERROR });
             return true;
@@ -305,8 +328,11 @@ export default class UsersController {
             return true;
         }
 
-        if (numImagesDB + numImagesUploaded > UsersController.MAX_NUM_USER_IMAGES) {
-            res.status(400).json({ msg: StatusMessage.EXCEEDS_IMAGE_LIMIT })
+        if (
+            numImagesDB + numImagesUploaded >
+            UsersController.MAX_NUM_USER_IMAGES
+        ) {
+            res.status(400).json({ msg: StatusMessage.EXCEEDS_IMAGE_LIMIT });
             return true;
         }
 
@@ -317,12 +343,12 @@ export default class UsersController {
         const input = {
             id: imageId,
             user_id: userId,
-            image_path: imagePath
-        }
+            image_path: imagePath,
+        };
 
         const result = await imagesModel.create({ input });
         if (!result || result.length === 0) {
-            res.status(500).json({ msg: StatusMessage.QUERY_ERROR })
+            res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
             return false;
         }
 
