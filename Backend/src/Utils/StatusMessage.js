@@ -57,4 +57,7 @@ export default class StatusMessage {
     static INVALID_MIME_TYPE =
         "Invalid Mime type. Only 'image/jpeg', 'image/jpg' and 'image/png' are accepted.";
     static INVALID_IMAGE_SIZE = 'Image size exceeds the 5MB limit.';
+    static EXCEEDS_IMAGE_LIMIT = 'You have exceeded the maximum allowed number of image uploads. Please reduce the number of images and try again.'
+    static EXCEEDS_IMAGE_LIMIT_DB = 'You have exceeded the maximum allowed number of image uploads. Please delete an image before uploading a new one.'
+    static IMAGE_NOT_FOUND = 'Image not found.'
 }

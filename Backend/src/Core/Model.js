@@ -161,4 +161,25 @@ export default class Model {
             return null;
         }
     }
+
+    async countRecordsByReference(reference) {
+        const fields = Object.keys(reference)
+            .map((key, index) => `${key} = $${index + 1}`)
+            .join(' AND ');
+        const values = Object.values(reference);
+
+        const query = {
+            text: `SELECT COUNT(*) AS matching_records FROM ${this.table} WHERE ${fields};`,
+            values: values,
+        };
+
+        try {
+            const result = await this.db.query(query);
+            if (result.rows.length === 0) return 0;
+            return parseInt(result.rows[0].matching_records);
+        } catch (error) {
+            console.error('Error making the query: ', error.message);
+            return null;
+        }
+    }
 }

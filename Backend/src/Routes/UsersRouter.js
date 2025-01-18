@@ -16,6 +16,19 @@ export default class UsersRouter {
         router.get('/', UsersController.getAllUsers);
         router.get('/:username', UsersController.getUserProfile);
         router.get('/:id/profile-picture', UsersController.getProfilePicture);
+        router.get('/:id/images/:imageId', UsersController.getImage);
+
+        // POST:
+        router.post(
+            '/:id/images',
+            imageUploadMiddleware(),
+            imagesValidationMiddleware(),
+            UsersController.uploadImages,
+            removeImageOnFailureMiddleware
+        );
+
+        // DELETE:
+        //router.delete('/:id/images/:imageId', UsersController.deleteImage)
 
         // PATCH:
         router.patch(

@@ -26,9 +26,9 @@ CREATE TABLE users (
 );
 
 CREATE TABLE images (
-	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+	id UUID PRIMARY KEY,
 	user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-	image VARCHAR(255) NOT NULL
+	image_path VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE tags (

@@ -10,8 +10,11 @@ import { returnErrorStatus } from '../Utils/authUtils.js';
 import getPublicUser from '../Utils/getPublicUser.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { returnErrorWithNext } from '../Utils/errorUtils.js';
+import imagesModel from '../Models/ImagesModel.js';
 
 export default class UsersController {
+    static MAX_NUM_USER_IMAGES = 4
+
     static async getAllUsers(req, res) {
         const users = await userModel.getAll();
         if (users) {
@@ -56,6 +59,29 @@ export default class UsersController {
             return res.json({ msg: publicUser });
         }
         return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+    }
+
+    static async getImage(req, res) {
+        if (!req.session.user)
+            return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
+
+        const { imageId } = req.params;
+
+        const id = imageId;
+
+        const result = await imagesModel.getById({ id });
+        if (!result)
+            return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+        if (result.length === 0)
+            return res.status(404).json({ msg: StatusMessage.IMAGE_NOT_FOUND });
+
+        const image = result.image_path;
+        const imagePath = path.join(image);
+        res.sendFile(imagePath, (err) => {
+            if (err) {
+                res.status(404).send('Image not found');
+            }
+        });
     }
 
     static async updateUser(req, res) {
@@ -231,5 +257,75 @@ export default class UsersController {
                 res.status(404).send('Image not found');
             }
         });
+    }
+
+    static async uploadImages(req, res, next) {
+        if (!req.session.user)
+            return returnErrorWithNext(
+                res,
+                next,
+                401,
+                StatusMessage.NOT_LOGGED_IN
+            );
+
+        const { API_HOST, API_PORT, API_VERSION } = process.env;
+    
+        const { id } = req.params;
+
+        // Check if the user has space for the images
+        const exceedsImageLimit = await UsersController.exceedsImageLimit(res, id, req.files.length);
+        if (exceedsImageLimit) return returnErrorWithNext(res, next, res.statusCode, res.responseData.body);
+
+        let images = [];
+        for (const image of req.files) {
+            const imageId = path.parse(image.filename).name;
+            const imageLink = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${id}/images/${imageId}`;
+            images.push(imageLink);
+            const result = await UsersController.saveImageToDB(res, id, imageId, image.path);
+            if (!result) return returnErrorWithNext(res, next, res.statusCode, res.responseData.body);
+        }
+
+        return res.json({ msg: images });
+    }
+
+    static async exceedsImageLimit(res, userId, numImagesUploaded) {
+        if (numImagesUploaded > UsersController.MAX_NUM_USER_IMAGES) {
+            res.status(400).json({ msg: StatusMessage.BAD_REQUEST })
+            return true;
+        }
+
+        const numImagesDB = await imagesModel.countRecordsByReference({ user_id: userId });
+        if (numImagesDB === null) {
+            res.status(400).json({ msg: StatusMessage.QUERY_ERROR });
+            return true;
+        }
+
+        if (numImagesDB === UsersController.MAX_NUM_USER_IMAGES) {
+            res.status(400).json({ msg: StatusMessage.EXCEEDS_IMAGE_LIMIT_DB });
+            return true;
+        }
+
+        if (numImagesDB + numImagesUploaded > UsersController.MAX_NUM_USER_IMAGES) {
+            res.status(400).json({ msg: StatusMessage.EXCEEDS_IMAGE_LIMIT })
+            return true;
+        }
+
+        return false;
+    }
+
+    static async saveImageToDB(res, userId, imageId, imagePath) {
+        const input = {
+            id: imageId,
+            user_id: userId,
+            image_path: imagePath
+        }
+
+        const result = await imagesModel.create({ input });
+        if (!result || result.length === 0) {
+            res.status(500).json({ msg: StatusMessage.QUERY_ERROR })
+            return false;
+        }
+
+        return true;
     }
 }
