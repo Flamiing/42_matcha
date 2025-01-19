@@ -11,6 +11,8 @@ import getPublicUser from '../Utils/getPublicUser.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { returnErrorWithNext } from '../Utils/errorUtils.js';
 import imagesModel from '../Models/ImagesModel.js';
+import visitHistoryModel from '../Models/VisitHistoryModel.js';
+import { getCurrentTimestamp } from '../Utils/timeUtils.js';
 
 export default class UsersController {
     static MAX_NUM_USER_IMAGES = 4;
@@ -68,6 +70,11 @@ export default class UsersController {
                 return res
                     .status(500)
                     .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+            if (user.id !== req.session.user.id) {
+                const viewResult = await UsersController.saveAsView(res, user.id, req.session.user.id)
+                if (!viewResult) return res;
+            }
+
             return res.json({ msg: publicUser });
         }
         return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
@@ -396,5 +403,41 @@ export default class UsersController {
                 .json(500)
                 .json({ msg: StatusMessage.ERROR_DELETING_IMAGE });
         }
+    }
+
+    static async saveAsView(res, visitedProfileId, visitorId) {
+        const reference = {
+            visitor_id: visitorId,
+            visited_id: visitedProfileId
+        }
+        const visit = await visitHistoryModel.getByReference(reference, true);
+        if (!visit) {
+            res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+            return false;
+        }
+
+        let input = {
+            visitor_id: visitorId,
+            visited_id: visitedProfileId,
+            time: getCurrentTimestamp()
+        }
+
+        if (visit && visit.length !== 0) {
+            const { id } = visit;
+            const updateResult = await visitHistoryModel.update({ input, id });
+            if (!updateResult || updateResult.length === 0) {
+                res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+                return false;
+            }
+            return true;
+        }
+
+        const visitUpdateResult = await visitHistoryModel.create({ input });
+        if (!visitUpdateResult || visitUpdateResult.length === 0) {
+            res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+            return false;
+        }
+
+        return true;
     }
 }
