@@ -21,6 +21,7 @@ export default class UsersRouter {
         // POST:
         router.post(
             '/:id/images',
+            checkValidUserIdMiddleware(),
             imageUploadMiddleware(),
             imagesValidationMiddleware(),
             UsersController.uploadImages,
@@ -28,7 +29,7 @@ export default class UsersRouter {
         );
 
         // DELETE:
-        //router.delete('/:id/images/:imageId', UsersController.deleteImage)
+        router.delete('/:id/images/:imageId', checkValidUserIdMiddleware(), UsersController.deleteImage);
 
         // PATCH:
         router.patch(
