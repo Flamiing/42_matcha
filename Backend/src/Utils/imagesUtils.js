@@ -1,6 +1,6 @@
 export function parseImages(userId, imagesToParse) {
     const { API_HOST, API_PORT, API_VERSION } = process.env;
-    
+
     const images = [];
     for (const imageToParse of imagesToParse) {
         const image = {

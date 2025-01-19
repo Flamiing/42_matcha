@@ -21,7 +21,10 @@ export default class UsersController {
             const publicUsers = [];
             for (const user of users) {
                 const publicUser = await getPublicUser(user);
-                if (!publicUser) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR })
+                if (!publicUser)
+                    return res
+                        .status(500)
+                        .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
                 publicUsers.push(publicUser);
             }
             return res.json({ msg: publicUsers });
@@ -39,7 +42,10 @@ export default class UsersController {
                     .status(404)
                     .json({ msg: StatusMessage.NOT_FOUND_BY_ID });
             const publicUser = getPublicUser(user);
-            if (!publicUser) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR })
+            if (!publicUser)
+                return res
+                    .status(500)
+                    .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
             return res.json({ msg: publicUser });
         }
         return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
@@ -58,7 +64,10 @@ export default class UsersController {
                     .status(404)
                     .json({ msg: StatusMessage.USER_NOT_FOUND });
             const publicUser = await getPublicUser(user);
-            if (!publicUser) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR })
+            if (!publicUser)
+                return res
+                    .status(500)
+                    .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
             return res.json({ msg: publicUser });
         }
         return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
@@ -68,7 +77,10 @@ export default class UsersController {
         const { id } = req.params;
 
         const reference = { user_id: id };
-        const imagesToParse = await imagesModel.getByReference(reference, false);
+        const imagesToParse = await imagesModel.getByReference(
+            reference,
+            false
+        );
         if (!imagesToParse)
             return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
         if (imagesToParse.length === 0)
@@ -138,7 +150,10 @@ export default class UsersController {
         if (user.length === 0)
             return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
         const publicUser = await getPublicUser(user);
-        if (!publicUser) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR })
+        if (!publicUser)
+            return res
+                .status(500)
+                .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
         return res.json({ msg: publicUser });
     }
 

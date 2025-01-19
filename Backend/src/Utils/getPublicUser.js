@@ -14,7 +14,8 @@ export default async function getPublicUser(user) {
     const imagesToParse = await imagesModel.getByReference(reference, false);
     if (!imagesToParse) return null;
 
-    const images = imagesToParse.length !== 0 ? parseImages(user.id, imagesToParse) : [];
+    const images =
+        imagesToParse.length !== 0 ? parseImages(user.id, imagesToParse) : [];
 
     const publicUser = {
         id: user.id,
@@ -32,7 +33,7 @@ export default async function getPublicUser(user) {
         gender: user.gender,
         sexual_preference: user.sexual_preference,
         tags: userTags,
-        images: images
+        images: images,
     };
 
     return publicUser;
