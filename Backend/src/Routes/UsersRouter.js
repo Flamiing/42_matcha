@@ -16,7 +16,8 @@ export default class UsersRouter {
         router.get('/', UsersController.getAllUsers);
         router.get('/:username', UsersController.getUserProfile);
         router.get('/:id/profile-picture', UsersController.getProfilePicture);
-        router.get('/:id/images/:imageId', UsersController.getImage);
+        router.get('/:id/images', UsersController.getImages);
+        router.get('/:id/images/:imageId', UsersController.getImageById);
 
         // POST:
         router.post(
