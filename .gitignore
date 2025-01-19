@@ -74,3 +74,4 @@ data
 
 # Ignore build folder for frontend
 dist/
+uploads

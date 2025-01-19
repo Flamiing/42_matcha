@@ -1,17 +1,37 @@
+// Third-Party Imports:
+import path from 'path';
+import fsExtra from 'fs-extra';
+
 // Local Imports:
 import userModel from '../Models/UserModel.js';
+import userTagsModel from '../Models/UserTagsModel.js';
+import { validatePartialUser } from '../Schemas/userSchema.js';
+import { returnErrorStatus } from '../Utils/authUtils.js';
+import getPublicUser from '../Utils/getPublicUser.js';
 import StatusMessage from '../Utils/StatusMessage.js';
+import { returnErrorWithNext } from '../Utils/errorUtils.js';
+import imagesModel from '../Models/ImagesModel.js';
+import visitHistoryModel from '../Models/VisitHistoryModel.js';
+import { getCurrentTimestamp } from '../Utils/timeUtils.js';
 
 export default class UsersController {
-    static async testController(req, res) {
-        const result = await userModel.getByReference(req.query);
-        return res.json({ result });
-    }
+    static MAX_NUM_USER_IMAGES = 4;
 
     static async getAllUsers(req, res) {
         const users = await userModel.getAll();
-        if (users) return res.json({ users: users });
-        return res.status(500).json({ error: StatusMessage.QUERY_ERROR });
+        if (users) {
+            const publicUsers = [];
+            for (const user of users) {
+                const publicUser = await getPublicUser(user);
+                if (!publicUser)
+                    return res
+                        .status(500)
+                        .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+                publicUsers.push(publicUser);
+            }
+            return res.json({ msg: publicUsers });
+        }
+        return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
     }
 
     static async getUserById(req, res) {
@@ -22,131 +42,406 @@ export default class UsersController {
             if (user.length === 0)
                 return res
                     .status(404)
-                    .json({ error: StatusMessage.NOT_FOUND_BY_ID });
-            return res.json({ user: user });
+                    .json({ msg: StatusMessage.NOT_FOUND_BY_ID });
+            const publicUser = getPublicUser(user);
+            if (!publicUser)
+                return res
+                    .status(500)
+                    .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+            return res.json({ msg: publicUser });
         }
-        return res.status(500).json({ error: StatusMessage.QUERY_ERROR });
+        return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
     }
 
-    static async createUser(req, res) {
-        const {
-            email,
-            username,
-            first_name,
-            last_name,
-            password,
-            age,
-            biography,
-            profile_picture,
-            location,
-            fame,
-            last_online,
-            is_online,
-            gender,
-            sexual_preference,
-        } = req.body;
+    static async getUserProfile(req, res) {
+        const { username } = req.params;
 
-        let input = {
-            email: email,
-            username: username,
-            first_name: first_name,
-            last_name: last_name,
-            password: password,
-            age: age,
-            biography: biography,
-            profile_picture: profile_picture,
-            location: location,
-            fame: fame,
-            last_online: last_online,
-            is_online: is_online,
-            gender: gender,
-            sexual_preference: sexual_preference,
-        };
-
-        input = Object.keys(input).reduce((acc, key) => {
-            if (input[key] !== undefined) {
-                acc[key] = input[key];
-            }
-            return acc;
-        }, {});
-
-        const user = await userModel.create({ input });
+        const user = await userModel.getByReference(
+            { username: username },
+            true
+        );
         if (user) {
             if (user.length === 0)
                 return res
                     .status(404)
-                    .json({ error: StatusMessage.NOT_FOUND_BY_ID }); // TODO: Change error msg
-            return res.json({ user: user });
+                    .json({ msg: StatusMessage.USER_NOT_FOUND });
+            const publicUser = await getPublicUser(user);
+            if (!publicUser)
+                return res
+                    .status(500)
+                    .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+
+            if (user.id !== req.session.user.id) {
+                const viewResult = await UsersController.saveAsView(
+                    res,
+                    user.id,
+                    req.session.user.id
+                );
+                if (!viewResult) return res;
+            }
+
+            return res.json({ msg: publicUser });
         }
-        return res.status(500).json({ error: StatusMessage.QUERY_ERROR });
+        return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+    }
+
+    static async getImages(req, res) {
+        const { id } = req.params;
+
+        const reference = { user_id: id };
+        const imagesToParse = await imagesModel.getByReference(
+            reference,
+            false
+        );
+        if (!imagesToParse)
+            return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+        if (imagesToParse.length === 0)
+            return res.status(404).json({ msg: StatusMessage.NO_IMAGES_FOUND });
+
+        const images = parseImages(id, imagesToParse);
+
+        return res.json({ msg: images });
+    }
+
+    static async getImageById(req, res) {
+        const { imageId } = req.params;
+
+        const id = imageId;
+
+        const result = await imagesModel.getById({ id });
+        if (!result)
+            return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+        if (result.length === 0)
+            return res.status(404).json({ msg: StatusMessage.IMAGE_NOT_FOUND });
+
+        const image = result.image_path;
+        const imagePath = path.join(image);
+        res.sendFile(imagePath, (err) => {
+            if (err) {
+                res.status(404).json({ msg: StatusMessage.IMAGE_NOT_FOUND });
+            }
+        });
+    }
+
+    static async getProfilePicture(req, res) {
+        const { id } = req.params;
+        const user = await userModel.getById({ id });
+        if (!user)
+            return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+        if (user.length === 0)
+            return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
+
+        const profilePicturePath = user.profile_picture;
+        const imagePath = path.join(profilePicturePath);
+        console.log('TEST: ', imagePath);
+        res.sendFile(imagePath, (err) => {
+            if (err) {
+                res.status(404).json({ msg: StatusMessage.IMAGE_NOT_FOUND });
+            }
+        });
     }
 
     static async updateUser(req, res) {
-        const {
-            email,
-            username,
-            first_name,
-            last_name,
-            password,
-            age,
-            biography,
-            profile_picture,
-            location,
-            fame,
-            last_online,
-            is_online,
-            gender,
-            sexual_preference,
-        } = req.body;
+        const isValidData = await UsersController.validateData(req, res);
+        if (!isValidData) return res;
 
         const { id } = req.params;
+        const { input, inputHasNoContent } = isValidData;
 
-        let input = {
-            email: email,
-            username: username,
-            first_name: first_name,
-            last_name: last_name,
-            password: password,
-            age: age,
-            biography: biography,
-            profile_picture: profile_picture,
-            location: location,
-            fame: fame,
-            last_online: last_online,
-            is_online: is_online,
-            gender: gender,
-            sexual_preference: sexual_preference,
-        };
+        const tagsUpdateResult = await UsersController.updateTags(req, res);
+        if (!tagsUpdateResult) return res;
 
-        input = Object.keys(input).reduce((acc, key) => {
-            if (input[key] !== undefined) {
-                acc[key] = input[key];
-            }
-            return acc;
-        }, {});
-
-        const user = await userModel.update({ input, id });
-        if (user) {
-            if (user.length === 0)
-                return res
-                    .status(404)
-                    .json({ error: StatusMessage.NOT_FOUND_BY_ID }); // TODO: Change error msg
-            return res.json({ user: user });
+        let user = null;
+        if (!inputHasNoContent) {
+            user = await userModel.update({ input, id });
+        } else {
+            user = await userModel.getById({ id });
         }
-        return res.status(500).json({ error: StatusMessage.QUERY_ERROR });
+        if (!user)
+            return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+        if (user.length === 0)
+            return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
+        const publicUser = await getPublicUser(user);
+        if (!publicUser)
+            return res
+                .status(500)
+                .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+        return res.json({ msg: publicUser });
     }
 
-    static async deleteUser(req, res) {
+    static async updateTags(req, res) {
+        const { id } = req.params;
+        const { tags } = req.body;
+
+        const tagsUpdateResult = await userTagsModel.updateUserTags(id, tags);
+        if (!tagsUpdateResult)
+            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+        if (tagsUpdateResult.length === 0)
+            return returnErrorStatus(res, 400, StatusMessage.INVALID_USER_TAG);
+
+        return true;
+    }
+
+    static async validateData(req, res) {
+        const validatedUser = validatePartialUser(req.body);
+        if (!validatedUser.success) {
+            const errorMessage = validatedUser.error.errors[0].message;
+            return returnErrorStatus(res, 400, errorMessage);
+        }
+
+        const { tags } = req.body;
+        const input = validatedUser.data;
+        const inputHasNoContent = Object.keys(input).length === 0;
+        if (inputHasNoContent && (!tags || tags.length === 0))
+            return returnErrorStatus(
+                res,
+                400,
+                StatusMessage.NO_PROFILE_INFO_TO_EDIT
+            );
+
+        const { email, username } = input;
+        const isUnique = await userModel.isUnique({ email, username });
+        if (!isUnique) {
+            if (email)
+                return returnErrorStatus(
+                    res,
+                    400,
+                    StatusMessage.DUPLICATE_EMAIL
+                );
+            return returnErrorStatus(
+                res,
+                400,
+                StatusMessage.DUPLICATE_USERNAME
+            );
+        }
+        return { input, inputHasNoContent };
+    }
+
+    static async changeProfilePicture(req, res, next) {
+        const { API_HOST, API_PORT, API_VERSION } = process.env;
+
+        try {
+            const { id } = req.params;
+
+            if (req.files.length !== 1)
+                return returnErrorWithNext(
+                    res,
+                    next,
+                    400,
+                    StatusMessage.BAD_REQUEST
+                );
+
+            const deleteResult =
+                await UsersController.deletePreviousProfilePicture(res, id);
+            if (!deleteResult)
+                return returnErrorWithNext(
+                    res,
+                    next,
+                    res.statusCode,
+                    res.responseData.body
+                );
+
+            const input = { profile_picture: req.files[0].path };
+            const updateResult = await userModel.update({ input, id });
+            if (!updateResult)
+                return returnErrorWithNext(
+                    res,
+                    next,
+                    500,
+                    StatusMessage.INTERNAL_SERVER_ERROR
+                );
+            if (updateResult.length === 0)
+                return returnErrorWithNext(
+                    res,
+                    next,
+                    404,
+                    StatusMessage.USER_NOT_FOUND
+                );
+            return res.json({
+                msg: `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${id}/profile-picture`,
+            });
+        } catch (error) {
+            console.error('Error uploading file: ', error);
+            return returnErrorWithNext(
+                res,
+                next,
+                400,
+                StatusMessage.ERROR_UPLOADING_IMAGE
+            );
+        }
+    }
+
+    static async deletePreviousProfilePicture(res, id) {
+        const user = await userModel.getById({ id });
+        if (!user)
+            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+        if (user.length === 0)
+            return returnErrorStatus(res, 404, StatusMessage.USER_NOT_FOUND);
+        if (!user.profile_picture) return true;
+
+        try {
+            await fsExtra.remove(user.profile_picture);
+            return true;
+        } catch (error) {
+            console.error('Error deleting file: ', error);
+            return false;
+        }
+    }
+
+    static async uploadImages(req, res, next) {
+        const { API_HOST, API_PORT, API_VERSION } = process.env;
+
         const { id } = req.params;
 
-        const user = await userModel.delete({ id });
-        if (user !== null) {
-            if (user === false)
-                return res
-                    .status(404)
-                    .json({ error: StatusMessage.NOT_FOUND_BY_ID });
-            return res.json({ user: user });
+        // Check if the user has space for the images
+        const exceedsImageLimit = await UsersController.exceedsImageLimit(
+            res,
+            id,
+            req.files.length
+        );
+        if (exceedsImageLimit)
+            return returnErrorWithNext(
+                res,
+                next,
+                res.statusCode,
+                res.responseData.body
+            );
+
+        let images = [];
+        for (const image of req.files) {
+            const imageId = path.parse(image.filename).name;
+            const imageLink = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${id}/images/${imageId}`;
+            images.push(imageLink);
+            const result = await UsersController.saveImageToDB(
+                res,
+                id,
+                imageId,
+                image.path
+            );
+            if (!result)
+                return returnErrorWithNext(
+                    res,
+                    next,
+                    res.statusCode,
+                    res.responseData.body
+                );
         }
-        return res.status(500).json({ error: StatusMessage.QUERY_ERROR });
+
+        return res.json({ msg: images });
+    }
+
+    static async exceedsImageLimit(res, userId, numImagesUploaded) {
+        if (numImagesUploaded > UsersController.MAX_NUM_USER_IMAGES) {
+            res.status(400).json({ msg: StatusMessage.BAD_REQUEST });
+            return true;
+        }
+
+        const numImagesDB = await imagesModel.countRecordsByReference({
+            user_id: userId,
+        });
+        if (numImagesDB === null) {
+            res.status(400).json({ msg: StatusMessage.QUERY_ERROR });
+            return true;
+        }
+
+        if (numImagesDB === UsersController.MAX_NUM_USER_IMAGES) {
+            res.status(400).json({ msg: StatusMessage.EXCEEDS_IMAGE_LIMIT_DB });
+            return true;
+        }
+
+        if (
+            numImagesDB + numImagesUploaded >
+            UsersController.MAX_NUM_USER_IMAGES
+        ) {
+            res.status(400).json({ msg: StatusMessage.EXCEEDS_IMAGE_LIMIT });
+            return true;
+        }
+
+        return false;
+    }
+
+    static async saveImageToDB(res, userId, imageId, imagePath) {
+        const input = {
+            id: imageId,
+            user_id: userId,
+            image_path: imagePath,
+        };
+
+        const result = await imagesModel.create({ input });
+        if (!result || result.length === 0) {
+            res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+            return false;
+        }
+
+        return true;
+    }
+
+    static async deleteImage(req, res) {
+        const { imageId } = req.params;
+
+        const id = imageId;
+
+        const image = await imagesModel.getById({ id });
+        if (!image)
+            return res
+                .json(500)
+                .json({ msg: StatusMessage.ERROR_DELETING_IMAGE });
+        if (image.length === 0)
+            return res.status(404).json({ msg: StatusMessage.IMAGE_NOT_FOUND });
+
+        const deleteResult = await imagesModel.delete({ id });
+        if (!deleteResult)
+            return res
+                .status(400)
+                .json({ msg: StatusMessage.ERROR_DELETING_IMAGE });
+
+        try {
+            await fsExtra.remove(image.image_path);
+            console.log(
+                `Image with path '${image.image_path}' has been removed successfully!`
+            );
+            return res.json({ msg: StatusMessage.IMAGE_DELETED_SUCCESSFULLY });
+        } catch (error) {
+            console.error(`Error deleting file ${image.image_path}: ${error}`);
+            return res
+                .json(500)
+                .json({ msg: StatusMessage.ERROR_DELETING_IMAGE });
+        }
+    }
+
+    static async saveAsView(res, visitedProfileId, visitorId) {
+        const reference = {
+            visitor_id: visitorId,
+            visited_id: visitedProfileId,
+        };
+        const visit = await visitHistoryModel.getByReference(reference, true);
+        if (!visit) {
+            res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+            return false;
+        }
+
+        let input = {
+            visitor_id: visitorId,
+            visited_id: visitedProfileId,
+            time: getCurrentTimestamp(),
+        };
+
+        if (visit && visit.length !== 0) {
+            const { id } = visit;
+            const updateResult = await visitHistoryModel.update({ input, id });
+            if (!updateResult || updateResult.length === 0) {
+                res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+                return false;
+            }
+            return true;
+        }
+
+        const visitUpdateResult = await visitHistoryModel.create({ input });
+        if (!visitUpdateResult || visitUpdateResult.length === 0) {
+            res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+            return false;
+        }
+
+        return true;
     }
 }
