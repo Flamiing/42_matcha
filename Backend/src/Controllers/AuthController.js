@@ -47,6 +47,7 @@ export default class AuthController {
 
         // Returns user
         const publicUser = await getPublicUser(user);
+        if (!publicUser) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR })
         return res.json({ msg: publicUser });
     }
 
@@ -67,7 +68,10 @@ export default class AuthController {
             await AuthController.#createAuthTokens(res, user);
             if (!('set-cookie' in res.getHeaders())) return res;
             const publicUser = await getPublicUser(user);
-            console.log('USER LOGGED!');
+            if (!publicUser) {
+                res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR })
+                return true;
+            }
             res.json({ msg: publicUser });
             return true;
         }
@@ -407,6 +411,7 @@ export default class AuthController {
 
             // Returns public user info:
             const publicUser = await getPublicUser(user);
+            if (!publicUser) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR })
             return res.status(201).json({ msg: publicUser });
         }
 

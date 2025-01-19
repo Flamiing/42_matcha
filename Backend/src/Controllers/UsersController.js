@@ -21,6 +21,7 @@ export default class UsersController {
             const publicUsers = [];
             for (const user of users) {
                 const publicUser = await getPublicUser(user);
+                if (!publicUser) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR })
                 publicUsers.push(publicUser);
             }
             return res.json({ msg: publicUsers });
@@ -38,6 +39,7 @@ export default class UsersController {
                     .status(404)
                     .json({ msg: StatusMessage.NOT_FOUND_BY_ID });
             const publicUser = getPublicUser(user);
+            if (!publicUser) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR })
             return res.json({ msg: publicUser });
         }
         return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
@@ -56,31 +58,23 @@ export default class UsersController {
                     .status(404)
                     .json({ msg: StatusMessage.USER_NOT_FOUND });
             const publicUser = await getPublicUser(user);
+            if (!publicUser) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR })
             return res.json({ msg: publicUser });
         }
         return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
     }
 
     static async getImages(req, res) {
-        const { API_HOST, API_PORT, API_VERSION } = process.env;
-
         const { id } = req.params;
 
         const reference = { user_id: id };
-        const userImages = await imagesModel.getByReference(reference, false);
-        if (!userImages)
+        const imagesToParse = await imagesModel.getByReference(reference, false);
+        if (!imagesToParse)
             return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
-        if (userImages.length === 0)
+        if (imagesToParse.length === 0)
             return res.status(404).json({ msg: StatusMessage.NO_IMAGES_FOUND });
 
-        const images = [];
-        for (const userImage of userImages) {
-            const image = {
-                imageId: userImage.id,
-                imageURL: `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${id}/images/${userImage.id}`,
-            };
-            images.push(image);
-        }
+        const images = parseImages(id, imagesToParse);
 
         return res.json({ msg: images });
     }
@@ -144,6 +138,7 @@ export default class UsersController {
         if (user.length === 0)
             return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
         const publicUser = await getPublicUser(user);
+        if (!publicUser) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR })
         return res.json({ msg: publicUser });
     }
 
