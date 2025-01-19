@@ -71,7 +71,11 @@ export default class UsersController {
                     .status(500)
                     .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
             if (user.id !== req.session.user.id) {
-                const viewResult = await UsersController.saveAsView(res, user.id, req.session.user.id)
+                const viewResult = await UsersController.saveAsView(
+                    res,
+                    user.id,
+                    req.session.user.id
+                );
                 if (!viewResult) return res;
             }
 
@@ -408,8 +412,8 @@ export default class UsersController {
     static async saveAsView(res, visitedProfileId, visitorId) {
         const reference = {
             visitor_id: visitorId,
-            visited_id: visitedProfileId
-        }
+            visited_id: visitedProfileId,
+        };
         const visit = await visitHistoryModel.getByReference(reference, true);
         if (!visit) {
             res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
@@ -419,8 +423,8 @@ export default class UsersController {
         let input = {
             visitor_id: visitorId,
             visited_id: visitedProfileId,
-            time: getCurrentTimestamp()
-        }
+            time: getCurrentTimestamp(),
+        };
 
         if (visit && visit.length !== 0) {
             const { id } = visit;
