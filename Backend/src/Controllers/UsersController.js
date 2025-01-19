@@ -358,13 +358,16 @@ export default class UsersController {
     static async deleteImage(req, res) {
         if (!req.session.user)
             return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
-    
+
         const { imageId } = req.params;
 
         const id = imageId;
 
         const result = await imagesModel.delete({ id });
-        if (!result) return res.status(400).json({ msg: StatusMessage.ERROR_DELETING_IMAGE });
-        return res.json({ msg: StatusMessage.IMAGE_DELETED_SUCCESSFULLY })
+        if (!result)
+            return res
+                .status(400)
+                .json({ msg: StatusMessage.ERROR_DELETING_IMAGE });
+        return res.json({ msg: StatusMessage.IMAGE_DELETED_SUCCESSFULLY });
     }
 }

@@ -62,6 +62,6 @@ export default class StatusMessage {
     static EXCEEDS_IMAGE_LIMIT_DB =
         'You have exceeded the maximum allowed number of image uploads. Please delete an image before uploading a new one.';
     static IMAGE_NOT_FOUND = 'Image not found.';
-    static ERROR_DELETING_IMAGE = 'There was an error deleting the image.'
-    static IMAGE_DELETED_SUCCESSFULLY = 'Image deleted successfully!'
+    static ERROR_DELETING_IMAGE = 'There was an error deleting the image.';
+    static IMAGE_DELETED_SUCCESSFULLY = 'Image deleted successfully!';
 }

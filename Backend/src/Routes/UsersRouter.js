@@ -29,7 +29,11 @@ export default class UsersRouter {
         );
 
         // DELETE:
-        router.delete('/:id/images/:imageId', checkValidUserIdMiddleware(), UsersController.deleteImage);
+        router.delete(
+            '/:id/images/:imageId',
+            checkValidUserIdMiddleware(),
+            UsersController.deleteImage
+        );
 
         // PATCH:
         router.patch(
