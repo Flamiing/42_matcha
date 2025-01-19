@@ -62,9 +62,6 @@ export default class UsersController {
     }
 
     static async getImages(req, res) {
-        if (!req.session.user)
-            return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
-
         const { API_HOST, API_PORT, API_VERSION } = process.env;
 
         const { id } = req.params;
@@ -89,9 +86,6 @@ export default class UsersController {
     }
 
     static async getImageById(req, res) {
-        if (!req.session.user)
-            return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
-
         const { imageId } = req.params;
 
         const id = imageId;
@@ -112,9 +106,6 @@ export default class UsersController {
     }
 
     static async getProfilePicture(req, res) {
-        if (!req.session.user)
-            return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
-
         const { id } = req.params;
         const user = await userModel.getById({ id });
         if (!user)
@@ -133,9 +124,6 @@ export default class UsersController {
     }
 
     static async updateUser(req, res) {
-        if (!req.session.user)
-            return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
-
         const isValidData = await UsersController.validateData(req, res);
         if (!isValidData) return res;
 
@@ -209,14 +197,6 @@ export default class UsersController {
     }
 
     static async changeProfilePicture(req, res, next) {
-        if (!req.session.user)
-            return returnErrorWithNext(
-                res,
-                next,
-                401,
-                StatusMessage.NOT_LOGGED_IN
-            );
-
         const { API_HOST, API_PORT, API_VERSION } = process.env;
 
         try {
@@ -288,14 +268,6 @@ export default class UsersController {
     }
 
     static async uploadImages(req, res, next) {
-        if (!req.session.user)
-            return returnErrorWithNext(
-                res,
-                next,
-                401,
-                StatusMessage.NOT_LOGGED_IN
-            );
-
         const { API_HOST, API_PORT, API_VERSION } = process.env;
 
         const { id } = req.params;
@@ -384,9 +356,6 @@ export default class UsersController {
     }
 
     static async deleteImage(req, res) {
-        if (!req.session.user)
-            return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
-
         const { imageId } = req.params;
 
         const id = imageId;

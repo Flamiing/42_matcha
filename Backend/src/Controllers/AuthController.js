@@ -150,11 +150,6 @@ export default class AuthController {
     }
 
     static async logout(req, res) {
-        // Check if user is logged in
-        const authStatus = await checkAuthStatus(req);
-        if (!authStatus.isAuthorized)
-            return res.status(400).json({ msg: StatusMessage.NOT_LOGGED_IN });
-
         return res
             .clearCookie('access_token')
             .clearCookie('refresh_token')
@@ -306,8 +301,6 @@ export default class AuthController {
 
     static async changePassword(req, res) {
         const authStatus = await checkAuthStatus(req);
-        if (!authStatus.isAuthorized)
-            return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
         if (authStatus.user.oauth)
             return res
                 .status(403)

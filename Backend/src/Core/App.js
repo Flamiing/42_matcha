@@ -2,8 +2,6 @@
 import express, { json } from 'express';
 import 'dotenv/config';
 import cookieParser from 'cookie-parser';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 // Middleware Imports:
 import { corsMiddleware } from '../Middlewares/corsMiddleware.js';
@@ -11,6 +9,7 @@ import { sessionMiddleware } from '../Middlewares/sessionMiddleware.js';
 import { refreshTokenMiddleware } from '../Middlewares/refreshTokenMiddleware.js';
 import { invalidJSONMiddleware } from '../Middlewares/invalidJSONMiddleware.js';
 import { captureResponseDataMiddleware } from '../Middlewares/captureResponseDataMiddleware.js';
+import { checkAuthStatusMiddleware } from '../Middlewares/checkAuthStatusMiddleware.js';
 
 // Router Imports:
 import AuthRouter from '../Routes/AuthRouter.js';
@@ -20,7 +19,7 @@ import TagsRouter from '../Routes/TagsRouter.js';
 export default class App {
     constructor() {
         this.app = express();
-        this.HOST = process.env.API_PORT ?? 'localhost';
+        this.HOST = process.env.API_HOST ?? 'localhost';
         this.PORT = process.env.API_PORT ?? 3001;
         this.API_VERSION = process.env.API_VERSION;
         this.API_PREFIX = `/api/v${this.API_VERSION}`;
@@ -30,7 +29,7 @@ export default class App {
             `${this.API_PREFIX}/auth/status`,
             `${this.API_PREFIX}/auth/confirm`,
             `${this.API_PREFIX}/auth/password/reset`,
-            `${this.API_PREFIX}/auth/password/change`,
+            //`${this.API_PREFIX}/auth/password/change`,
             `${this.API_PREFIX}/auth/oauth`,
             `${this.API_PREFIX}/tags`,
         ];
@@ -52,6 +51,7 @@ export default class App {
         this.app.use(corsMiddleware());
         this.app.use(cookieParser());
         this.app.use(sessionMiddleware());
+        this.app.use(checkAuthStatusMiddleware(this.IGNORED_ROUTES));
         this.app.use(refreshTokenMiddleware(this.IGNORED_ROUTES));
         this.app.use(invalidJSONMiddleware());
         this.app.use(captureResponseDataMiddleware);
