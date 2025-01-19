@@ -69,21 +69,23 @@ export default class UsersController {
 
         const { id } = req.params;
 
-        const reference = { user_id: id }
+        const reference = { user_id: id };
         const userImages = await imagesModel.getByReference(reference, false);
-        if (!userImages) return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
-        if (userImages.length === 0) return res.status(404).json({ msg: StatusMessage.NO_IMAGES_FOUND });
+        if (!userImages)
+            return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+        if (userImages.length === 0)
+            return res.status(404).json({ msg: StatusMessage.NO_IMAGES_FOUND });
 
-        const images = []
+        const images = [];
         for (const userImage of userImages) {
             const image = {
                 imageId: userImage.id,
-                imageURL: `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${id}/images/${userImage.id}`
-            }
+                imageURL: `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${id}/images/${userImage.id}`,
+            };
             images.push(image);
         }
 
-        return res.json({ msg: images })
+        return res.json({ msg: images });
     }
 
     static async getImageById(req, res) {
