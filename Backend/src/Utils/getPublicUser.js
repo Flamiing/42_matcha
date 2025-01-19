@@ -1,4 +1,21 @@
-export default function getPublicUser(user) {
+// Local Imports:
+import userTagsModel from '../Models/UserTagsModel.js';
+import imagesModel from '../Models/ImagesModel.js';
+import { parseImages } from './imagesUtils.js';
+
+export default async function getPublicUser(user) {
+    const { API_HOST, API_PORT, API_VERSION } = process.env;
+
+    const userTags = await userTagsModel.getUserTags(user.id);
+    if (!userTags) return null;
+    const profilePicture = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${user.id}/profile-picture`;
+
+    const reference = { user_id: user.id };
+    const imagesToParse = await imagesModel.getByReference(reference, false);
+    if (!imagesToParse) return null;
+
+    const images = imagesToParse.length !== 0 ? parseImages(user.id, imagesToParse) : [];
+
     const publicUser = {
         id: user.id,
         email: user.email,
@@ -7,13 +24,15 @@ export default function getPublicUser(user) {
         last_name: user.last_name,
         age: user.age,
         biography: user.biography,
-        profile_picture: user.profile_picture,
+        profile_picture: profilePicture,
         location: user.location,
         fame: user.fame,
         last_online: user.last_online,
         is_online: user.is_online,
         gender: user.gender,
         sexual_preference: user.sexual_preference,
+        tags: userTags,
+        images: images
     };
 
     return publicUser;

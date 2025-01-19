@@ -46,14 +46,18 @@ export default class AuthController {
         if (!('set-cookie' in res.getHeaders())) return res;
 
         // Returns user
-        const publicUser = getPublicUser(user);
+        const publicUser = await getPublicUser(user);
+        if (!publicUser) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR })
         return res.json({ msg: publicUser });
     }
 
     static async loginOAuth(res, validatedUser) {
-        const user = await userModel.getByReference({
-            username: validatedUser.data.username,
-        });
+        const user = await userModel.getByReference(
+            {
+                username: validatedUser.data.username,
+            },
+            true
+        );
         if (!user) {
             res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
             return true;
@@ -63,8 +67,11 @@ export default class AuthController {
         if (user.oauth) {
             await AuthController.#createAuthTokens(res, user);
             if (!('set-cookie' in res.getHeaders())) return res;
-            const publicUser = getPublicUser(user);
-            console.log('USER LOGGED!');
+            const publicUser = await getPublicUser(user);
+            if (!publicUser) {
+                res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR })
+                return true;
+            }
             res.json({ msg: publicUser });
             return true;
         }
@@ -81,7 +88,7 @@ export default class AuthController {
                 .json({ msg: StatusMessage.ALREADY_LOGGED_IN });
 
         // Validate and clean input
-        var validatedUser = validateUser(req.body);
+        let validatedUser = validateUser(req.body);
         if (!validatedUser.success) {
             const errorMessage = validatedUser.error.errors[0].message;
             return res.status(400).json({ msg: errorMessage });
@@ -147,11 +154,6 @@ export default class AuthController {
     }
 
     static async logout(req, res) {
-        // Check if user is logged in
-        const authStatus = await checkAuthStatus(req);
-        if (!authStatus.isAuthorized)
-            return res.status(400).json({ msg: StatusMessage.NOT_LOGGED_IN });
-
         return res
             .clearCookie('access_token')
             .clearCookie('refresh_token')
@@ -231,7 +233,7 @@ export default class AuthController {
         if (!email)
             return res.status(400).json({ msg: StatusMessage.BAD_REQUEST });
 
-        const user = await userModel.getByReference({ email: email });
+        const user = await userModel.getByReference({ email: email }, true);
         if (!user)
             return res
                 .status(500)
@@ -303,8 +305,6 @@ export default class AuthController {
 
     static async changePassword(req, res) {
         const authStatus = await checkAuthStatus(req);
-        if (!authStatus.isAuthorized)
-            return res.status(401).json({ msg: StatusMessage.NOT_LOGGED_IN });
         if (authStatus.user.oauth)
             return res
                 .status(403)
@@ -410,7 +410,8 @@ export default class AuthController {
             }
 
             // Returns public user info:
-            const publicUser = getPublicUser(user);
+            const publicUser = await getPublicUser(user);
+            if (!publicUser) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR })
             return res.status(201).json({ msg: publicUser });
         }
 
