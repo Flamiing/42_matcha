@@ -70,6 +70,7 @@ export default class UsersController {
                 return res
                     .status(500)
                     .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+          
             if (user.id !== req.session.user.id) {
                 const viewResult = await UsersController.saveAsView(
                     res,
@@ -213,7 +214,6 @@ export default class UsersController {
                 StatusMessage.DUPLICATE_USERNAME
             );
         }
-
         return { input, inputHasNoContent };
     }
 
