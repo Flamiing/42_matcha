@@ -68,3 +68,4 @@ backend/build/
 
 # Ignore docker volumes:
 data
+uploads
