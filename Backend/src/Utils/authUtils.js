@@ -15,7 +15,8 @@ export async function checkAuthStatus(req) {
                 return { isAuthorized: true, user: user };
         }
         return { isAuthorized: false };
-    } catch {
+    } catch (error) {
+        console.error('ERROR: ', error);
         return { isAuthorized: false };
     }
 }
@@ -86,8 +87,14 @@ export async function hashPassword(password) {
     return encryptedPassword;
 }
 
-// TODO: Replace all errors with this
 export function returnErrorStatus(res, statusCode, errorMsg) {
     res.status(statusCode).json({ msg: errorMsg });
     return false;
+}
+
+export function isIgnored(ignoredRoutes, path) {
+    return ignoredRoutes.some((pattern) => {
+        const regex = new RegExp('^' + pattern.replace(/\*/g, '[^/]+') + '$');
+        return regex.test(path);
+    });
 }
