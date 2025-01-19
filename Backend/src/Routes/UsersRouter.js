@@ -3,6 +3,10 @@ import { Router } from 'express';
 
 // Local Imports:
 import UsersController from '../Controllers/UsersController.js';
+import { checkValidUserIdMiddleware } from '../Middlewares/checkValidUserIdMiddleware.js';
+import { imageUploadMiddleware } from '../Middlewares/imageUploadMiddleware.js';
+import { imagesValidationMiddleware } from '../Middlewares/imagesValidationMiddleware.js';
+import { removeImageOnFailureMiddleware } from '../Middlewares/removeImageOnFailureMiddleware.js';
 
 export default class UsersRouter {
     static createRouter() {
@@ -10,17 +14,44 @@ export default class UsersRouter {
 
         // GET:
         router.get('/', UsersController.getAllUsers);
-        router.get('/test', UsersController.testController);
-        router.get('/:id', UsersController.getUserById);
+        router.get('/:username', UsersController.getUserProfile);
+        router.get('/:id/profile-picture', UsersController.getProfilePicture);
+        router.get('/:id/images', UsersController.getImages);
+        router.get('/:id/images/:imageId', UsersController.getImageById);
 
         // POST:
-        router.post('/', UsersController.createUser);
-
-        // PATCH:
-        router.patch('/:id', UsersController.updateUser);
+        router.post(
+            '/:id/images',
+            checkValidUserIdMiddleware(),
+            imageUploadMiddleware(),
+            imagesValidationMiddleware(),
+            UsersController.uploadImages,
+            removeImageOnFailureMiddleware
+        );
 
         // DELETE:
-        router.delete('/:id', UsersController.deleteUser);
+        router.delete(
+            '/:id/images/:imageId',
+            checkValidUserIdMiddleware(),
+            UsersController.deleteImage
+        );
+
+        // PATCH:
+        router.patch(
+            '/:id',
+            checkValidUserIdMiddleware(),
+            UsersController.updateUser
+        );
+
+        // PUT:
+        router.put(
+            '/:id/profile-picture',
+            checkValidUserIdMiddleware(),
+            imageUploadMiddleware(),
+            imagesValidationMiddleware(),
+            UsersController.changeProfilePicture,
+            removeImageOnFailureMiddleware
+        );
 
         return router;
     }
