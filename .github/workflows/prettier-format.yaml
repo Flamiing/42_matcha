@@ -37,6 +37,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "Nothing to commit."
           else
-            git commit -m "Prittier formating" || true
+            git commit -m "Prettier formating" || true
             git push origin HEAD:${{ steps.extract_branch.outputs.branch }}
           fi
