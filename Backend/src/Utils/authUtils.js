@@ -90,3 +90,12 @@ export function returnErrorStatus(res, statusCode, errorMsg) {
     res.status(statusCode).json({ msg: errorMsg });
     return false;
 }
+
+export function isIgnored(ignoredRoutes, path) {
+    return ignoredRoutes.some((pattern) => {
+        const regex = new RegExp(
+            '^' + pattern.replace(/\*/g, '[^/]+') + '$'
+        );
+        return regex.test(path);
+    });
+};
