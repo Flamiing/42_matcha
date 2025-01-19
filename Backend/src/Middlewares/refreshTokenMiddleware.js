@@ -2,7 +2,7 @@
 import jwt from 'jsonwebtoken';
 
 // Local Imports:
-import { checkAuthStatus } from '../Utils/authUtils.js';
+import { checkAuthStatus, isIgnored } from '../Utils/authUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { createAccessToken } from '../Utils/jsonWebTokenUtils.js';
 import userModel from '../Models/UserModel.js';
@@ -13,7 +13,7 @@ export const refreshTokenMiddleware =
         const authStatus = await checkAuthStatus(req);
         if (authStatus.isAuthorized) return next();
 
-        if (IGNORED_ROUTES.includes(req.path)) return next();
+        if (isIgnored(IGNORED_ROUTES, req.path)) return next();
 
         const refreshToken = req.cookies.refreshToken;
         try {
