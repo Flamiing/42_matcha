@@ -371,8 +371,12 @@ export default class UsersController {
         const id = imageId;
 
         const image = await imagesModel.getById({ id });
-        if (!image) return res.json(500).json({ msg: StatusMessage.ERROR_DELETING_IMAGE });
-        if (image.length === 0) return res.status(404).json({ msg: StatusMessage.IMAGE_NOT_FOUND });
+        if (!image)
+            return res
+                .json(500)
+                .json({ msg: StatusMessage.ERROR_DELETING_IMAGE });
+        if (image.length === 0)
+            return res.status(404).json({ msg: StatusMessage.IMAGE_NOT_FOUND });
 
         const deleteResult = await imagesModel.delete({ id });
         if (!deleteResult)
@@ -382,11 +386,15 @@ export default class UsersController {
 
         try {
             await fsExtra.remove(image.image_path);
-            console.log(`Image with path '${image.image_path}' has been removed successfully!`)
+            console.log(
+                `Image with path '${image.image_path}' has been removed successfully!`
+            );
             return res.json({ msg: StatusMessage.IMAGE_DELETED_SUCCESSFULLY });
         } catch (error) {
             console.error(`Error deleting file ${image.image_path}: ${error}`);
-            return res.json(500).json({ msg: StatusMessage.ERROR_DELETING_IMAGE });
+            return res
+                .json(500)
+                .json({ msg: StatusMessage.ERROR_DELETING_IMAGE });
         }
     }
 }
