@@ -93,9 +93,7 @@ export function returnErrorStatus(res, statusCode, errorMsg) {
 
 export function isIgnored(ignoredRoutes, path) {
     return ignoredRoutes.some((pattern) => {
-        const regex = new RegExp(
-            '^' + pattern.replace(/\*/g, '[^/]+') + '$'
-        );
+        const regex = new RegExp('^' + pattern.replace(/\*/g, '[^/]+') + '$');
         return regex.test(path);
     });
-};
+}
