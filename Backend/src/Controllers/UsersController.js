@@ -6,10 +6,9 @@ import fsExtra from 'fs-extra';
 import userModel from '../Models/UserModel.js';
 import userTagsModel from '../Models/UserTagsModel.js';
 import { validatePartialUser } from '../Schemas/userSchema.js';
-import { returnErrorStatus } from '../Utils/authUtils.js';
 import getPublicUser from '../Utils/getPublicUser.js';
 import StatusMessage from '../Utils/StatusMessage.js';
-import { returnErrorWithNext } from '../Utils/errorUtils.js';
+import { returnErrorWithNext, returnErrorStatus } from '../Utils/errorUtils.js';
 import imagesModel from '../Models/ImagesModel.js';
 import visitHistoryModel from '../Models/VisitHistoryModel.js';
 import { getCurrentTimestamp } from '../Utils/timeUtils.js';
@@ -368,10 +367,7 @@ export default class UsersController {
         };
 
         const result = await imagesModel.create({ input });
-        if (!result || result.length === 0) {
-            res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
-            return false;
-        }
+        if (!result || result.length === 0) return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR)
 
         return true;
     }
@@ -415,10 +411,7 @@ export default class UsersController {
             visited_id: visitedProfileId,
         };
         const visit = await visitHistoryModel.getByReference(reference, true);
-        if (!visit) {
-            res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
-            return false;
-        }
+        if (!visit) return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR)
 
         let input = {
             visitor_id: visitorId,
@@ -429,18 +422,12 @@ export default class UsersController {
         if (visit && visit.length !== 0) {
             const { id } = visit;
             const updateResult = await visitHistoryModel.update({ input, id });
-            if (!updateResult || updateResult.length === 0) {
-                res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
-                return false;
-            }
+            if (!updateResult || updateResult.length === 0) return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR)
             return true;
         }
 
         const visitUpdateResult = await visitHistoryModel.create({ input });
-        if (!visitUpdateResult || visitUpdateResult.length === 0) {
-            res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
-            return false;
-        }
+        if (!visitUpdateResult || visitUpdateResult.length === 0) return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR)
 
         return true;
     }
