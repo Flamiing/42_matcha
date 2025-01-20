@@ -86,11 +86,6 @@ export async function hashPassword(password) {
     return encryptedPassword;
 }
 
-export function returnErrorStatus(res, statusCode, errorMsg) {
-    res.status(statusCode).json({ msg: errorMsg });
-    return false;
-}
-
 export function isIgnored(ignoredRoutes, path) {
     return ignoredRoutes.some((pattern) => {
         const regex = new RegExp('^' + pattern.replace(/\*/g, '[^/]+') + '$');
