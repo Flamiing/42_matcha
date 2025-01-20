@@ -9,7 +9,10 @@ export default class LikesController {
         const { userId } = req.params;
         const likeEmitterId = req.session.user.id;
 
-        if (userId === likeEmitterId) return res.status(400).json({ msg: StatusMessage.CANNOT_LIKE_YOURSELF });
+        if (userId === likeEmitterId)
+            return res
+                .status(400)
+                .json({ msg: StatusMessage.CANNOT_LIKE_YOURSELF });
 
         const validIds = await LikesController.validateId(res, userId);
         if (!validIds) return res;
@@ -18,8 +21,10 @@ export default class LikesController {
     static async validateId(res, id) {
         let id = userId;
         const userIdCheck = await userModel.getById({ id });
-        if (!userIdCheck) return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
-        if (userIdCheck.length === 0) returnErrorStatus(res, 404, StatusMessage.USER_NOT_FOUND)
+        if (!userIdCheck)
+            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+        if (userIdCheck.length === 0)
+            returnErrorStatus(res, 404, StatusMessage.USER_NOT_FOUND);
         return true;
     }
 }

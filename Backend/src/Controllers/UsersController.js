@@ -367,7 +367,8 @@ export default class UsersController {
         };
 
         const result = await imagesModel.create({ input });
-        if (!result || result.length === 0) return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR)
+        if (!result || result.length === 0)
+            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
 
         return true;
     }
@@ -411,7 +412,12 @@ export default class UsersController {
             visited_id: visitedProfileId,
         };
         const visit = await visitHistoryModel.getByReference(reference, true);
-        if (!visit) return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR)
+        if (!visit)
+            return returnErrorStatus(
+                res,
+                500,
+                StatusMessage.INTERNAL_SERVER_ERROR
+            );
 
         let input = {
             visitor_id: visitorId,
@@ -422,12 +428,14 @@ export default class UsersController {
         if (visit && visit.length !== 0) {
             const { id } = visit;
             const updateResult = await visitHistoryModel.update({ input, id });
-            if (!updateResult || updateResult.length === 0) return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR)
+            if (!updateResult || updateResult.length === 0)
+                return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
             return true;
         }
 
         const visitUpdateResult = await visitHistoryModel.create({ input });
-        if (!visitUpdateResult || visitUpdateResult.length === 0) return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR)
+        if (!visitUpdateResult || visitUpdateResult.length === 0)
+            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
 
         return true;
     }
