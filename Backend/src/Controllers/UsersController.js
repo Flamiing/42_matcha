@@ -72,7 +72,7 @@ export default class UsersController {
                     .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
 
             if (user.id !== req.session.user.id) {
-                const viewResult = await UsersController.saveAsView(
+                const viewResult = await UsersController.saveView(
                     res,
                     user.id,
                     req.session.user.id
@@ -409,7 +409,7 @@ export default class UsersController {
         }
     }
 
-    static async saveAsView(res, visitedProfileId, visitorId) {
+    static async saveView(res, visitedProfileId, visitorId) {
         const reference = {
             visitor_id: visitorId,
             visited_id: visitedProfileId,
