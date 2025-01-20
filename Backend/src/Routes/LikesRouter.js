@@ -10,7 +10,7 @@ export default class LikesRouter {
 
         // POST:
         router.post('/:userId', LikesController.saveLike);
-        
+
         // DELETE:
         router.delete('/:userId', LikesController.removeLike);
 
