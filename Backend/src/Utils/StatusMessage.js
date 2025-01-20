@@ -64,4 +64,5 @@ export default class StatusMessage {
     static IMAGE_NOT_FOUND = 'Image not found.';
     static ERROR_DELETING_IMAGE = 'There was an error deleting the image.';
     static IMAGE_DELETED_SUCCESSFULLY = 'Image deleted successfully!';
+    static CANNOT_LIKE_YOURSELF = 'You cannot like yourself!';
 }
