@@ -8,11 +8,8 @@ export default class LikesRouter {
     static createRouter() {
         const router = Router();
 
-        // POST:
-        router.post('/:userId', LikesController.saveLike);
-
-        // DELETE:
-        router.delete('/:userId', LikesController.removeLike);
+        // PUT:
+        router.put('/:likedId', LikesController.handleLike);
 
         return router;
     }

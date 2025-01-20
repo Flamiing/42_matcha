@@ -65,4 +65,6 @@ export default class StatusMessage {
     static ERROR_DELETING_IMAGE = 'There was an error deleting the image.';
     static IMAGE_DELETED_SUCCESSFULLY = 'Image deleted successfully!';
     static CANNOT_LIKE_YOURSELF = 'You cannot like yourself!';
+    static USER_LIKED = 'User liked!'
+    static USER_LIKED_REMOVED = 'User like removed.'
 }
