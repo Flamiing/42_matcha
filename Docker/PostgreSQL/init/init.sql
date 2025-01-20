@@ -46,9 +46,9 @@ CREATE TABLE user_tags (
 CREATE TABLE likes (
 	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
 	liked_by UUID REFERENCES users(id) ON DELETE CASCADE,
-	liked_to UUID REFERENCES users(id) ON DELETE CASCADE,
+	liked UUID REFERENCES users(id) ON DELETE CASCADE,
 	time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	UNIQUE(liked_by, liked_to)
+	UNIQUE(liked_by, liked)
 );
 
 CREATE TABLE visit_history (
