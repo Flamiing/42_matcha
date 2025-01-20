@@ -4,6 +4,7 @@ import axios from 'axios';
 
 // Local Imports:
 import userModel from '../Models/UserModel.js';
+import { returnErrorStatus } from '../Utils/errorUtils.js';
 import { validatePartialUser, validateUser } from '../Schemas/userSchema.js';
 import {
     validatePasswords,
