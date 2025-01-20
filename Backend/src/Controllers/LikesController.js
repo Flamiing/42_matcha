@@ -37,12 +37,13 @@ export default class LikesController {
             liked: likedId,
         };
         const saveLikeResult = await likesModel.create({ input });
-        if (!saveLikeResult || saveLikeResult.length === 0)
-            return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
-        return res.json({ msg: StatusMessage.USER_LIKED });
+        if (!saveLikeResult) return res.status(500).json({ msg: StatusMessage.QUERY_ERROR })
+        return res.json({ msg: StatusMessage.USER_LIKED })
     }
 
     static async validateId(res, id) {
+        if (!LikesController.isValidUUID(id)) return returnErrorStatus(res, 404, StatusMessage.USER_NOT_FOUND)
+
         const likedIdCheck = await userModel.getById({ id });
         if (!likedIdCheck)
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
@@ -61,5 +62,10 @@ export default class LikesController {
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
         if (likedCheck.length === 0) return false;
         return likedCheck;
+    }
+
+    static isValidUUID(uuid) {
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        return uuidRegex.test(uuid);
     }
 }
