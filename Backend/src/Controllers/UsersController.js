@@ -4,6 +4,7 @@ import fsExtra from 'fs-extra';
 
 // Local Imports:
 import userModel from '../Models/UserModel.js';
+import likesModel from '../Models/LikesModel.js';
 import userTagsModel from '../Models/UserTagsModel.js';
 import { validatePartialUser } from '../Schemas/userSchema.js';
 import getPublicUser from '../Utils/getPublicUser.js';
@@ -31,6 +32,33 @@ export default class UsersController {
             return res.json({ msg: publicUsers });
         }
         return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+    }
+
+    static async getMe(req, res) {
+        const { id } = req.session.user;
+
+        const user = await userModel.getById({ id });
+        if (!user) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+        if (user.length === 0) return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
+
+        const me = await getPublicUser(user);
+        if (!me) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+
+        // TODO: Make a method to get likes
+        const likes = await UsersController.getUserLikes(res, me.id);
+        if (!likes) return res;
+        me.likes = likes;
+
+        // TODO: Make a method to get views
+        const reference = {
+            visited_id: id
+        };
+        const views = await visitHistoryModel.getByReference(reference, false) // TODO: With a join get the username of the visitor and the time
+        if (!views) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+
+        console.log('LIKES TEST: ', likes);
+        console.log('VIEWS TEST: ', views);
+        return res.json({ msg: me })
     }
 
     static async getUserById(req, res) {
@@ -438,5 +466,16 @@ export default class UsersController {
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
 
         return true;
+    }
+
+    static async getUserLikes(res, likedUserId) {
+        const likes = await likesModel.getUserLikes(likedUserId);
+        if (!likes) return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR)
+        
+        return likes;
+    }
+
+    static async getUserViews(res) {
+
     }
 }
