@@ -5,6 +5,32 @@ class VisitHistoryModel extends Model {
     constructor() {
         super('visit_history');
     }
+
+    async getUserViewsHistory(visitedUserId) {
+        const query = {
+            text: `SELECT 
+                u.username, 
+                v.time
+            FROM 
+                visit_history v
+            JOIN 
+                users u
+            ON 
+                v.visitor_id = u.id
+            WHERE 
+                v.visited_id = $1;`,
+            values: [visitedUserId],
+        };
+
+        try {
+            const result = await this.db.query(query);
+            if (result.rows.length === 0) return [];
+            return result.rows;
+        } catch (error) {
+            console.error('Error making the query: ', error.message);
+            return null;
+        }
+    }
 }
 
 const visitHistoryModel = new VisitHistoryModel();

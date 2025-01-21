@@ -51,20 +51,14 @@ export default class UsersController {
                 .status(500)
                 .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
 
-        // TODO: Make a method to get likes
         const likes = await UsersController.getUserLikes(res, me.id);
         if (!likes) return res;
         me.likes = likes;
 
         // TODO: Make a method to get views
-        const reference = {
-            visited_id: id,
-        };
-        const views = await visitHistoryModel.getByReference(reference, false); // TODO: With a join get the username of the visitor and the time
-        if (!views)
-            return res
-                .status(500)
-                .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+        const views = await UsersController.getUserViewsHistory(res, me.id);
+        if (!views) return res;
+        me.views = views;
 
         console.log('LIKES TEST: ', likes);
         console.log('VIEWS TEST: ', views);
@@ -490,5 +484,15 @@ export default class UsersController {
         return likes;
     }
 
-    static async getUserViews(res) {}
+    static async getUserViewsHistory(res, viewedUserId) {
+        const views = await visitHistoryModel.getUserViewsHistory(viewedUserId);
+        if (!views)
+            return returnErrorStatus(
+                res,
+                500,
+                StatusMessage.INTERNAL_SERVER_ERROR
+            );
+
+        return views;
+    }
 }
