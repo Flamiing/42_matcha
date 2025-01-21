@@ -6,7 +6,7 @@ class VisitHistoryModel extends Model {
         super('visit_history');
     }
 
-    async getUserViewsHistory(visitedUserId) {
+    async getUserViewsHistory(viewedUserId) {
         const query = {
             text: `SELECT 
                 u.username, 
@@ -19,7 +19,7 @@ class VisitHistoryModel extends Model {
                 v.visitor_id = u.id
             WHERE 
                 v.visited_id = $1;`,
-            values: [visitedUserId],
+            values: [viewedUserId],
         };
 
         try {
