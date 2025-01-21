@@ -38,11 +38,18 @@ export default class UsersController {
         const { id } = req.session.user;
 
         const user = await userModel.getById({ id });
-        if (!user) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
-        if (user.length === 0) return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
+        if (!user)
+            return res
+                .status(500)
+                .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+        if (user.length === 0)
+            return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
 
         const me = await getPublicUser(user);
-        if (!me) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+        if (!me)
+            return res
+                .status(500)
+                .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
 
         // TODO: Make a method to get likes
         const likes = await UsersController.getUserLikes(res, me.id);
@@ -51,14 +58,17 @@ export default class UsersController {
 
         // TODO: Make a method to get views
         const reference = {
-            visited_id: id
+            visited_id: id,
         };
-        const views = await visitHistoryModel.getByReference(reference, false) // TODO: With a join get the username of the visitor and the time
-        if (!views) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+        const views = await visitHistoryModel.getByReference(reference, false); // TODO: With a join get the username of the visitor and the time
+        if (!views)
+            return res
+                .status(500)
+                .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
 
         console.log('LIKES TEST: ', likes);
         console.log('VIEWS TEST: ', views);
-        return res.json({ msg: me })
+        return res.json({ msg: me });
     }
 
     static async getUserById(req, res) {
@@ -470,12 +480,15 @@ export default class UsersController {
 
     static async getUserLikes(res, likedUserId) {
         const likes = await likesModel.getUserLikes(likedUserId);
-        if (!likes) return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR)
-        
+        if (!likes)
+            return returnErrorStatus(
+                res,
+                500,
+                StatusMessage.INTERNAL_SERVER_ERROR
+            );
+
         return likes;
     }
 
-    static async getUserViews(res) {
-
-    }
+    static async getUserViews(res) {}
 }
