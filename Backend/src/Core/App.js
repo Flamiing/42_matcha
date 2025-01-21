@@ -15,6 +15,7 @@ import { checkAuthStatusMiddleware } from '../Middlewares/checkAuthStatusMiddlew
 import AuthRouter from '../Routes/AuthRouter.js';
 import UsersRouter from '../Routes/UsersRouter.js';
 import TagsRouter from '../Routes/TagsRouter.js';
+import LikesRouter from '../Routes/LikesRouter.js';
 
 export default class App {
     constructor() {
@@ -61,5 +62,6 @@ export default class App {
         this.app.use(`${this.API_PREFIX}/auth`, AuthRouter.createRouter());
         this.app.use(`${this.API_PREFIX}/users`, UsersRouter.createRouter());
         this.app.use(`${this.API_PREFIX}/tags`, TagsRouter.createRouter());
+        this.app.use(`${this.API_PREFIX}/likes`, LikesRouter.createRouter());
     }
 }

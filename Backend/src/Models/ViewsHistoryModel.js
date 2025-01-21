@@ -1,9 +1,9 @@
 // Local Imports:
 import Model from '../Core/Model.js';
 
-class VisitHistoryModel extends Model {
+class ViewsHistoryModel extends Model {
     constructor() {
-        super('visit_history');
+        super('views_history');
     }
 
     async getUserViewsHistory(viewedUserId) {
@@ -12,13 +12,13 @@ class VisitHistoryModel extends Model {
                 u.username, 
                 v.time
             FROM 
-                visit_history v
+                views_history v
             JOIN 
                 users u
             ON 
-                v.visitor_id = u.id
+                v.viewed_by = u.id
             WHERE 
-                v.visited_id = $1;`,
+                v.viewed = $1;`,
             values: [viewedUserId],
         };
 
@@ -33,5 +33,5 @@ class VisitHistoryModel extends Model {
     }
 }
 
-const visitHistoryModel = new VisitHistoryModel();
-export default visitHistoryModel;
+const viewsHistoryModel = new ViewsHistoryModel();
+export default viewsHistoryModel;

@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 import userModel from '../Models/UserModel.js';
 import { validatePartialUser } from '../Schemas/userSchema.js';
 import StatusMessage from '../Utils/StatusMessage.js';
-import { returnErrorStatus } from '../Utils/authUtils.js';
+import { returnErrorStatus } from '../Utils/errorUtils.js';
 
 export async function passwordValidations(data) {
     const { res, token, id, newPassword, oldPassword } = data;

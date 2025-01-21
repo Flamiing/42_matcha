@@ -15,6 +15,7 @@ const disallowedUsernames = [
     'moderator',
     'superuser',
     'backup',
+    'me',
 ];
 
 const userSchema = z.object({
