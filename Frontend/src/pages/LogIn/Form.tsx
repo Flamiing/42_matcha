@@ -35,6 +35,10 @@ const LoginForm: React.FC = () => {
 				username: "",
 				password: "",
 			});
+			// Add a small delay before navigation to allow context to update
+			setTimeout(() => {
+				navigate("/profile");
+			}, 1000);
 		}
 		setMsg({
 			type: success ? "success" : "error",

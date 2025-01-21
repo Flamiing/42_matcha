@@ -4,7 +4,7 @@ import { useBreakpoints } from "../../../hooks/useBreakpoints";
 import { useAuth } from "../../../context/AuthContext";
 
 const Header: React.FC = () => {
-	const { isAuthenticated, logout } = useAuth();
+	const { isAuthenticated, user, logout } = useAuth();
 	const navigate = useNavigate();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const { isMobile, isTablet, isDesktop } = useBreakpoints();
@@ -25,9 +25,43 @@ const Header: React.FC = () => {
 	const handleLogout = async () => {
 		const response = await logout();
 		if (response.success) {
+			setIsMenuOpen(false);
 			navigate("/");
 		}
 	};
+
+	// User menu component for desktop
+	const UserMenu = () => (
+		<div className="flex items-center gap-4">
+			<div className="flex items-center gap-2">
+				<span className="text-primary font-medium">
+					{user?.username}
+				</span>
+			</div>
+			<button
+				onClick={handleLogout}
+				className="bg-primary text-white btn whitespace-nowrap text-sm px-6 py-2 rounded-full hover:bg-primary-monochromatic transition-colors duration-300"
+			>
+				Logout
+			</button>
+		</div>
+	);
+
+	// Auth buttons component for desktop
+	const AuthButtons = () => (
+		<div className="flex items-center gap-3">
+			<Link to="/login">
+				<button className="text-primary border border-primary btn whitespace-nowrap text-sm px-6 py-2 rounded-full hover:bg-primary hover:text-white transition-colors duration-300">
+					Login
+				</button>
+			</Link>
+			<Link to="/register">
+				<button className="bg-primary text-white btn whitespace-nowrap text-sm px-6 py-2 rounded-full hover:bg-primary-monochromatic transition-colors duration-300">
+					Register
+				</button>
+			</Link>
+		</div>
+	);
 
 	return (
 		<header
@@ -35,8 +69,8 @@ const Header: React.FC = () => {
 				isMenuOpen ? "bg-primary" : "bg-white"
 			}`}
 		>
-			<div className="container mx-auto lx:p-7 py-5 px-2">
-				<div className="flex justify-between items-center flex-wrap">
+			<div className="container mx-auto lx:p-7 py-5 px-4">
+				<div className="flex justify-between items-center">
 					<h1
 						className={`text-3xl font-bold ${
 							isMenuOpen ? "text-white" : "text-primary"
@@ -46,53 +80,41 @@ const Header: React.FC = () => {
 							Matcha
 						</Link>
 					</h1>
+
 					{isDesktop && (
 						<>
-							<nav className="flex text-black justify-evenly flex-1">
-								<Link to="/">
-									<button className="text-font-main font-medium btn whitespace-nowrap text-base px-8 py-3 rounded-full hover:ease-in-out duration-300 hover:bg-secondary-light">
-										Home
-									</button>
-								</Link>
-								<Link to="/browse">
-									<button className="text-font-main font-medium btn whitespace-nowrap text-base px-8 py-3 rounded-full hover:ease-in-out duration-300 hover:bg-secondary-light">
-										Browse
-									</button>
-								</Link>
-								<Link to="/profile">
-									<button className="text-font-main font-medium btn whitespace-nowrap text-base px-8 py-3 rounded-full hover:ease-in-out duration-300 hover:bg-secondary-light">
-										Profile
-									</button>
-								</Link>
-							</nav>
-							{!isAuthenticated && (
-								<div className="flex items-center gap-1 text-sm">
-									<Link to="/login">
-										<button className="text-font-main btn whitespace-nowrap text-sm px-6 py-2 rounded-full hover:ease-in-out duration-300 hover:bg-secondary-light">
-											Login
+							<nav className="flex justify-center flex-1">
+								<div className="flex gap-4">
+									<Link to="/">
+										<button className="text-font-main font-medium btn whitespace-nowrap text-base px-6 py-2 rounded-full hover:bg-secondary-light transition-colors duration-300">
+											Home
 										</button>
 									</Link>
-									<Link to="/register">
-										<button className="text-font-main btn whitespace-nowrap text-sm px-6 py-2 rounded-full hover:ease-in-out duration-300 hover:bg-secondary-light">
-											Register
+									<Link to="/browse">
+										<button className="text-font-main font-medium btn whitespace-nowrap text-base px-6 py-2 rounded-full hover:bg-secondary-light transition-colors duration-300">
+											Browse
+										</button>
+									</Link>
+									<Link to="/profile">
+										<button className="text-font-main font-medium btn whitespace-nowrap text-base px-6 py-2 rounded-full hover:bg-secondary-light transition-colors duration-300">
+											Profile
 										</button>
 									</Link>
 								</div>
-							)}
-							{isAuthenticated && (
-									<button
-										onClick={handleLogout}
-										className="text-font-main btn whitespace-nowrap text-sm px-6 py-2 rounded-full hover:ease-in-out duration-300 hover:bg-primary-monochromatic hover:text-white"
-									>
-										Logout
-									</button>
+							</nav>
+							{isAuthenticated && user ? (
+								<UserMenu />
+							) : (
+								<AuthButtons />
 							)}
 						</>
 					)}
+
+					{/* Mobile menu button */}
 					{(isMobile || isTablet) && (
 						<button
 							onClick={toggleMenu}
-							className="flex rounded-full px-2 py-3 bg-white w-10 h-10 justify-between items-center flex-col"
+							className="flex rounded-full p-2 bg-white w-10 h-10 justify-center items-center"
 							aria-label={isMenuOpen ? "Close menu" : "Open menu"}
 						>
 							<div className="flex flex-col items-center justify-center w-5 h-5">
@@ -118,18 +140,27 @@ const Header: React.FC = () => {
 							</div>
 						</button>
 					)}
+
+					{/* Mobile menu */}
 					{(isMobile || isTablet) && (
 						<div
-							className={`fixed inset-0 bg-primary transform transition-transform duration-300 ease-in-out px-3 ${
+							className={`fixed inset-0 bg-primary transform transition-transform duration-300 ease-in-out ${
 								isMenuOpen
 									? "translate-x-0"
 									: "translate-x-full"
 							} z-40 mt-20`}
 						>
-							<nav className="container flex flex-col text-white m-auto w-full">
-								<div className="flex items-center justify-center flex-col gap-5 mb-10">
+							<nav className="container flex flex-col text-white p-6">
+								<div className="flex flex-col gap-4 mb-8">
+									{isAuthenticated && user && (
+										<div className="flex items-center gap-2 mb-4 pb-4 border-b border-white/20">
+											<span className="text-white font-medium">
+												{user.username}
+											</span>
+										</div>
+									)}
 									<Link to="/" onClick={handleLinkClick}>
-										<button className="whitespace-nowrap text-base px-8 py-3 rounded-full hover:ease-in-out duration-300 hover:bg-primary-monochromatic">
+										<button className="w-full text-left px-4 py-3 rounded-lg hover:bg-primary-monochromatic transition-colors duration-300">
 											Home
 										</button>
 									</Link>
@@ -137,7 +168,7 @@ const Header: React.FC = () => {
 										to="/browse"
 										onClick={handleLinkClick}
 									>
-										<button className="whitespace-nowrap text-base px-8 py-3 rounded-full hover:ease-in-out duration-300 hover:bg-primary-monochromatic">
+										<button className="w-full text-left px-4 py-3 rounded-lg hover:bg-primary-monochromatic transition-colors duration-300">
 											Browse
 										</button>
 									</Link>
@@ -145,41 +176,41 @@ const Header: React.FC = () => {
 										to="/profile"
 										onClick={handleLinkClick}
 									>
-										<button className="whitespace-nowrap text-base px-8 py-3 rounded-full hover:ease-in-out duration-300 hover:bg-primary-monochromatic">
+										<button className="w-full text-left px-4 py-3 rounded-lg hover:bg-primary-monochromatic transition-colors duration-300">
 											Profile
 										</button>
 									</Link>
 								</div>
-								{(!isAuthenticated && (
-									<div className="border-t border-white mt-4 pt-4 px-6 flex items-center justify-start">
-										<Link
-											to="/login"
-											onClick={handleLinkClick}
+
+								<div className="mt-auto border-t border-white/20 pt-4">
+									{isAuthenticated ? (
+										<button
+											onClick={handleLogout}
+											className="w-full text-left px-4 py-3 rounded-lg hover:bg-primary-monochromatic transition-colors duration-300"
 										>
-											<button className="rounded-full px-3 py-2 text-white hover:ease-in-out duration-300 hover:bg-primary-monochromatic">
-												Login
-											</button>
-										</Link>
-										<Link
-											to="/register"
-											onClick={handleLinkClick}
-										>
-											<button className="rounded-full px-3 py-2 text-white hover:ease-in-out duration-300 hover:bg-primary-monochromatic">
-												Register
-											</button>
-										</Link>
-									</div>
-								)) ||
-									(isAuthenticated && (
-										<div className="border-t border-white mt-4 pt-4 px-6 flex items-center justify-start">
-											<button
-												onClick={handleLogout}
-												className="rounded-full px-3 py-2 text-white hover:ease-in-out duration-300 hover:bg-primary-monochromatic"
+											Logout
+										</button>
+									) : (
+										<div className="flex flex-col gap-2">
+											<Link
+												to="/login"
+												onClick={handleLinkClick}
 											>
-												Logout
-											</button>
+												<button className="w-full text-left px-4 py-3 rounded-lg hover:bg-primary-monochromatic transition-colors duration-300">
+													Login
+												</button>
+											</Link>
+											<Link
+												to="/register"
+												onClick={handleLinkClick}
+											>
+												<button className="w-full text-left px-4 py-3 rounded-lg hover:bg-primary-monochromatic transition-colors duration-300">
+													Register
+												</button>
+											</Link>
 										</div>
-									))}
+									)}
+								</div>
 							</nav>
 						</div>
 					)}

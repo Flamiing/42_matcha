@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import {
 	authApi,
-	User,
+	BasicUser,
 	LoginData,
 	RegisterData,
 	AuthResponse,
@@ -9,10 +9,12 @@ import {
 
 interface AuthContextType {
 	isAuthenticated: boolean;
-	user: User | null;
+	user: BasicUser | null;
+	loading: boolean;
 	register: (data: RegisterData) => Promise<AuthResponse>;
 	login: (data: LoginData) => Promise<AuthResponse>;
 	logout: () => Promise<AuthResponse>;
+	oauth: (code: string) => Promise<AuthResponse>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -36,56 +38,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
 	const [loading, setLoading] = useState<boolean>(true);
 	const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-	// Store user data in memory
-	const [user, setUser] = useState<User | null>(null);
+	const [user, setUser] = useState<BasicUser | null>(null);
 
-	// Check if user is authenticated
+	const checkAuthStatus = async () => {
+		try {
+			const { success, user: userData } = await authApi.checkAuth();
+			setIsAuthenticated(success);
+			setUser(userData);
+		} catch {
+			setIsAuthenticated(false);
+			setUser(null);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	useEffect(() => {
-		const checkAuthStatus = async () => {
-			try {
-				// ! -> Temporary while backend is not implemented
-				// TODO: updated this to fit backend
-				/* const userData = await authApi.getCurrentUser();
-				setUser(userData); */
-				const resp = await authApi.checkAuth();
-				setIsAuthenticated(resp);
-				if (resp) {
-					// Temporary mock user data
-					setUser({
-						id: "1",
-						email: "test@test.com",
-						username: "magnitopic",
-						first_name: "alex",
-						last_name: "magnito",
-						age: 20,
-						biography: "Cool guy who likes to code 😎",
-						profile_picture: null,
-						location: null,
-						fame: 150,
-						last_online: Date.now(),
-						is_online: true,
-						gender: "male",
-						sexual_preference: "female",
-					});
-				} else {
-					setUser(null);
-				}
-			} catch {
-				setUser(null);
-				setIsAuthenticated(false);
-			} finally {
-				setLoading(false);
-			}
-		};
-
 		checkAuthStatus();
 	}, []);
 
 	const register = async (data: RegisterData): Promise<AuthResponse> => {
 		const response = await authApi.register(data);
-		if (response.success && response.user) {
-			setUser(response.user);
-			setIsAuthenticated(true);
+		if (response.success) {
+			await checkAuthStatus();
 		}
 		return response;
 	};
@@ -126,6 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				register,
 				login,
 				logout,
+				oauth,
 			}}
 		>
 			{children}

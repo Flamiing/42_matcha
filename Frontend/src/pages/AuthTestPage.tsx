@@ -49,46 +49,6 @@ const AuthTestPage = () => {
 											{user.username}
 										</p>
 									</div>
-									<div>
-										<p className="text-sm text-gray-500">
-											Email
-										</p>
-										<p className="font-medium">
-											{user.email}
-										</p>
-									</div>
-									<div>
-										<p className="text-sm text-gray-500">
-											Name
-										</p>
-										<p className="font-medium">{`${user.first_name} ${user.last_name}`}</p>
-									</div>
-									<div>
-										<p className="text-sm text-gray-500">
-											Fame
-										</p>
-										<p className="font-medium">
-											{user.fame}
-										</p>
-									</div>
-									<div>
-										<p className="text-sm text-gray-500">
-											Status
-										</p>
-										<p className="font-medium">
-											{user.is_online
-												? "Online"
-												: "Offline"}
-										</p>
-									</div>
-									<div>
-										<p className="text-sm text-gray-500">
-											Biography
-										</p>
-										<p className="font-medium">
-											{user.biography || "No biography"}
-										</p>
-									</div>
 								</div>
 							</div>
 						)}

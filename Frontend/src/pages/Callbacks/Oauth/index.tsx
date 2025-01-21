@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
-import authApi from "../../../services/api/auth";
 import RegularButton from "../../../components/common/RegularButton";
 
 const Index: React.FC = () => {
-	const { isAuthenticated, loading } = useAuth();
+	const { oauth } = useAuth();
+	const navigate = useNavigate();
 	const [pageMsg, setPageMsg] = useState<string>(
 		"Authenticating you... hold on..."
 	);
@@ -14,39 +15,53 @@ const Index: React.FC = () => {
 		const authenticate = async () => {
 			const urlParams = new URLSearchParams(window.location.search);
 			const code = urlParams.get("code");
-			if (code) {
-				const { success, message } = await authApi.oauth(code);
-				if (success) {
-					setPageMsg("You are now authenticated. Redirecting...");
+
+			if (!code) {
+				setPageMsg(
+					"No authorization code found. Please try to login again."
+				);
+				setError("text-red-400");
+				return;
+			}
+
+			try {
+				const response = await oauth(code);
+				if (response.success) {
+					setPageMsg("Authentication successful! Redirecting...");
 					setTimeout(() => {
-						window.location.href = "/profile";
+						navigate("/profile");
 					}, 1000);
 				} else {
-					setPageMsg(message);
+					setPageMsg(
+						response.message ||
+							"Authentication failed. Please try again."
+					);
 					setError("text-red-400");
 				}
-			} else {
-				setPageMsg("No code provided. Try to login again.");
+			} catch (err) {
+				setPageMsg(
+					"An error occurred during authentication. Please try again."
+				);
 				setError("text-red-400");
 			}
 		};
 
 		authenticate();
-	}, []);
+	}, [oauth, navigate]);
 
 	return (
-		<main className="m-auto">
-			<h1 className={`text-xl font-bold ${error}`}>{pageMsg}</h1>
-			{error !== "" && (
-				<div className="mx-auto w-fit mt-7">
-					<RegularButton
-						callback={() => {
-							window.location.href = "/login";
-						}}
-						value="Back to login from"
-					/>
-				</div>
-			)}
+		<main className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-background-main from-60% to-white to-60%">
+			<div className="text-center">
+				<h1 className={`text-xl font-bold ${error}`}>{pageMsg}</h1>
+				{error && (
+					<div className="mx-auto mt-7">
+						<RegularButton
+							callback={() => navigate("/login")}
+							value="Back to login form"
+						/>
+					</div>
+				)}
+			</div>
 		</main>
 	);
 };
