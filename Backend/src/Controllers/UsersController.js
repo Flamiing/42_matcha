@@ -11,7 +11,7 @@ import getPublicUser from '../Utils/getPublicUser.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { returnErrorWithNext, returnErrorStatus } from '../Utils/errorUtils.js';
 import imagesModel from '../Models/ImagesModel.js';
-import visitHistoryModel from '../Models/VisitHistoryModel.js';
+import viewsHistoryModel from '../Models/ViewsHistoryModel.js';
 import { getCurrentTimestamp } from '../Utils/timeUtils.js';
 
 export default class UsersController {
@@ -438,13 +438,13 @@ export default class UsersController {
         }
     }
 
-    static async saveView(res, visitedProfileId, visitorId) {
+    static async saveView(res, viewedId, viewedById) {
         const reference = {
-            visitor_id: visitorId,
-            visited_id: visitedProfileId,
+            viewed_by: viewedById,
+            viewed: viewedId,
         };
-        const visit = await visitHistoryModel.getByReference(reference, true);
-        if (!visit)
+        const view = await viewsHistoryModel.getByReference(reference, true);
+        if (!view)
             return returnErrorStatus(
                 res,
                 500,
@@ -452,21 +452,21 @@ export default class UsersController {
             );
 
         let input = {
-            visitor_id: visitorId,
-            visited_id: visitedProfileId,
+            viewed_by: viewedById,
+            viewed: viewedId,
             time: getCurrentTimestamp(),
         };
 
-        if (visit && visit.length !== 0) {
-            const { id } = visit;
-            const updateResult = await visitHistoryModel.update({ input, id });
+        if (view && view.length !== 0) {
+            const { id } = view;
+            const updateResult = await viewsHistoryModel.update({ input, id });
             if (!updateResult || updateResult.length === 0)
                 return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
             return true;
         }
 
-        const visitUpdateResult = await visitHistoryModel.create({ input });
-        if (!visitUpdateResult || visitUpdateResult.length === 0)
+        const viewUpdateResult = await viewsHistoryModel.create({ input });
+        if (!viewUpdateResult || viewUpdateResult.length === 0)
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
 
         return true;
@@ -485,7 +485,7 @@ export default class UsersController {
     }
 
     static async getUserViewsHistory(res, viewedUserId) {
-        const views = await visitHistoryModel.getUserViewsHistory(viewedUserId);
+        const views = await viewsHistoryModel.getUserViewsHistory(viewedUserId);
         if (!views)
             return returnErrorStatus(
                 res,
