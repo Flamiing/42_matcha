@@ -24,25 +24,29 @@ const Info: React.FC<InfoProps> = ({ user }) => {
 	return (
 		<section className="container max-w-4xl mx-auto pt-12 px-4">
 			<div className="flex flex-col items-center space-y-8">
-				<div className="bg-gray-50 rounded-lg px-6 py-3 shadow-sm">
-					<div className="flex items-center gap-3 text-lg">
-						<span className="font-medium text-gray-900">
-							{user.gender}
-						</span>
-						<span className="text-gray-500 text-base">
-							looking for
-						</span>
-						<span className="font-medium text-gray-900">
-							{preferenceDisplay}
-						</span>
+				{user.gender && user.sexual_preference ? (
+					<div className="bg-gray-50 rounded-lg px-6 py-3 shadow-sm">
+						<div className="flex items-center gap-3 text-lg">
+							<span className="font-medium text-gray-900">
+								{user.gender}
+							</span>
+							<span className="text-gray-500 text-base">
+								looking for
+							</span>
+							<span className="font-medium text-gray-900">
+								{preferenceDisplay}
+							</span>
+						</div>
 					</div>
-				</div>
+				) : null}
 
-				<div className="prose prose-gray max-w-2xl">
-					<p className="text-gray-700 leading-relaxed text-pretty">
-						{user.biography}
-					</p>
-				</div>
+				{user.biography ? (
+					<div className="prose prose-gray max-w-2xl">
+						<p className="text-gray-700 leading-relaxed text-pretty">
+							{user.biography}
+						</p>
+					</div>
+				) : null}
 			</div>
 		</section>
 	);
