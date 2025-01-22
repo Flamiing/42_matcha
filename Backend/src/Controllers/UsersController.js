@@ -56,13 +56,12 @@ export default class UsersController {
         if (!likes) return res;
         me.likes = likes;
 
-        // TODO: Make a method to get views
         const views = await UsersController.getUserViewsHistory(res, me.id);
         if (!views) return res;
         me.views = views;
 
-        console.log('LIKES TEST: ', likes);
-        console.log('VIEWS TEST: ', views);
+        me.email = user.email;
+
         return res.json({ msg: me });
     }
 
