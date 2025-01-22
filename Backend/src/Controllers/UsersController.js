@@ -215,8 +215,18 @@ export default class UsersController {
                 StatusMessage.NO_PROFILE_INFO_TO_EDIT
             );
 
-        if (input.username) return returnErrorStatus(res, 403, StatusMessage.CANNOT_CHANGE_USERNAME)
-        if (input.email && req.session.user.oauth) return returnErrorStatus(res, 403, StatusMessage.CANNOT_CHANGE_EMAIL)
+        if (input.username)
+            return returnErrorStatus(
+                res,
+                403,
+                StatusMessage.CANNOT_CHANGE_USERNAME
+            );
+        if (input.email && req.session.user.oauth)
+            return returnErrorStatus(
+                res,
+                403,
+                StatusMessage.CANNOT_CHANGE_EMAIL
+            );
 
         const { email, username } = input;
         const isUnique = await userModel.isUnique({ email, username });
