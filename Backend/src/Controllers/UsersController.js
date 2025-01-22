@@ -13,6 +13,7 @@ import { returnErrorWithNext, returnErrorStatus } from '../Utils/errorUtils.js';
 import imagesModel from '../Models/ImagesModel.js';
 import viewsHistoryModel from '../Models/ViewsHistoryModel.js';
 import { getCurrentTimestamp } from '../Utils/timeUtils.js';
+import { parseImages } from '../Utils/imagesUtils.js';
 
 export default class UsersController {
     static MAX_NUM_USER_IMAGES = 4;
