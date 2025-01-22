@@ -37,7 +37,10 @@ const index = () => {
 				<Body user={profile} />
 				<section className="flex flex-wrap flex-row w-fit items-center justify-center mb-10 gap-7 px-4">
 					<Images user={profile} />
-					<LikesAndViews user={profile} />
+					<LikesAndViews
+						profileLikes={profile.likes}
+						profileViews={profile.views}
+					/>
 				</section>
 			</section>
 			<Info user={profile} />
