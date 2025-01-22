@@ -179,7 +179,7 @@ export default class UsersController {
             return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
         if (user.length === 0)
             return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
-        
+
         const privateUser = await UsersController.getPrivateUser(res, user);
         if (!privateUser) return res;
         return res.json({ msg: privateUser });
@@ -459,7 +459,12 @@ export default class UsersController {
 
     static async getPrivateUser(res, user) {
         const privateUser = await getPublicUser(user);
-        if (!privateUser) return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR);
+        if (!privateUser)
+            return returnErrorStatus(
+                res,
+                500,
+                StatusMessage.INTERNAL_SERVER_ERROR
+            );
 
         const likes = await likesModel.getUserLikes(user.id);
         if (!likes)
