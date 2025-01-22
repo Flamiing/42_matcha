@@ -1,68 +1,105 @@
-import RegularButton from "../../components/common/RegularButton";
+import { useEffect, useState } from "react";
 import FormInput from "../../components/common/FormInput";
 import FormSelect from "../../components/common/FormSelect";
+import { EditProfileData } from "../../services/api/profile";
+import AgeDisplay from "../../components/common/AgeDisplay";
 
-interface UserData {
-	first_name: string;
-	last_name: string;
-	username: string;
-	email: string;
-	age: number;
-	biography: string;
-	fame: number;
-	last_online: number;
-	gender: string;
-	sexual_preference: string;
+interface BodyProps {
+	user: EditProfileData;
+	onChange: (
+		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+	) => void;
+	onSelectChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
-interface FaceProps {
-	user: UserData;
-}
+const Body = ({ user, onChange, onSelectChange }: BodyProps) => {
+	const handleBirthdayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const date = new Date(e.target.value);
+		date.setHours(12, 0, 0, 0);
+		const timestamp = date.getTime();
 
-const Face: React.FC<FaceProps> = ({ user }) => {
+		const syntheticEvent = {
+			target: {
+				name: "age",
+				value: timestamp.toString(),
+			},
+		} as React.ChangeEvent<HTMLInputElement>;
+		onChange(syntheticEvent);
+	};
 
-	const gender = [
-		{
-			value: "Male",
-			label: "Male"
-		}, {
-			value: "Female",
-			label: "Female"
-		},
-	]
+	const dateFormatConversion = (timestamp: string) => {
+		timestamp = Number(timestamp);
+		if (!timestamp) return "";
 
-	const genderPreference = [
-		{
-			value: "Male",
-			label: "Male"
-		}, {
-			value: "Female",
-			label: "Female"
-		},
-		{
-			value: "Bisexual",
-			label: "Bisexual"
-		},
-	]
+		const date = new Date(timestamp);
+		const formattedDate = date.toISOString().split("T")[0];
+
+		return formattedDate;
+	};
 
 	return (
-		<section className="container max-w-4xl mb-20 px-3 relative text-font-main pt-5">
+		<section className="container max-w-4xl px-3 relative text-font-main pt-5">
 			<div className="flex flex-col gap-5 w-full text-start">
 				<div>
-					<label htmlFor="">Age</label>
-					<FormInput name="username" value="alaparic" />
+					<label htmlFor="birthday">Birthday</label>
+					<input
+						type="date"
+						name="birthday"
+						value={dateFormatConversion(user.age)}
+						onChange={handleBirthdayChange}
+						className="rounded-md w-full p-3 my-1 border border-gray-300"
+						max={
+							new Date(
+								new Date().setFullYear(
+									new Date().getFullYear() - 18
+								)
+							)
+								.toISOString()
+								.split("T")[0]
+						}
+					/>
+					{user.age && (
+						<p className="text-sm text-gray-600 mt-1">
+							Age: <AgeDisplay birthday={user.age} /> years old
+						</p>
+					)}
 				</div>
 				<div>
-					<label htmlFor="">Location</label>
-					<FormInput name="username" value="alaparic" />
+					<label htmlFor="location">Location</label>
+					<FormInput
+						name="location"
+						value={user.location || ""}
+						onChange={onChange}
+					/>
 				</div>
+
 				<div>
-					<label htmlFor="">Your Gender</label>
-					<FormSelect options={gender} />
+					<label htmlFor="gender">Your Gender</label>
+					<FormSelect
+						name="gender"
+						options={[
+							{ value: "Male", label: "Male" },
+							{ value: "Female", label: "Female" },
+						]}
+						value={user.gender || ""}
+						onChange={onSelectChange}
+					/>
 				</div>
+
 				<div>
-					<label htmlFor="">Your Sexual Preference</label>
-					<FormSelect options={genderPreference}/>
+					<label htmlFor="sexual_preference">
+						Your Sexual Preference
+					</label>
+					<FormSelect
+						name="sexual_preference"
+						options={[
+							{ value: "Male", label: "Male" },
+							{ value: "Female", label: "Female" },
+							{ value: "Bisexual", label: "Bisexual" },
+						]}
+						value={user.sexual_preference || ""}
+						onChange={onSelectChange}
+					/>
 				</div>
 				<div>
 					<p>Tag</p>
@@ -70,12 +107,9 @@ const Face: React.FC<FaceProps> = ({ user }) => {
 				<div>
 					<p>Images</p>
 				</div>
-				<div className="w-full text-start">
-					<RegularButton value="Update profile" />
-				</div>
 			</div>
 		</section>
 	);
 };
 
-export default Face;
+export default Body;
