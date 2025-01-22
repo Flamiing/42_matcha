@@ -67,5 +67,5 @@ export default class StatusMessage {
     static CANNOT_LIKE_YOURSELF = 'You cannot like yourself!';
     static USER_LIKED = 'User liked!';
     static USER_LIKED_REMOVED = 'User like removed.';
-    static LOGIN_SUCCESS = 'Logged in successfully!'
+    static LOGIN_SUCCESS = 'Logged in successfully!';
 }
