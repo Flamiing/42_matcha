@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import FormInput from "../../components/common/FormInput";
 import FormSelect from "../../components/common/FormSelect";
 import { EditProfileData } from "../../services/api/profile";
+import { useTags } from "../../hooks/PageData/useTags";
 import AgeDisplay from "../../components/common/AgeDisplay";
+import Spinner from "../../components/common/Spinner";
+import Tag from "../../components/common/Tag";
+import TagSection from "./TagSection";
 
 interface BodyProps {
 	user: EditProfileData;
@@ -13,6 +17,18 @@ interface BodyProps {
 }
 
 const Body = ({ user, onChange, onSelectChange }: BodyProps) => {
+	const { tags, loading, error } = useTags();
+
+	const handleTagsChange = (newTagIds: string[]) => {
+		const syntheticEvent = {
+			target: {
+				name: "tags",
+				value: newTagIds,
+			},
+		} as React.ChangeEvent<HTMLInputElement>;
+		onChange(syntheticEvent);
+	};
+
 	const handleBirthdayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const date = new Date(e.target.value);
 		date.setHours(12, 0, 0, 0);
@@ -102,10 +118,14 @@ const Body = ({ user, onChange, onSelectChange }: BodyProps) => {
 					/>
 				</div>
 				<div>
-					<p>Tag</p>
-				</div>
-				<div>
-					<p>Images</p>
+					<p>Tags</p>
+
+					<TagSection
+						availableTags={tags || []}
+						selectedTagIds={user.tags || []}
+						onTagsChange={handleTagsChange}
+						isLoading={loading}
+					/>
 				</div>
 			</div>
 		</section>

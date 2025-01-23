@@ -1,20 +1,19 @@
+import React from "react";	
+
 interface TagProps {
 	value: string;
-	removable?: boolean;
+	onRemove?: () => void;
 }
 
-const Tag = ({ value, removable = true }: TagProps) => {
+const Tag = React.memo(({ value, onRemove }: TagProps) => {
 	return (
-		<span
-			id="badge-dismiss-dark"
-			className="inline-flex items-center px-2 py-1 text-xs bg-white/20 rounded-full backdrop-blur-sm border"
-		>
+		<span className="inline-flex items-center px-2 py-1 text-sm bg-white/20 rounded-full backdrop-blur-sm border">
 			{value}
-
-			{removable && (
+			{onRemove && (
 				<button
 					type="button"
-					className="inline-flex items-center p-1 ms-2 text-sm text-gray-400 bg-transparent rounded-sm hover:bg-gray-200 hover:text-gray-900"
+					onClick={onRemove}
+					className="inline-flex items-center p-1 ms-2 text-gray-400 hover:text-gray-900 transition-colors"
 				>
 					<svg
 						className="w-2 h-2"
@@ -25,17 +24,19 @@ const Tag = ({ value, removable = true }: TagProps) => {
 					>
 						<path
 							stroke="currentColor"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							strokeWidth="2"
 							d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
 						/>
 					</svg>
-					<span className="sr-only">Remove badge</span>
+					<span className="sr-only">Remove {value}</span>
 				</button>
 			)}
 		</span>
 	);
-};
+});
+
+Tag.displayName = "Tag";
 
 export default Tag;
