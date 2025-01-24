@@ -22,6 +22,10 @@ export const imagesValidationMiddleware = () => (req, res, next) => {
             res.status(400).json({ msg: StatusMessage.INVALID_IMAGE_SIZE });
             return next(new Error(StatusMessage.INVALID_IMAGE_SIZE));
         }
+        if (image.size === 0) {
+            res.status(400).json({ msg: StatusMessage.IMAGE_IS_EMPTY });
+            return next(new Error(StatusMessage.IMAGE_IS_EMPTY));
+        }
     }
     next();
 };
