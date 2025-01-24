@@ -1,32 +1,33 @@
-import { useState, useEffect } from "react";
-import { profileApi, ProfileData } from "../../services/api/profile";
+import { useState } from "react";
+import {
+	profileApi,
+	ProfileData,
+	EditProfileData,
+} from "../../services/api/profile";
 
-export const useEditProfile = (userId: string) => {
-	const [profile, setProfile] = useState<ProfileData | null>(null);
-	const [loading, setLoading] = useState(true);
+export const useEditProfile = () => {
+	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	useEffect(() => {
-		const fetchProfile = async () => {
-			try {
-				setLoading(true);
-				const data = await profileApi.getPrivateProfile(userId);
-				setProfile(data.msg);
-				setError(null);
-			} catch (err) {
-				setError(
-					err instanceof Error
-						? err.message
-						: "Failed to fetch profile"
-				);
-				setProfile(null);
-			} finally {
-				setLoading(false);
-			}
-		};
+	const updateProfile = async (userId: string, userData: EditProfileData) => {
+		setLoading(true);
+		setError(null);
+		try {
+			const response = await profileApi.editProfile(userId, userData);
+			return response;
+		} catch (err) {
+			const errorMessage =
+				err.message ? err.message : "Failed to update profile";
+			console.log(err);
+			console.log(userData);
+			
+			
+			setError(errorMessage);
+			throw new Error(errorMessage);
+		} finally {
+			setLoading(false);
+		}
+	};
 
-		if (userId) fetchProfile();
-	}, [userId]);
-
-	return { profile, loading, error };
+	return { updateProfile, loading, error };
 };

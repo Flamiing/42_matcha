@@ -94,8 +94,8 @@ const Body = ({ user, onChange, onSelectChange }: BodyProps) => {
 					<FormSelect
 						name="gender"
 						options={[
-							{ value: "Male", label: "Male" },
-							{ value: "Female", label: "Female" },
+							{ value: "male", label: "Male" },
+							{ value: "female", label: "Female" },
 						]}
 						value={user.gender || ""}
 						onChange={onSelectChange}
@@ -109,8 +109,8 @@ const Body = ({ user, onChange, onSelectChange }: BodyProps) => {
 					<FormSelect
 						name="sexual_preference"
 						options={[
-							{ value: "Male", label: "Male" },
-							{ value: "Female", label: "Female" },
+							{ value: "male", label: "Male" },
+							{ value: "female", label: "Female" },
 							{ value: "Bisexual", label: "Bisexual" },
 						]}
 						value={user.sexual_preference || ""}

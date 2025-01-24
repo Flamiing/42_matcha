@@ -8,11 +8,11 @@ export const useProfile = (userId: string) => {
 
 	useEffect(() => {
 		const fetchProfile = async () => {
+			setLoading(true);
+			setError(null);
 			try {
-				setLoading(true);
 				const data = await profileApi.getPrivateProfile(userId);
 				setProfile(data.msg);
-				setError(null);
 			} catch (err) {
 				setError(
 					err instanceof Error

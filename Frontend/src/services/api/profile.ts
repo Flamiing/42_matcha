@@ -47,7 +47,7 @@ export const profileApi = {
 		return response;
 	},
 
-	getEditProfile: async (
+	editProfile: async (
 		userId: string,
 		userData: EditProfileData
 	): Promise<EditProfileData> => {
