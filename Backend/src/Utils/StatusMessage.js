@@ -45,6 +45,7 @@ export default class StatusMessage {
         'Your account is linked to 42 School. Please manage your password on their site.';
     static CANNOT_CHANGE_EMAIL =
         'Your account is linked to 42 School. Please manage your email on their site.';
+    static CANNOT_LOGIN_WITH_PASS = 'Your account is linked to 42 School. Please login with your 42 School account.';
     static CANNOT_EDIT_OTHER_PROFILE =
         "You do not have permission to modify another user's profile.";
     static NO_PROFILE_INFO_TO_EDIT = 'There was no profile info to edit.';

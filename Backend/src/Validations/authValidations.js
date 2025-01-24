@@ -72,6 +72,8 @@ export async function loginValidations(reqBody, res) {
     if (user.length === 0)
         return res.status(401).json({ msg: StatusMessage.WRONG_USERNAME });
 
+    if (!user.password) return res.status(403).json({ msg: StatusMessage.CANNOT_LOGIN_WITH_PASS })
+
     // Validates password
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword)
