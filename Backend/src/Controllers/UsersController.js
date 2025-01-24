@@ -150,8 +150,9 @@ export default class UsersController {
             return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
 
         let profilePicturePath = user.profile_picture;
-        if (!profilePicturePath) 
-            profilePicturePath = '/backend/static/images/default-profile-picture.png'
+        if (!profilePicturePath)
+            profilePicturePath =
+                '/backend/static/images/default-profile-picture.png';
         const imagePath = path.join(profilePicturePath);
         console.log('TEST: ', imagePath);
         res.sendFile(imagePath, (err) => {
