@@ -46,23 +46,9 @@ export default class UsersController {
         if (user.length === 0)
             return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
 
-        const me = await getPublicUser(user);
-        if (!me)
-            return res
-                .status(500)
-                .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+        const me = await UsersController.getPrivateUser(res, user);
+        if (!me) return res;
 
-        const likes = await UsersController.getUserLikes(res, me.id);
-        if (!likes) return res;
-        me.likes = likes;
-
-        // TODO: Make a method to get views
-        const views = await UsersController.getUserViewsHistory(res, me.id);
-        if (!views) return res;
-        me.views = views;
-
-        console.log('LIKES TEST: ', likes);
-        console.log('VIEWS TEST: ', views);
         return res.json({ msg: me });
     }
 
@@ -193,12 +179,10 @@ export default class UsersController {
             return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
         if (user.length === 0)
             return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
-        const publicUser = await getPublicUser(user);
-        if (!publicUser)
-            return res
-                .status(500)
-                .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
-        return res.json({ msg: publicUser });
+
+        const privateUser = await UsersController.getPrivateUser(res, user);
+        if (!privateUser) return res;
+        return res.json({ msg: privateUser });
     }
 
     static async updateTags(req, res) {
@@ -229,6 +213,19 @@ export default class UsersController {
                 res,
                 400,
                 StatusMessage.NO_PROFILE_INFO_TO_EDIT
+            );
+
+        if (input.username)
+            return returnErrorStatus(
+                res,
+                403,
+                StatusMessage.CANNOT_CHANGE_USERNAME
+            );
+        if (input.email && req.session.user.oauth)
+            return returnErrorStatus(
+                res,
+                403,
+                StatusMessage.CANNOT_CHANGE_EMAIL
             );
 
         const { email, username } = input;
@@ -473,8 +470,16 @@ export default class UsersController {
         return true;
     }
 
-    static async getUserLikes(res, likedUserId) {
-        const likes = await likesModel.getUserLikes(likedUserId);
+    static async getPrivateUser(res, user) {
+        const privateUser = await getPublicUser(user);
+        if (!privateUser)
+            return returnErrorStatus(
+                res,
+                500,
+                StatusMessage.INTERNAL_SERVER_ERROR
+            );
+
+        const likes = await likesModel.getUserLikes(user.id);
         if (!likes)
             return returnErrorStatus(
                 res,
@@ -482,11 +487,7 @@ export default class UsersController {
                 StatusMessage.INTERNAL_SERVER_ERROR
             );
 
-        return likes;
-    }
-
-    static async getUserViewsHistory(res, viewedUserId) {
-        const views = await viewsHistoryModel.getUserViewsHistory(viewedUserId);
+        const views = await viewsHistoryModel.getUserViewsHistory(user.id);
         if (!views)
             return returnErrorStatus(
                 res,
@@ -494,6 +495,10 @@ export default class UsersController {
                 StatusMessage.INTERNAL_SERVER_ERROR
             );
 
-        return views;
+        privateUser.likes = likes;
+        privateUser.views = views;
+        privateUser.email = user.email;
+
+        return privateUser;
     }
 }
