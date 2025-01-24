@@ -43,6 +43,10 @@ export default class StatusMessage {
     static INVALID_JSON = 'Invalid JSON payload.';
     static CANNOT_CHANGE_PASS =
         'Your account is linked to 42 School. Please manage your password on their site.';
+    static CANNOT_CHANGE_EMAIL =
+        'Your account is linked to 42 School. Please manage your email on their site.';
+    static CANNOT_LOGIN_WITH_PASS =
+        'Your account is linked to 42 School. Please login with your 42 School account.';
     static CANNOT_EDIT_OTHER_PROFILE =
         "You do not have permission to modify another user's profile.";
     static NO_PROFILE_INFO_TO_EDIT = 'There was no profile info to edit.';
@@ -67,4 +71,6 @@ export default class StatusMessage {
     static CANNOT_LIKE_YOURSELF = 'You cannot like yourself!';
     static USER_LIKED = 'User liked!';
     static USER_LIKED_REMOVED = 'User like removed.';
+    static LOGIN_SUCCESS = 'Logged in successfully!';
+    static CANNOT_CHANGE_USERNAME = 'You cannot change your username.';
 }
