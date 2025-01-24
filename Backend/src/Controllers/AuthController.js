@@ -46,13 +46,7 @@ export default class AuthController {
         await AuthController.#createAuthTokens(res, user);
         if (!('set-cookie' in res.getHeaders())) return res;
 
-        // Returns user
-        const publicUser = await getPublicUser(user);
-        if (!publicUser)
-            return res
-                .status(500)
-                .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
-        return res.json({ msg: publicUser });
+        return res.json({ msg: StatusMessage.LOGIN_SUCCESS });
     }
 
     static async loginOAuth(res, validatedUser) {
@@ -71,14 +65,7 @@ export default class AuthController {
         if (user.oauth) {
             await AuthController.#createAuthTokens(res, user);
             if (!('set-cookie' in res.getHeaders())) return res;
-            const publicUser = await getPublicUser(user);
-            if (!publicUser) {
-                res.status(500).json({
-                    msg: StatusMessage.INTERNAL_SERVER_ERROR,
-                });
-                return true;
-            }
-            res.json({ msg: publicUser });
+            res.json({ msg: StatusMessage.LOGIN_SUCCESS });
             return true;
         }
 
@@ -168,8 +155,11 @@ export default class AuthController {
 
     static async status(req, res) {
         const authStatus = await checkAuthStatus(req);
-        if (authStatus.isAuthorized)
+        if (authStatus.isAuthorized) {
+            delete authStatus.user.iat;
+            delete authStatus.user.exp;
             return res.status(200).json({ msg: authStatus.user });
+        }
         return res.status(401).json();
     }
 
