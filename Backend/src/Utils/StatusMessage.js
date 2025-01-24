@@ -61,7 +61,7 @@ export default class StatusMessage {
     static INVALID_MIME_TYPE =
         "Invalid Mime type. Only 'image/jpeg', 'image/jpg' and 'image/png' are accepted.";
     static INVALID_IMAGE_SIZE = 'Image size exceeds the 5MB limit.';
-    static IMAGE_IS_EMPTY = 'Image is empty. Please upload a valid image.'
+    static IMAGE_IS_EMPTY = 'Image is empty. Please upload a valid image.';
     static EXCEEDS_IMAGE_LIMIT =
         'You have exceeded the maximum allowed number of image uploads. Please reduce the number of images and try again.';
     static EXCEEDS_IMAGE_LIMIT_DB =
