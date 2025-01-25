@@ -96,6 +96,10 @@ export default class UsersController {
                     req.session.user.id
                 );
                 if (!viewResult) return res;
+
+                const updateFameResult = await userModel.updateFame(user.id, publicUser);
+                if (!updateFameResult)
+                    return res.status(500).json({ msg: StatusMessage.QUERY_ERROR })
             }
 
             return res.json({ msg: publicUser });
