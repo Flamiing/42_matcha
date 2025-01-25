@@ -11,11 +11,11 @@ export default class EventsRouter {
         // GET:
         router.get('/', EventsController.getAllEvents);
 
-        // POST: 
-        router.post('/', EventsController.createEvent)
+        // POST:
+        router.post('/', EventsController.createEvent);
 
         // DELETE:
-        router.delete('/:id', EventsController.deleteEvent)
+        router.delete('/:id', EventsController.deleteEvent);
 
         return router;
     }
