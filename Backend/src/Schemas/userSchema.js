@@ -18,7 +18,7 @@ const disallowedUsernames = [
     'me',
 ];
 
-const MIN_AGE = Date.now() - (18 * 365.25 * 24 * 60 * 60 * 1000);
+const MIN_AGE = Date.now() - 18 * 365.25 * 24 * 60 * 60 * 1000;
 const MAX_AGE = Date.now() - 3124135674000;
 
 const userSchema = z.object({
