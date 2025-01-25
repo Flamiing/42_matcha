@@ -17,6 +17,9 @@ export default class LikesController {
         const validId = await LikesController.validateId(res, likedId);
         if (!validId) return res;
 
+        const canLike = await LikesController.checkIfCanLike(res, likedById);
+        if (!canLike) return res;
+
         const liked = await LikesController.checkIfLiked(
             res,
             likedId,
@@ -70,5 +73,14 @@ export default class LikesController {
         const uuidRegex =
             /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
         return uuidRegex.test(uuid);
+    }
+
+    static async checkIfCanLike(res, id) {
+        const user = await userModel.getById({ id });
+        if (!user) return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+        if (user.length === 0) return returnErrorStatus(res, 404, StatusMessage.USER_NOT_FOUND)
+        
+        if (!user.profile_picture) return returnErrorStatus(res, 403, StatusMessage.USER_CANNOT_LIKE);
+        return true;
     }
 }
