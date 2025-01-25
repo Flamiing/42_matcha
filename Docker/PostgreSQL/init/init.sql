@@ -10,7 +10,7 @@ CREATE TABLE users (
 	first_name VARCHAR(50),
 	last_name VARCHAR(50),
 	password VARCHAR(255) DEFAULT NULL,
-	age BIGINT,
+	age BIGINT DEFAULT 0,
 	biography VARCHAR(500),
 	profile_picture VARCHAR(255) DEFAULT NULL,
 	location VARCHAR(100),

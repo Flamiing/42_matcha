@@ -26,7 +26,7 @@ export default async function getPublicUser(user) {
         biography: user.biography,
         profile_picture: profilePicture,
         location: user.location,
-        fame: user.fame,
+        fame: parseInt(user.fame),
         last_online: user.last_online,
         is_online: user.is_online,
         gender: user.gender,
