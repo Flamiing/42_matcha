@@ -17,12 +17,12 @@ class UserModel extends Model {
 
     async updateFame(userId, publicUser) {
         const fameToAdd = 10;
-        const fameLimit = 1000000
+        const fameLimit = 1000000;
 
         let newFame = publicUser.fame + fameToAdd;
         if (newFame >= fameLimit) {
-            console.log(StatusMessage.USER_HAS_MAX_FAME)
-            newFame = fameLimit
+            console.log(StatusMessage.USER_HAS_MAX_FAME);
+            newFame = fameLimit;
         }
 
         const query = {
