@@ -41,7 +41,9 @@ export default class App {
 
     startApp() {
         this.app.listen(this.PORT, () => {
-            console.log(`Server listening on http://${this.HOST}:${this.PORT}`);
+            console.info(
+                `Server listening on http://${this.HOST}:${this.PORT}`
+            );
         });
     }
 
