@@ -56,8 +56,16 @@ const index = () => {
 		);
 	};
 
-	// TODO -> Implement this
-	const handleImageUpload = async (e) => {};
+	const handleImagesUpdate = (newImages: string[]) => {
+		setFormData((prev) =>
+			prev
+				? {
+						...prev,
+						images: newImages,
+				  }
+				: null
+		);
+	};
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -121,7 +129,7 @@ const index = () => {
 				<section className="w-full bg-gradient-to-br from-orange-200 to-purple-200 flex flex-col items-center gap-12 pb-5">
 					<Face
 						user={formData}
-						onImageUpload={handleImageUpload}
+						onImagesUpdate={handleImagesUpdate}
 						onChange={handleInputChange}
 					/>
 				</section>

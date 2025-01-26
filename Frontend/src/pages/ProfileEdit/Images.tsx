@@ -1,23 +1,84 @@
-import { useState } from "react";
+import MsgCard from "../../components/common/MsgCard";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import FormInput from "../../components/common/FormInput";
+import OauthButton from "../../components/common/Oauth42Button";
+import { useAuth } from "../../context/AuthContext";
+import RegularButton from "../../components/common/RegularButton";
+import { useEditProfile } from "../../hooks/PageData/useEditProfile";
 import Modal from "../../components/common/Modal";
 
 interface User {
+	id: string;
 	first_name: string;
-	images: string[]; // array of image URLs
+	images: string[];
 }
 
 interface ImageGalleryProps {
 	user: User;
+	onImagesUpdate?: (images: string[]) => void;
 }
 
 const ImageGallery = ({ user, onImagesUpdate }: ImageGalleryProps) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isUploading, setIsUploading] = useState(false);
+	const { uploadImages, removeImage } = useEditProfile();
+	const { user: authUser } = useAuth();
 
-	/* const handleImageUpload = {
-		// Implement image upload logic here
-		onImagesUpdate([...images, data.url]);
-	} */
+	const [msg, setMsg] = useState<{
+		type: "error" | "success";
+		message: string;
+		key: number; // Add a key to force re-render
+	} | null>(null);
+
+	const handleImageUpload = async (
+		e: React.ChangeEvent<HTMLInputElement>
+	) => {
+		if (!e.target.files || !authUser?.id) return;
+
+		setIsUploading(true);
+		try {
+			const files = Array.from(e.target.files);
+			const response = await uploadImages(authUser.id, files);
+			if (response && response.msg) {
+				let newImages = response.images;
+				// combine new images with existing images
+				if (user.images.length < 4)
+					newImages = [...user.images, ...response.msg];
+				onImagesUpdate(newImages);
+			}
+		} catch (error) {
+			setMsg({
+				type: "error",
+				message:
+					error.message ||
+					"Failed to upload images, please try again",
+				key: Date.now(),
+			});
+		} finally {
+			setIsUploading(false);
+		}
+	};
+
+	const handleRemoveImage = async (imageId: string) => {
+		if (!authUser?.id) return;
+
+		try {
+			const response = await removeImage(authUser.id, imageId);
+			// delete image from state using id
+			const newImages = user.images.filter(
+				(image) => image.imageId !== imageId
+			);
+			onImagesUpdate && onImagesUpdate(newImages);
+		} catch (error) {
+			setMsg({
+				type: "error",
+				message:
+					error.message || "Failed to remove image, please try again",
+				key: Date.now(),
+			});
+		}
+	};
 
 	return (
 		<section className="container max-w-4xl mx-auto flex justify-center">
@@ -27,11 +88,23 @@ const ImageGallery = ({ user, onImagesUpdate }: ImageGalleryProps) => {
 					isOpen={isModalOpen}
 					onClose={() => setIsModalOpen(false)}
 				>
+					{/* Error card if image upload fails */}
+					{msg && (
+						<MsgCard
+							key={msg.key}
+							type={msg.type}
+							message={msg.message}
+							onClose={() => setMsg(null)}
+						/>
+					)}
 					{/* Header */}
 					<div className="flex items-center justify-between p-4 border-b">
 						<h3 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
 							<span className="fa fa-image" />
-							Edit Your Images
+							Edit Your Images{" "}
+							<span className="font-light text-base text-gray-500">
+								(4 pictures max)
+							</span>
 						</h3>
 						<button
 							onClick={() => setIsModalOpen(false)}
@@ -45,13 +118,15 @@ const ImageGallery = ({ user, onImagesUpdate }: ImageGalleryProps) => {
 							{user.images.map((image, index) => (
 								<div key={index} className="relative group">
 									<img
-										src={image}
+										src={image.imageURL}
 										alt={`Profile ${index + 1}`}
 										className="w-full h-48 object-cover rounded-lg"
 									/>
 									<button
 										type="button"
-										/* onClick={() => handleRemoveImage(image)} */
+										onClick={() =>
+											handleRemoveImage(image.imageId)
+										}
 										className="absolute top-2 right-2 bg-red-500 text-white h-7 w-7 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
 									>
 										<i className="fa fa-trash" />
@@ -59,18 +134,22 @@ const ImageGallery = ({ user, onImagesUpdate }: ImageGalleryProps) => {
 								</div>
 							))}
 							{/* Add new image input */}
-							{user.images.length < 5 && (
+							{user.images.length < 4 && (
 								<div className="w-full h-48 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
 									<label className="cursor-pointer text-center">
 										<input
 											type="file"
 											accept="image/*"
-											/* onChange={handleImageUpload} */
+											onChange={handleImageUpload}
 											className="hidden"
+											multiple
+											disabled={isUploading}
 										/>
 										<i className="fa fa-plus text-3xl text-gray-400 mb-2" />
 										<p className="text-sm text-gray-500">
-											Add Image
+											{isUploading
+												? "Uploading..."
+												: "Add Image"}
 										</p>
 									</label>
 								</div>
@@ -87,6 +166,7 @@ const ImageGallery = ({ user, onImagesUpdate }: ImageGalleryProps) => {
 
 			{/* Trigger Button */}
 			<button
+				type="button"
 				onClick={() => setIsModalOpen(true)}
 				className="group relative inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-cyan-500 to-blue-500 p-0.5 font-medium text-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-cyan-200"
 			>

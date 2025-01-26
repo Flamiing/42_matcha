@@ -30,21 +30,23 @@ const Body = ({ user, onChange, onSelectChange }: BodyProps) => {
 	};
 
 	const handleBirthdayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const date = new Date(e.target.value);
-		date.setHours(12, 0, 0, 0);
-		const timestamp = date.getTime();
+		let timestamp: number | null = null;
+		if (e.target.value) {
+			const date = new Date(e.target.value);
+			date.setHours(12, 0, 0, 0);
+			timestamp = date.getTime();
+		}
 
 		const syntheticEvent = {
 			target: {
 				name: "age",
-				value: timestamp.toString(),
+				value: timestamp,
 			},
 		} as React.ChangeEvent<HTMLInputElement>;
 		onChange(syntheticEvent);
 	};
 
 	const dateFormatConversion = (timestamp: string) => {
-		timestamp = Number(timestamp);
 		if (!timestamp) return "";
 
 		const date = new Date(timestamp);

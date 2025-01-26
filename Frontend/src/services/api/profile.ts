@@ -1,4 +1,4 @@
-import apiRequest from "./config";
+import apiRequest, { fileUploadRequest } from "./config";
 
 export interface ProfileData {
 	id: string;
@@ -54,6 +54,38 @@ export const profileApi = {
 		const response = await apiRequest(`users/${userId}`, {
 			method: "PATCH",
 			body: JSON.stringify(userData),
+		});
+		return response;
+	},
+
+	uploadProfilePicture: async (
+		userId: string,
+		file: File
+	): Promise<ProfileData> => {
+		const formData = new FormData();
+		formData.append("files", file);
+
+		return fileUploadRequest(`users/${userId}/profile-picture`, formData);
+	},
+
+	uploadImages: async (
+		userId: string,
+		files: File[]
+	): Promise<ProfileData> => {
+		const formData = new FormData();
+		files.forEach((file) => {
+			formData.append("files", file);
+		});
+
+		return fileUploadRequest(`users/${userId}/images`, formData);
+	},
+
+	removeImage: async (
+		userId: string,
+		imageId: string
+	): Promise<ProfileData> => {
+		const response = await apiRequest(`users/${userId}/images/${imageId}`, {
+			method: "DELETE",
 		});
 		return response;
 	},

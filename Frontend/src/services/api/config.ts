@@ -28,4 +28,30 @@ export const apiRequest = async (
 	return data;
 };
 
+export const fileUploadRequest = async (
+	endpoint: string,
+	formData: FormData,
+	options: RequestInit = {}
+) => {
+	const finalOptions: RequestInit = {
+		...options,
+		method: "POST",
+		credentials: "include",
+		body: formData,
+		// Content-Type not specified, browser will set it with boundary
+	};
+
+	const resp = await fetch(`${API_BASE_URL}/${endpoint}`, finalOptions);
+	const data = await resp.json();
+
+	if (!resp.ok) {
+		throw {
+			status: resp.status,
+			message: data.msg || "An unexpected error occurred",
+		};
+	}
+
+	return data;
+};
+
 export default apiRequest;

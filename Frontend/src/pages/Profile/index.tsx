@@ -29,6 +29,8 @@ const index = () => {
 	const { profile, loading, error } = useProfile(user?.id || "");
 
 	if (loading) return <Spinner />;
+	if (error) return <div>Error: {error}</div>;
+	if (!user || !profile) return <div>Error: User not found</div>;
 
 	return (
 		<main className="flex flex-1 justify-center items-center flex-col">

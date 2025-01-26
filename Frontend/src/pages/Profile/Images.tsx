@@ -34,14 +34,14 @@ const ImageGallery = ({ user }: ImageGalleryProps) => {
 				<div className="p-4 md:p-6">
 					{user.images && user.images.length > 0 ? (
 						<div className="flex flex-wrap gap-2 md:gap-4 justify-center">
-							{user.images.map((imageUrl, index) => (
+							{user.images.map((image, index) => (
 								<div
 									key={index}
 									className="w-[calc(50%-0.5rem)] md:w-[calc(33.333%-1rem)] flex-grow-0 flex-shrink-0"
 								>
 									<div className="relative pt-[100%]">
 										<img
-											src={imageUrl}
+											src={image.imageURL}
 											alt={`${user.first_name}'s image ${
 												index + 1
 											}`}

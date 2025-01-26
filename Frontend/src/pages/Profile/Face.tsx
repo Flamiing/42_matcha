@@ -37,11 +37,7 @@ const Face = ({ user, editable = false }: FaceProps) => {
 			<div className="flex flex-col items-center gap-3">
 				<div className="relative">
 					<img
-						/* src={user.profile_picture} */
-						/* TODO: temporary profile picture, remove when default image implemented */
-						src={`https://randomuser.me/api/portraits/${
-							Math.random() > 0.5 ? "men" : "women"
-						}/${Math.floor(Math.random() * 100)}.jpg`}
+						src={user.profile_picture}
 						alt="UserProfile"
 						className="w-36 rounded-full border shadow-lg h-36 object-cover"
 					/>

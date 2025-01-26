@@ -1,30 +1,17 @@
 import { Link } from "react-router-dom";
 import FormInput from "../../components/common/FormInput";
 import Images from "./Images";
-
-interface UserData {
-	first_name: string;
-	last_name: string;
-	username: string;
-	email: string;
-	age: number;
-	biography: string;
-	fame: number;
-	last_online: number;
-	profile_picture: string;
-	gender: string;
-	sexual_preference: string;
-}
+import { EditProfileData } from "../../services/api/profile";
 
 interface FaceProps {
 	user: EditProfileData;
 	onChange: (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 	) => void;
-	handleImageUpload: (newImages: string[]) => void;
+	onImagesUpdate: (images: string[]) => void;
 }
 
-const Face = ({ user, onChange, handleImageUpload }: FaceProps) => {
+const Face = ({ user, onChange, onImagesUpdate }: FaceProps) => {
 	return (
 		<section className="container max-w-4xl mt-20 px-3 relative text-font-main">
 			<div className="m-auto w-fit">
@@ -39,12 +26,7 @@ const Face = ({ user, onChange, handleImageUpload }: FaceProps) => {
 						<div className="relative w-fit">
 							{user.profile_picture ? (
 								<img
-									/* src={user.profile_picture} */
-									/* TODO: temporary profile picture, remove when default image implemented */
-									/* src={`https://randomuser.me/api/portraits/${
-										Math.random() > 0.5 ? "men" : "women"
-									}/${Math.floor(Math.random() * 100)}.jpg`} */
-									src="https://randomuser.me/api/portraits/men/41.jpg"
+									src={user.profile_picture}
 									alt="UserProfile"
 									className="w-36 rounded-full border shadow-lg h-36 object-cover"
 								/>
@@ -60,7 +42,7 @@ const Face = ({ user, onChange, handleImageUpload }: FaceProps) => {
 						<div className="mt-5">
 							<Images
 								user={user}
-								handleImageUpload={handleImageUpload}
+								onImagesUpdate={onImagesUpdate}
 							/>
 						</div>
 					</div>
