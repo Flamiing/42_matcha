@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import capitalizeLetters from "../../utils/capitalizeLetters";
 
 interface UserData {
 	first_name: string;
@@ -49,17 +50,23 @@ const Face = ({ user, editable = false }: FaceProps) => {
 					</p>
 
 					<div className="flex gap-1 flex-wrap justify-center font-light text-gray-500">
-						<p>{user.first_name + " " + user.last_name}</p>
-					</div>
-
-					<div>
-						<p className="text-gray-700 leading-relaxed text-pretty text-start flex flex-row items-center gap-1">
-							<span className="fa fa-map-marker font-semibold text-red-500" />
-							<span className="truncate max-w-[200px]">
-								{user.location}
-							</span>
+						<p>
+							{capitalizeLetters(user.first_name) +
+								" " +
+								capitalizeLetters(user.last_name)}
 						</p>
 					</div>
+
+					{user.location ? (
+						<div>
+							<p className="text-gray-700 leading-relaxed text-pretty text-start flex flex-row items-center gap-1">
+								<span className="fa fa-map-marker font-semibold text-red-500" />
+								<span className="truncate max-w-[200px]">
+									{user.location}
+								</span>
+							</p>
+						</div>
+					) : null}
 				</div>
 			</div>
 		</section>

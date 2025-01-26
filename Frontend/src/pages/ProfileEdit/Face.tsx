@@ -1,28 +1,17 @@
 import { Link } from "react-router-dom";
 import FormInput from "../../components/common/FormInput";
 import Images from "./Images";
-
-interface UserData {
-	first_name: string;
-	last_name: string;
-	username: string;
-	email: string;
-	age: number;
-	biography: string;
-	fame: number;
-	last_online: number;
-	profile_picture: string;
-	gender: string;
-	sexual_preference: string;
-}
+import { EditProfileData } from "../../services/api/profile";
 
 interface FaceProps {
-	user: UserData;
+	user: EditProfileData;
+	onChange: (
+		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+	) => void;
+	onImagesUpdate: (images: string[]) => void;
 }
 
-const Face = ({ user, handleImageUpload }: FaceProps) => {
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {};
-
+const Face = ({ user, onChange, onImagesUpdate }: FaceProps) => {
 	return (
 		<section className="container max-w-4xl mt-20 px-3 relative text-font-main">
 			<div className="m-auto w-fit">
@@ -53,7 +42,7 @@ const Face = ({ user, handleImageUpload }: FaceProps) => {
 						<div className="mt-5">
 							<Images
 								user={user}
-								handleImageUpload={handleImageUpload}
+								onImagesUpdate={onImagesUpdate}
 							/>
 						</div>
 					</div>
@@ -62,8 +51,8 @@ const Face = ({ user, handleImageUpload }: FaceProps) => {
 							<label htmlFor="">Username</label>
 							<FormInput
 								name="username"
-								value="alaparic"
-								onChange={handleChange}
+								value={user.username}
+								onChange={onChange}
 							/>
 						</div>
 						<div className="flex gap-2 lg:gap-5 flex-wrap">
@@ -71,16 +60,16 @@ const Face = ({ user, handleImageUpload }: FaceProps) => {
 								<label htmlFor="first_name">First Name</label>
 								<FormInput
 									name="first_name"
-									value="alex"
-									onChange={handleChange}
+									value={user.first_name}
+									onChange={onChange}
 								/>
 							</div>
 							<div className="w-full lg:w-auto">
 								<label htmlFor="last_name">Last Name</label>
 								<FormInput
 									name="last_name"
-									value="apa"
-									onChange={handleChange}
+									value={user.last_name}
+									onChange={onChange}
 								/>
 							</div>
 						</div>
@@ -89,19 +78,21 @@ const Face = ({ user, handleImageUpload }: FaceProps) => {
 							<FormInput
 								type="email"
 								name="email"
-								value="test@test.com"
-								onChange={handleChange}
+								value={user.email}
+								onChange={onChange}
 							/>
 						</div>
 						<div>
 							<label htmlFor="bio">Bio</label>
 							<div className="w-full">
 								<textarea
-									name="bio"
+									name="biography"
+									value={user.biography || ""}
+									onChange={onChange}
 									placeholder="Bio"
 									className="rounded-md w-full p-3 my-1"
 									rows={4}
-								></textarea>
+								/>
 							</div>
 						</div>
 					</div>

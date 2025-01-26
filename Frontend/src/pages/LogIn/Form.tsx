@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FormInput from "../../components/common/FormInput";
 import MsgCard from "../../components/common/MsgCard";
 import OauthButton from "../../components/common/Oauth42Button";
@@ -8,6 +8,8 @@ import RegularButton from "../../components/common/RegularButton";
 
 const LoginForm: React.FC = () => {
 	const { login } = useAuth();
+	const navigate = useNavigate();
+
 	const [formData, setFormData] = useState({
 		username: "",
 		password: "",

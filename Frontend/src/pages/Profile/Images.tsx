@@ -20,7 +20,7 @@ const ImageGallery = ({ user }: ImageGalleryProps) => {
 				<div className="flex items-center justify-between p-4 border-b">
 					<h3 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
 						<span className="fa fa-image" />
-						{user.first_name}'s Images
+						Your Images
 					</h3>
 					<button
 						onClick={() => setIsModalOpen(false)}
@@ -34,14 +34,14 @@ const ImageGallery = ({ user }: ImageGalleryProps) => {
 				<div className="p-4 md:p-6">
 					{user.images && user.images.length > 0 ? (
 						<div className="flex flex-wrap gap-2 md:gap-4 justify-center">
-							{user.images.map((imageUrl, index) => (
+							{user.images.map((image, index) => (
 								<div
 									key={index}
 									className="w-[calc(50%-0.5rem)] md:w-[calc(33.333%-1rem)] flex-grow-0 flex-shrink-0"
 								>
 									<div className="relative pt-[100%]">
 										<img
-											src={imageUrl}
+											src={image.imageURL}
 											alt={`${user.first_name}'s image ${
 												index + 1
 											}`}
@@ -67,7 +67,7 @@ const ImageGallery = ({ user }: ImageGalleryProps) => {
 			>
 				<span className="flex items-center gap-2 rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0">
 					<span className="fa fa-image" />
-					{user.first_name}'s Images
+					Your Images
 				</span>
 			</button>
 		</div>

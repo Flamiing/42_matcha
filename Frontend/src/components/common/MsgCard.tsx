@@ -21,7 +21,7 @@ const MsgCard: React.FC<MessageProps> = ({
 
 	const getStyles = (type: MessageType) => {
 		const baseStyles =
-			"rounded py-4 px-8 fixed bottom-4 right-4 shadow-lg xl:w-1/4 lg:w-1/3 md:w-1/2 sm:w-3/4 w-fit flex items-center transition-all duration-500";
+			"z-50 rounded py-4 px-8 fixed bottom-4 right-4 shadow-lg xl:w-1/4 lg:w-1/3 md:w-1/2 sm:w-3/4 w-fit flex items-center transition-all duration-500";
 
 		const typeStyles = {
 			error: "bg-red-50 text-red-700 border-red-200",
