@@ -28,7 +28,11 @@ export default class MatchesController {
 
         const rawMatches = [...matchesOne, ...matchesTwo];
 
-        const matches = await MatchesController.getMatchesInfo(req, res, rawMatches);
+        const matches = await MatchesController.getMatchesInfo(
+            req,
+            res,
+            rawMatches
+        );
         if (!matches) return res;
 
         return res.json({ msg: matches });
@@ -45,16 +49,21 @@ export default class MatchesController {
             if (match.user_id_1 !== req.session.user.id) id = match.user_id_1;
             else id = match.user_id_2;
             user = await userModel.getById({ id });
-            if (!user || user.length === 0) return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR);
+            if (!user || user.length === 0)
+                return returnErrorStatus(
+                    res,
+                    500,
+                    StatusMessage.INTERNAL_SERVER_ERROR
+                );
 
-            const profilePictureURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${id}/profile-picture`
+            const profilePictureURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${id}/profile-picture`;
 
             const newMatch = {
                 userId: id,
                 username: user.username,
                 profilePicture: profilePictureURL,
-                matchId: match.id
-            }
+                matchId: match.id,
+            };
             matches.push(newMatch);
         }
 
