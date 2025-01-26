@@ -12,10 +12,10 @@ export default class EventsRouter {
         router.get('/', EventsController.getAllUserEvents);
 
         // POST:
-        router.post('/', EventsController.createEvent);
+        //router.post('/', EventsController.createEvent);
 
         // DELETE:
-        router.delete('/:id', EventsController.deleteEvent);
+        //router.delete('/:id', EventsController.deleteEvent);
 
         return router;
     }

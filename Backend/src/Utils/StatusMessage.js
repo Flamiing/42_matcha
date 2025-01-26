@@ -77,4 +77,5 @@ export default class StatusMessage {
     static USER_HAS_MAX_FAME = 'INFO: User has max fame!';
     static USER_CANNOT_LIKE =
         "Cannot like other users if you don't have a profile picture!";
+    static INVALID_USERNAME = 'Invalid username.'
 }
