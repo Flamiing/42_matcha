@@ -51,6 +51,16 @@ CREATE TABLE matches (
     UNIQUE(user_id_1, user_id_2)
 );
 
+CREATE TABLE events (
+	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+	attendee_id_1 UUID REFERENCES users(id) ON DELETE CASCADE,
+	attendee_id_2 UUID REFERENCES users(id) ON DELETE CASCADE,
+    match_id UUID REFERENCES matches(id) ON DELETE CASCADE,
+    title VARCHAR(60),
+    description VARCHAR(500),
+    date TIMESTAMP,
+);
+
 CREATE TABLE likes (
 	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
 	liked_by UUID REFERENCES users(id) ON DELETE CASCADE,

@@ -9,7 +9,7 @@ export default class EventsRouter {
         const router = Router();
 
         // GET:
-        router.get('/', EventsController.getAllEvents);
+        router.get('/', EventsController.getAllUserEvents);
 
         // POST:
         router.post('/', EventsController.createEvent);

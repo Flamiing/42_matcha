@@ -17,6 +17,7 @@ import UsersRouter from '../Routes/UsersRouter.js';
 import TagsRouter from '../Routes/TagsRouter.js';
 import LikesRouter from '../Routes/LikesRouter.js';
 import MatchesRouter from '../Routes/MatchesRouter.js';
+import EventsRouter from '../Routes/EventsRouter.js';
 
 export default class App {
     constructor() {
