@@ -36,9 +36,12 @@ export default class LikesController {
             return res.json({ msg: StatusMessage.USER_LIKED_REMOVED });
         }
 
-        const saveLikeResult = await LikesController.saveLike(res, likedById, likedId);
-        if (!saveLikeResult)
-            return res
+        const saveLikeResult = await LikesController.saveLike(
+            res,
+            likedById,
+            likedId
+        );
+        if (!saveLikeResult) return res;
 
         return res.json({ msg: StatusMessage.USER_LIKED });
     }
@@ -92,19 +95,21 @@ export default class LikesController {
         };
         const saveLikeResult = await likesModel.create({ input });
         if (!saveLikeResult)
-            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR)
+            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
 
         const isMatch = await likesModel.checkIfMatch(likedById, likedId);
-        if (isMatch === null) return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+        if (isMatch === null)
+            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
 
         if (isMatch) {
             input = {
                 user_id_1: likedById,
-                user_id_2: likedId
-            }
-    
+                user_id_2: likedId,
+            };
+
             const matchResult = await matchesModel.create({ input });
-            if (!matchResult || matchResult.length === 0) return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+            if (!matchResult || matchResult.length === 0)
+                return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
             console.info('Match made!');
             // TODO: Send notification
         }

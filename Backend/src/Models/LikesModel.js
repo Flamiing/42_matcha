@@ -35,19 +35,25 @@ class LikesModel extends Model {
     async checkIfMatch(userIdOne, userIdTwo) {
         const referenceOne = {
             liked_by: userIdOne,
-            liked: userIdTwo
+            liked: userIdTwo,
         };
 
-        const userLikeOne = await likesModel.getByReference(referenceOne, false);
+        const userLikeOne = await likesModel.getByReference(
+            referenceOne,
+            false
+        );
         if (!userLikeOne) return null;
         if (userLikeOne.length === 0) return false;
 
         const referenceTwo = {
             liked_by: userIdTwo,
-            liked: userIdOne
+            liked: userIdOne,
         };
 
-        const userLikeTwo = await likesModel.getByReference(referenceTwo, false);
+        const userLikeTwo = await likesModel.getByReference(
+            referenceTwo,
+            false
+        );
         if (!userLikeTwo) return null;
         if (userLikeTwo.length === 0) return false;
 
