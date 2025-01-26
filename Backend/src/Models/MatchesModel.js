@@ -9,17 +9,17 @@ class MatchesModel extends Model {
     async findMatchId(userIdOne, userIdTwo) {
         let reference = {
             user_id_1: userIdOne,
-            user_id_2: userIdTwo
-        }
+            user_id_2: userIdTwo,
+        };
 
         let match = await this.getByReference(reference, false);
         if (!match) return null;
         if (match.length === 0) {
             reference = {
                 user_id_1: userIdTwo,
-                user_id_2: userIdOne
-            }
-    
+                user_id_2: userIdOne,
+            };
+
             match = await this.getByReference(reference, false);
             if (!match) return null;
         }
