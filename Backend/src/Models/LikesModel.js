@@ -38,10 +38,7 @@ class LikesModel extends Model {
             liked: userIdTwo,
         };
 
-        const userLikeOne = await likesModel.getByReference(
-            referenceOne,
-            false
-        );
+        const userLikeOne = await this.getByReference(referenceOne, false);
         if (!userLikeOne) return null;
         if (userLikeOne.length === 0) return false;
 
@@ -50,10 +47,7 @@ class LikesModel extends Model {
             liked: userIdOne,
         };
 
-        const userLikeTwo = await likesModel.getByReference(
-            referenceTwo,
-            false
-        );
+        const userLikeTwo = await this.getByReference(referenceTwo, false);
         if (!userLikeTwo) return null;
         if (userLikeTwo.length === 0) return false;
 

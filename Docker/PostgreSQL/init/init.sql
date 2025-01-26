@@ -43,6 +43,14 @@ CREATE TABLE user_tags (
 	UNIQUE(user_id, tag_id)
 );
 
+CREATE TABLE matches (
+	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+	user_id_1 UUID REFERENCES users(id) ON DELETE CASCADE,
+	user_id_2 UUID REFERENCES users(id) ON DELETE CASCADE,
+	time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id_1, user_id_2)
+);
+
 CREATE TABLE likes (
 	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
 	liked_by UUID REFERENCES users(id) ON DELETE CASCADE,
@@ -55,13 +63,6 @@ CREATE TABLE views_history (
 	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
 	viewed_by UUID REFERENCES users(id) ON DELETE CASCADE,
 	viewed UUID REFERENCES users(id) ON DELETE CASCADE,
-	time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE matches (
-	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-	user_id_1 UUID REFERENCES users(id) ON DELETE CASCADE,
-	user_id_2 UUID REFERENCES users(id) ON DELETE CASCADE,
 	time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

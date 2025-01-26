@@ -82,6 +82,32 @@ export default class Model {
         }
     }
 
+    async updateByReference(input, reference) {
+        const fields = Object.keys(input)
+            .map((key, index) => `${key} = $${index + 1}`)
+            .join(', ');
+        let values = Object.values(input);
+
+        const references = Object.keys(reference)
+            .map((key, index) => `${key} = $${Object.keys(input).length + index + 1}`)
+            .join(' AND ');
+        values.push(...Object.values(reference));
+
+        const query = {
+            text: `UPDATE ${this.table} SET ${fields} WHERE ${references} RETURNING *;`,
+            values: values,
+        };
+
+        try {
+            const result = await this.db.query(query);
+            if (result.rows.length === 0) return [];
+            return result.rows;
+        } catch (error) {
+            console.error('Error making the query: ', error.message);
+            return null;
+        }
+    }
+
     async delete({ id }) {
         const query = {
             text: `DELETE FROM ${this.table} WHERE id = $1 RETURNING *;`,
