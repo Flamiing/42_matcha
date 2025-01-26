@@ -67,7 +67,10 @@ export default class App {
         this.app.use(`${this.API_PREFIX}/users`, UsersRouter.createRouter());
         this.app.use(`${this.API_PREFIX}/tags`, TagsRouter.createRouter());
         this.app.use(`${this.API_PREFIX}/likes`, LikesRouter.createRouter());
+<<<<<<< HEAD
         this.app.use(`${this.API_PREFIX}/events`, EventsRouter.createRouter());
+=======
+>>>>>>> 647d2f8 (Prettier formating)
         this.app.use(
             `${this.API_PREFIX}/matches`,
             MatchesRouter.createRouter()
