@@ -16,7 +16,7 @@ const eventSchema = z.object({
             invalid_type_error: 'Invalid description.',
         })
         .max(500, 'Description must be 500 characters or fewer.')
-        .optional()
+        .optional(),
 });
 
 export function validateEvent(input) {
