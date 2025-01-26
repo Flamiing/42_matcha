@@ -15,7 +15,7 @@ const db = new Client({
 async function connectToDatabase() {
     try {
         await db.connect();
-        console.log('Connected to the database.');
+        console.info('Connected to the database.');
     } catch (error) {
         console.error('Could not connect to the database: ', error.message);
     }

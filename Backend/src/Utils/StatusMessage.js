@@ -76,5 +76,5 @@ export default class StatusMessage {
     static CANNOT_CHANGE_USERNAME = 'You cannot change your username.';
     static USER_HAS_MAX_FAME = 'INFO: User has max fame!';
     static USER_CANNOT_LIKE =
-        'Cannot like other users without a profile picture!';
+        'Cannot like other users if you don\'t have a profile picture!';
 }
