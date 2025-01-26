@@ -342,8 +342,12 @@ export default class UsersController {
         let images = [];
         for (const image of req.files) {
             const imageId = path.parse(image.filename).name;
-            const imageLink = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${id}/images/${imageId}`;
-            images.push(imageLink);
+            const imageURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${id}/images/${imageId}`;
+            const imageInfo = { 
+                imageId: imageId,
+                imageURL: imageURL
+            }
+            images.push(imageInfo);
             const result = await UsersController.saveImageToDB(
                 res,
                 id,
