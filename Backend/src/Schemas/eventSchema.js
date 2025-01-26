@@ -7,9 +7,9 @@ import StatusMessage from '../Utils/StatusMessage.js';
 const eventSchema = z.object({
     description: z
             .string({
-                invalid_type_error: 'Invalid biography.',
+                invalid_type_error: 'Invalid description.',
             })
-            .max(500, 'Biography must be 500 characters or fewer.')
+            .max(500, 'Description must be 500 characters or fewer.')
             .optional(),
     new_password: z
         .string({
