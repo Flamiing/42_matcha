@@ -66,6 +66,9 @@ export default class App {
         this.app.use(`${this.API_PREFIX}/users`, UsersRouter.createRouter());
         this.app.use(`${this.API_PREFIX}/tags`, TagsRouter.createRouter());
         this.app.use(`${this.API_PREFIX}/likes`, LikesRouter.createRouter());
-        this.app.use(`${this.API_PREFIX}/matches`, MatchesRouter.createRouter());
+        this.app.use(
+            `${this.API_PREFIX}/matches`,
+            MatchesRouter.createRouter()
+        );
     }
 }
