@@ -56,7 +56,7 @@ export default class Model {
             return result.rows[0];
         } catch (error) {
             console.error('Error making the query: ', error.message);
-            return error;
+            return null;
         }
     }
 

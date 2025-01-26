@@ -1,6 +1,7 @@
 // Local Imports:
 import likesModel from '../Models/LikesModel.js';
 import userModel from '../Models/UserModel.js';
+import matchesModel from '../Models/MatchesModel.js';
 import { returnErrorStatus } from '../Utils/errorUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 
@@ -17,6 +18,9 @@ export default class LikesController {
         const validId = await LikesController.validateId(res, likedId);
         if (!validId) return res;
 
+        const canLike = await LikesController.checkIfCanLike(res, likedById);
+        if (!canLike) return res;
+
         const liked = await LikesController.checkIfLiked(
             res,
             likedId,
@@ -32,13 +36,10 @@ export default class LikesController {
             return res.json({ msg: StatusMessage.USER_LIKED_REMOVED });
         }
 
-        const input = {
-            liked_by: likedById,
-            liked: likedId,
-        };
-        const saveLikeResult = await likesModel.create({ input });
+        const saveLikeResult = await LikesController.saveLike(res, likedById, likedId);
         if (!saveLikeResult)
-            return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+            return res
+
         return res.json({ msg: StatusMessage.USER_LIKED });
     }
 
@@ -70,5 +71,44 @@ export default class LikesController {
         const uuidRegex =
             /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
         return uuidRegex.test(uuid);
+    }
+
+    static async checkIfCanLike(res, id) {
+        const user = await userModel.getById({ id });
+        if (!user)
+            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+        if (user.length === 0)
+            return returnErrorStatus(res, 404, StatusMessage.USER_NOT_FOUND);
+
+        if (!user.profile_picture)
+            return returnErrorStatus(res, 403, StatusMessage.USER_CANNOT_LIKE);
+        return true;
+    }
+
+    static async saveLike(res, likedById, likedId) {
+        let input = {
+            liked_by: likedById,
+            liked: likedId,
+        };
+        const saveLikeResult = await likesModel.create({ input });
+        if (!saveLikeResult)
+            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR)
+
+        const isMatch = await likesModel.checkIfMatch(likedById, likedId);
+        if (isMatch === null) return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+
+        if (isMatch) {
+            input = {
+                user_id_1: likedById,
+                user_id_2: likedId
+            }
+    
+            const matchResult = await matchesModel.create({ input });
+            if (!matchResult || matchResult.length === 0) return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+            console.info('Match made!');
+            // TODO: Send notification
+        }
+
+        return true;
     }
 }
