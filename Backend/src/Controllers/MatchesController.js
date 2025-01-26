@@ -2,7 +2,7 @@
 import matchesModel from '../Models/MatchesModel.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 
-export default class TagsController {
+export default class MatchesController {
     static async getAllUserMatches(req, res) {
         let reference = {
             user_id_1: req.session.user.id,
@@ -25,6 +25,8 @@ export default class TagsController {
                 .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
 
         const matches = [...matchesOne, ...matchesTwo];
+
+        //const matchesWithInfo = await MatchesController.getMatchesInfo()
 
         return res.json({ msg: matches });
     }
