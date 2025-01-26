@@ -29,7 +29,12 @@ export default class LikesController {
         if (res.statusCode !== 200) return res;
 
         if (liked) {
-            const removeLikeResult = await LikesController.removeLike(res, liked.id, likedById, likedId)
+            const removeLikeResult = await LikesController.removeLike(
+                res,
+                liked.id,
+                likedById,
+                likedId
+            );
             if (!removeLikeResult) return res;
             return res.json({ msg: StatusMessage.USER_LIKED_REMOVED });
         }
@@ -106,9 +111,10 @@ export default class LikesController {
             };
 
             const matchResult = await matchesModel.create({ input });
-            if (!matchResult || matchResult.length === 0) return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+            if (!matchResult || matchResult.length === 0)
+                return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
             console.info(`Match created with ID: ${matchResult.id}`);
-            
+
             // TODO: Send notification
         }
 
@@ -122,20 +128,30 @@ export default class LikesController {
 
         let reference = {
             user_id_1: likedById,
-            user_id_2: likedId
-        }
+            user_id_2: likedId,
+        };
         let removeMatch = await matchesModel.deleteByReference(reference);
-        if (removeMatch === null) return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR)
+        if (removeMatch === null)
+            return returnErrorStatus(
+                res,
+                500,
+                StatusMessage.INTERNAL_SERVER_ERROR
+            );
         if (!removeMatch) {
             reference = {
                 user_id_1: likedId,
-                user_id_2: likedById
-            }
+                user_id_2: likedById,
+            };
 
             removeMatch = await matchesModel.deleteByReference(reference);
-            if (!removeMatch) return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR)
+            if (!removeMatch)
+                return returnErrorStatus(
+                    res,
+                    500,
+                    StatusMessage.INTERNAL_SERVER_ERROR
+                );
         }
-        
+
         return true;
     }
 }

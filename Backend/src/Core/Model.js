@@ -89,7 +89,10 @@ export default class Model {
         let values = Object.values(input);
 
         const references = Object.keys(reference)
-            .map((key, index) => `${key} = $${Object.keys(input).length + index + 1}`)
+            .map(
+                (key, index) =>
+                    `${key} = $${Object.keys(input).length + index + 1}`
+            )
             .join(' AND ');
         values.push(...Object.values(reference));
 
