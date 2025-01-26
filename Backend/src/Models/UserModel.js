@@ -21,7 +21,7 @@ class UserModel extends Model {
 
         let newFame = publicUser.fame + fameToAdd;
         if (newFame >= fameLimit) {
-            console.log(StatusMessage.USER_HAS_MAX_FAME);
+            console.info(StatusMessage.USER_HAS_MAX_FAME);
             newFame = fameLimit;
         }
 
