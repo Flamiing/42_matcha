@@ -10,7 +10,7 @@ CREATE TABLE users (
 	first_name VARCHAR(50),
 	last_name VARCHAR(50),
 	password VARCHAR(255) DEFAULT NULL,
-	age INTEGER CHECK (age >= 0),
+	age BIGINT DEFAULT 0,
 	biography VARCHAR(500),
 	profile_picture VARCHAR(255) DEFAULT NULL,
 	location VARCHAR(100),
@@ -41,6 +41,14 @@ CREATE TABLE user_tags (
 	user_id UUID REFERENCES users(id) ON DELETE CASCADE,
 	tag_id UUID REFERENCES tags(id) ON DELETE CASCADE,
 	UNIQUE(user_id, tag_id)
+);
+
+CREATE TABLE matches (
+	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+	user_id_1 UUID REFERENCES users(id) ON DELETE CASCADE,
+	user_id_2 UUID REFERENCES users(id) ON DELETE CASCADE,
+	time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id_1, user_id_2)
 );
 
 CREATE TABLE likes (
