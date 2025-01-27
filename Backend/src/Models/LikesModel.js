@@ -31,6 +31,28 @@ class LikesModel extends Model {
             return null;
         }
     }
+
+    async checkIfMatch(userIdOne, userIdTwo) {
+        const referenceOne = {
+            liked_by: userIdOne,
+            liked: userIdTwo,
+        };
+
+        const userLikeOne = await this.getByReference(referenceOne, false);
+        if (!userLikeOne) return null;
+        if (userLikeOne.length === 0) return false;
+
+        const referenceTwo = {
+            liked_by: userIdTwo,
+            liked: userIdOne,
+        };
+
+        const userLikeTwo = await this.getByReference(referenceTwo, false);
+        if (!userLikeTwo) return null;
+        if (userLikeTwo.length === 0) return false;
+
+        return true;
+    }
 }
 
 const likesModel = new LikesModel();
