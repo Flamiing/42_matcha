@@ -19,6 +19,7 @@ class UserTagsModel extends Model {
     }
 
     async addTags(userId, tags) {
+        if (!tags) return [];
         for (const id of tags) {
             const validTag = await tagsModel.getById({ id });
             if (!validTag) return null;
