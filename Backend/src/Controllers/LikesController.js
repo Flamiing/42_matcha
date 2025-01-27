@@ -4,6 +4,7 @@ import userModel from '../Models/UserModel.js';
 import matchesModel from '../Models/MatchesModel.js';
 import { returnErrorStatus } from '../Utils/errorUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
+import { isValidUUID } from '../Validations/generalValidations.js';
 
 export default class LikesController {
     static async handleLike(req, res) {
@@ -50,8 +51,8 @@ export default class LikesController {
     }
 
     static async validateId(res, id) {
-        if (!LikesController.isValidUUID(id))
-            return returnErrorStatus(res, 404, StatusMessage.USER_NOT_FOUND);
+        if (!isValidUUID(id))
+            return returnErrorStatus(res, 404, StatusMessage.EVENT_NOT_FOUND);
 
         const likedIdCheck = await userModel.getById({ id });
         if (!likedIdCheck)
@@ -71,12 +72,6 @@ export default class LikesController {
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
         if (likedCheck.length === 0) return false;
         return likedCheck;
-    }
-
-    static isValidUUID(uuid) {
-        const uuidRegex =
-            /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-        return uuidRegex.test(uuid);
     }
 
     static async checkIfCanLike(res, id) {

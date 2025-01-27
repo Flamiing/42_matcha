@@ -15,7 +15,7 @@ export default class EventsRouter {
         router.post('/', EventsController.createEvent);
 
         // DELETE:
-        //router.delete('/:id', EventsController.deleteEvent);
+        router.delete('/:id', EventsController.deleteEvent);
 
         return router;
     }

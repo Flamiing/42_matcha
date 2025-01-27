@@ -82,4 +82,6 @@ export default class StatusMessage {
         'Cannot create an event with a user you are not matched with.';
     static INVALID_EVENT_DATE =
         'The selected date cannot be in the past. Please choose a valid future date.';
+    static EVENT_DELETION_SUCCESSFUL = 'Event deleted successfully!';
+    static EVENT_NOT_FOUND = 'The event you tried to delete does not exist.';
 }

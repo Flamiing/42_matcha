@@ -7,6 +7,7 @@ import {
     validateInvitedUserId,
 } from '../Validations/eventsValidations.js';
 import { validEventDate } from '../Utils/timeUtils.js';
+import { isValidUUID } from '../Validations/generalValidations.js';
 
 export default class EventsController {
     static async getAllUserEvents(req, res) {
@@ -79,5 +80,27 @@ export default class EventsController {
             return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
 
         return res.json({ msg: event });
+    }
+
+    static async deleteEvent(req, res) {
+        if (!isValidUUID(req.params.id)) return res.status(400).json({ msg: StatusMessage.EVENT_NOT_FOUND });
+        
+        const reference = {
+            id: req.params.id,
+            attendee_id_1: req.session.user.id
+        }
+
+        let deleteResult = await eventsModel.deleteByReference(reference);
+        if (deleteResult === null) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+        if (!deleteResult) {
+            delete reference.attendee_id_1
+            reference.attendee_id_2 = req.session.user.id
+            console.log('TEST: ', reference)
+            deleteResult = await eventsModel.deleteByReference(reference);
+            if (deleteResult === null) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+            if (!deleteResult) return res.status(404).json({ msg: StatusMessage.EVENT_NOT_FOUND })
+        }
+
+        return res.json({ msg: StatusMessage.EVENT_DELETION_SUCCESSFUL })
     }
 }
