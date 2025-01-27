@@ -134,6 +134,7 @@ const Face = ({ user, onChange, onImagesUpdate, oauth }: FaceProps) => {
 							<label htmlFor="bio">Biography</label>
 							<div className="w-full">
 								<textarea
+									id="biography"
 									name="biography"
 									value={user.biography || ""}
 									onChange={onChange}

@@ -61,6 +61,7 @@ const Body = ({ user, onChange, onSelectChange }: BodyProps) => {
 				<div>
 					<label htmlFor="birthday">Birthday</label>
 					<input
+						id="birthday"
 						type="date"
 						name="birthday"
 						value={dateFormatConversion(user.age)}

@@ -20,6 +20,7 @@ const FormInput: React.FC<FormInputProps> = ({
 	return (
 		<div className="w-full">
 			<input
+				id={name}
 				type={type}
 				name={name}
 				value={value}
