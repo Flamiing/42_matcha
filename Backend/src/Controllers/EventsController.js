@@ -6,6 +6,7 @@ import {
     validateMatch,
     validateInvitedUserId,
 } from '../Validations/eventsValidations.js';
+import { validEventDate } from '../Utils/timeUtils.js';
 
 export default class EventsController {
     static async getAllUserEvents(req, res) {
@@ -40,6 +41,9 @@ export default class EventsController {
             const errorMessage = validatedEvent.error.errors[0].message;
             return res.status(400).json({ msg: errorMessage });
         }
+
+        if (!validEventDate(validatedEvent.data.date))
+            return res.status(400).json({ msg: StatusMessage.INVALID_EVENT_DATE })
 
         const validMatchId = await validateMatch(
             res,
