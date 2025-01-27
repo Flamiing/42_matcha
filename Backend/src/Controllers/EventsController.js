@@ -35,7 +35,7 @@ export default class EventsController {
     }
 
     static async createEvent(req, res) {
-        const validatedEvent = (validateEvent(req.body));
+        const validatedEvent = validateEvent(req.body);
         if (!validatedEvent.success) {
             const errorMessage = validatedEvent.error.errors[0].message;
             return res.status(400).json({ msg: errorMessage });
