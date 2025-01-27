@@ -80,5 +80,6 @@ export default class StatusMessage {
     static INVALID_USERNAME = 'Invalid username.';
     static MATCH_DOES_NOT_EXIST =
         'Cannot create an event with a user you are not matched with.';
-    static INVALID_EVENT_DATE = 'The selected date cannot be in the past. Please choose a valid future date.'
+    static INVALID_EVENT_DATE =
+        'The selected date cannot be in the past. Please choose a valid future date.';
 }

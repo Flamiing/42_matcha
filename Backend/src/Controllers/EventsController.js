@@ -43,7 +43,9 @@ export default class EventsController {
         }
 
         if (!validEventDate(validatedEvent.data.date))
-            return res.status(400).json({ msg: StatusMessage.INVALID_EVENT_DATE })
+            return res
+                .status(400)
+                .json({ msg: StatusMessage.INVALID_EVENT_DATE });
 
         const validMatchId = await validateMatch(
             res,
