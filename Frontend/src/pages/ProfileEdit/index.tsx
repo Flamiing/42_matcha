@@ -8,6 +8,7 @@ import RegularButton from "../../components/common/RegularButton";
 import MsgCard from "../../components/common/MsgCard";
 import { useEditProfile } from "../../hooks/PageData/useEditProfile";
 import { EditProfileData } from "../../services/api/profile";
+import PasswordChange from "./PasswordChange";
 
 const index = () => {
 	const { user } = useAuth();
@@ -139,13 +140,16 @@ const index = () => {
 					onChange={handleInputChange}
 					onSelectChange={handleSelectChange}
 				/>
-				<div className="max-w-4xl w-full text-start mb-10 mt-9">
-					<RegularButton
-						value="Update profile"
-						disabled={isSubmitting || isUpdating}
-					/>
-				</div>
+				<section className="container max-w-4xl px-3 relative text-font-main  mb-10 mt-9">
+					<div className="max-w-4xl w-full text-start">
+						<RegularButton
+							value="Update profile"
+							disabled={isSubmitting || isUpdating}
+						/>
+					</div>
+				</section>
 			</form>
+			<PasswordChange />
 		</main>
 	);
 };

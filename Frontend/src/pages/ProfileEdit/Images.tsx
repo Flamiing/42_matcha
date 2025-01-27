@@ -113,6 +113,7 @@ const ImageGallery = ({ user, onImagesUpdate }: ImageGalleryProps) => {
 							<span className="fa fa-close" />
 						</button>
 					</div>
+					{/* Content */}
 					<div className="p-4 md:p-6">
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 							{user.images.map((image, index) => (

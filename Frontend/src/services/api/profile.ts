@@ -93,4 +93,12 @@ export const profileApi = {
 		});
 		return response;
 	},
+
+	changePassword: async (passwords: string) => {
+		const response = await apiRequest(`auth/password/change`, {
+			method: "POST",
+			body: JSON.stringify(passwords),
+		});
+		return response;
+	},
 };

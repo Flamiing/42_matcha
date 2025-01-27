@@ -80,11 +80,29 @@ export const useEditProfile = () => {
 		}
 	};
 
+	const changePassword = async (passwords: string) => {
+		setLoading(true);
+		setError(null);
+		try {
+			const response = await profileApi.changePassword(passwords);
+			return response;
+		} catch (err) {
+			const errorMessage = err.message
+				? err.message
+				: "Failed to change password";
+			setError(errorMessage);
+			throw new Error(errorMessage);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	return {
 		updateProfile,
 		uploadProfilePicture,
 		uploadImages,
 		removeImage,
+		changePassword,
 		loading,
 		error,
 	};
