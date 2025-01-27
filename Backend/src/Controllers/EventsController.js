@@ -34,8 +34,12 @@ export default class EventsController {
 
         const rawEvents = [...eventsOne, ...eventsTwo];
 
-        const events = await EventsController.getEventsInfo(req, res, rawEvents);
-        if (!events) return res
+        const events = await EventsController.getEventsInfo(
+            req,
+            res,
+            rawEvents
+        );
+        if (!events) return res;
 
         return res.json({ msg: events });
     }
@@ -64,23 +68,23 @@ export default class EventsController {
                     StatusMessage.INTERNAL_SERVER_ERROR
                 );
 
-            const profilePictureOneURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${attendeeOne.id}/profile-picture`
-            const profilePictureTwoURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${attendeeTwo.id}/profile-picture`
+            const profilePictureOneURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${attendeeOne.id}/profile-picture`;
+            const profilePictureTwoURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${attendeeTwo.id}/profile-picture`;
 
             const newEvent = {
                 attendeeIdOne: {
                     userId: attendeeOne.id,
                     username: attendeeOne.username,
-                    profilePicture: profilePictureOneURL
+                    profilePicture: profilePictureOneURL,
                 },
                 attendeeIdTwo: {
                     userId: attendeeTwo.id,
                     username: attendeeTwo.username,
-                    profilePicture: profilePictureTwoURL
+                    profilePicture: profilePictureTwoURL,
                 },
                 title: event.title,
                 description: event.description,
-                date: event.date
+                date: event.date,
             };
             events.push(newEvent);
         }
