@@ -78,5 +78,6 @@ export default class StatusMessage {
     static USER_CANNOT_LIKE =
         "Cannot like other users if you don't have a profile picture!";
     static INVALID_USERNAME = 'Invalid username.';
-    static MATCH_DOES_NOT_EXIST = 'Cannot create an event with a user you are not matched with.'
+    static MATCH_DOES_NOT_EXIST =
+        'Cannot create an event with a user you are not matched with.';
 }
