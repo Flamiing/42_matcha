@@ -1,5 +1,6 @@
 // Local Imports:
 import eventsModel from '../Models/EventsModel.js';
+import userModel from '../Models/userModel.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { validateEvent } from '../Schemas/eventSchema.js';
 import {
@@ -31,9 +32,60 @@ export default class EventsController {
                 .status(500)
                 .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
 
-        const events = [...eventsOne, ...eventsTwo];
+        const rawEvents = [...eventsOne, ...eventsTwo];
+
+        const events = await EventsController.getEventsInfo(req, res, rawEvents);
+        if (!events) return res
 
         return res.json({ msg: events });
+    }
+
+    static async getEventsInfo(req, res, rawEvents) {
+        const { API_HOST, API_PORT, API_VERSION } = process.env;
+
+        let events = [];
+
+        for (const event of rawEvents) {
+            let id = event.attendee_id_1;
+            const attendeeOne = await userModel.getById({ id });
+            if (!attendeeOne || attendeeOne.length === 0)
+                return returnErrorStatus(
+                    res,
+                    500,
+                    StatusMessage.INTERNAL_SERVER_ERROR
+                );
+
+            id = event.attendee_id_2;
+            const attendeeTwo = await userModel.getById({ id });
+            if (!attendeeTwo || attendeeTwo.length === 0)
+                return returnErrorStatus(
+                    res,
+                    500,
+                    StatusMessage.INTERNAL_SERVER_ERROR
+                );
+
+            const profilePictureOneURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${attendeeOne.id}/profile-picture`
+            const profilePictureTwoURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${attendeeTwo.id}/profile-picture`
+
+            const newEvent = {
+                attendeeIdOne: {
+                    userId: attendeeOne.id,
+                    username: attendeeOne.username,
+                    profilePicture: profilePictureOneURL
+                },
+                attendeeIdTwo: {
+                    userId: attendeeTwo.id,
+                    username: attendeeTwo.username,
+                    profilePicture: profilePictureTwoURL
+                },
+                title: event.title,
+                description: event.description,
+                date: event.date
+            };
+            events.push(newEvent);
+        }
+
+        return events;
     }
 
     static async createEvent(req, res) {
