@@ -121,31 +121,8 @@ export default class LikesController {
         if (!removeLike)
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
 
-        let reference = {
-            user_id_1: likedById,
-            user_id_2: likedId,
-        };
-        let removeMatch = await matchesModel.deleteByReference(reference);
-        if (removeMatch === null)
-            return returnErrorStatus(
-                res,
-                500,
-                StatusMessage.INTERNAL_SERVER_ERROR
-            );
-        if (!removeMatch) {
-            reference = {
-                user_id_1: likedId,
-                user_id_2: likedById,
-            };
-
-            removeMatch = await matchesModel.deleteByReference(reference);
-            if (!removeMatch)
-                return returnErrorStatus(
-                    res,
-                    500,
-                    StatusMessage.INTERNAL_SERVER_ERROR
-                );
-        }
+        const deleteMatch = await matchesModel.deleteMatch(res, likedById, likedId);
+        if (!deleteMatch) return false;
 
         return true;
     }

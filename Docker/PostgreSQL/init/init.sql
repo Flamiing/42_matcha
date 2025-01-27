@@ -78,17 +78,17 @@ CREATE TABLE views_history (
 
 CREATE TABLE blocked_users (
 	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-	user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-	blocked_user UUID REFERENCES users(id) ON DELETE CASCADE,
-	UNIQUE(user_id, blocked_user)
+	blocked_by UUID REFERENCES users(id) ON DELETE CASCADE,
+	blocked UUID REFERENCES users(id) ON DELETE CASCADE,
+	UNIQUE(blocked_by, blocked)
 );
 
 CREATE TABLE reports (
 	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-	reporter UUID REFERENCES users(id) ON DELETE CASCADE,
+	reported_by UUID REFERENCES users(id) ON DELETE CASCADE,
 	reported UUID REFERENCES users(id) ON DELETE CASCADE,
 	time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	UNIQUE(reporter, reported)
+	UNIQUE(reported_by, reported)
 );
 
 CREATE TABLE chats (
