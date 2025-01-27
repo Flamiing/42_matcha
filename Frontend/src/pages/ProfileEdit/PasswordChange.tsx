@@ -81,7 +81,7 @@ const PasswordChange: React.FC = () => {
 	};
 
 	return (
-		<section className="container max-w-4xl px-3 relative text-font-main mb-10">
+		<>
 			{/* Modal */}
 			{isModalOpen && (
 				<Modal
@@ -159,7 +159,7 @@ const PasswordChange: React.FC = () => {
 					</span>
 				</button>
 			</div>
-		</section>
+		</>
 	);
 };
 

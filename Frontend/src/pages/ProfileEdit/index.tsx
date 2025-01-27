@@ -149,7 +149,10 @@ const index = () => {
 					</div>
 				</section>
 			</form>
-			<PasswordChange />
+			<section className="container max-w-4xl px-3 relative text-font-main mb-10 flex flex-col gap-5">
+				<h2 className="text-font-main text-xl ">Additional settings</h2>
+				<PasswordChange />
+			</section>
 		</main>
 	);
 };
