@@ -77,7 +77,7 @@ async function sendEmail(email, subject, body) {
     };
 
     const info = await transporter.sendMail(mail);
-    console.log('Email info: ', info);
+    console.info('Email info: ', info);
 }
 
 export async function hashPassword(password) {
