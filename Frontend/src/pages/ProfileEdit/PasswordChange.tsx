@@ -100,7 +100,7 @@ const PasswordChange: React.FC = () => {
 					<div className="flex items-center justify-between p-4 border-b">
 						<h3 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
 							<span className="fa fa-key" />
-							Update Password
+							Change password
 						</h3>
 						<button
 							onClick={() => setIsModalOpen(false)}
@@ -112,7 +112,7 @@ const PasswordChange: React.FC = () => {
 					{/* Content */}
 					<div className="p-4 md:p-6">
 						<form
-							className="flex flex-col gap-4"
+							className="flex flex-col gap-4 md:gap-6 md:mx-5"
 							onSubmit={handleSubmit()}
 						>
 							{/* OldPassword */}
@@ -140,7 +140,7 @@ const PasswordChange: React.FC = () => {
 							<RegularButton
 								type="submit"
 								className="w-full"
-								value="Update Password"
+								value="Change password"
 							/>
 						</form>
 					</div>

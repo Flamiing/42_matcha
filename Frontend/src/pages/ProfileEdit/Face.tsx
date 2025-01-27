@@ -131,7 +131,7 @@ const Face = ({ user, onChange, onImagesUpdate, oauth }: FaceProps) => {
 							""
 						)}
 						<div>
-							<label htmlFor="bio">Bio</label>
+							<label htmlFor="bio">Biography</label>
 							<div className="w-full">
 								<textarea
 									name="biography"

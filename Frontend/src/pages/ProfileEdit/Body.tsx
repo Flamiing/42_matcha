@@ -113,7 +113,7 @@ const Body = ({ user, onChange, onSelectChange }: BodyProps) => {
 						options={[
 							{ value: "male", label: "Male" },
 							{ value: "female", label: "Female" },
-							{ value: "Bisexual", label: "Bisexual" },
+							{ value: "bisexual", label: "Bisexual" },
 						]}
 						value={user.sexual_preference || ""}
 						onChange={onSelectChange}
