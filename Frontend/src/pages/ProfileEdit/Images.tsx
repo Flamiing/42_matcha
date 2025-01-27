@@ -127,7 +127,7 @@ const ImageGallery = ({ user, onImagesUpdate }: ImageGalleryProps) => {
 										onClick={() =>
 											handleRemoveImage(image.imageId)
 										}
-										className="absolute top-2 right-2 bg-red-500 text-white h-7 w-7 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+										className="absolute top-2 right-2 bg-red-500 text-white h-7 w-7 rounded-full xl:opacity-0 group-hover:opacity-100 transition-opacity"
 									>
 										<i className="fa fa-trash" />
 									</button>

@@ -128,6 +128,7 @@ const index = () => {
 			>
 				<section className="w-full bg-gradient-to-br from-orange-200 to-purple-200 flex flex-col items-center gap-12 pb-5">
 					<Face
+						oauth={user.oauth}
 						user={formData}
 						onImagesUpdate={handleImagesUpdate}
 						onChange={handleInputChange}

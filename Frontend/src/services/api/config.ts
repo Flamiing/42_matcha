@@ -31,11 +31,10 @@ export const apiRequest = async (
 export const fileUploadRequest = async (
 	endpoint: string,
 	formData: FormData,
-	options: RequestInit = {}
+	method: string = "POST"
 ) => {
 	const finalOptions: RequestInit = {
-		...options,
-		method: "POST",
+		method,
 		credentials: "include",
 		body: formData,
 		// Content-Type not specified, browser will set it with boundary

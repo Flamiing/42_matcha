@@ -65,7 +65,11 @@ export const profileApi = {
 		const formData = new FormData();
 		formData.append("files", file);
 
-		return fileUploadRequest(`users/${userId}/profile-picture`, formData);
+		return fileUploadRequest(
+			`users/${userId}/profile-picture`,
+			formData,
+			"PUT"
+		);
 	},
 
 	uploadImages: async (
@@ -77,7 +81,7 @@ export const profileApi = {
 			formData.append("files", file);
 		});
 
-		return fileUploadRequest(`users/${userId}/images`, formData);
+		return fileUploadRequest(`users/${userId}/images`, formData, "POST");
 	},
 
 	removeImage: async (
