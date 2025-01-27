@@ -1,7 +1,6 @@
 // Local Imports:
-import userModel from "../Models/UserModel.js";
+import userModel from '../Models/UserModel.js';
 import { isValidUUID } from '../Validations/generalValidations.js';
-
 
 export async function validateUserId(id) {
     if (!isValidUUID(id)) return false;

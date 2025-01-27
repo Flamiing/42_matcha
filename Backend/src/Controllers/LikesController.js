@@ -121,7 +121,11 @@ export default class LikesController {
         if (!removeLike)
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
 
-        const deleteMatch = await matchesModel.deleteMatch(res, likedById, likedId);
+        const deleteMatch = await matchesModel.deleteMatch(
+            res,
+            likedById,
+            likedId
+        );
         if (!deleteMatch) return false;
 
         return true;

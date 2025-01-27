@@ -8,44 +8,64 @@ import { validateUserId } from '../Validations/blockedUsersValidations.js';
 
 export default class BlockedUsersController {
     static async addBlockedUser(req, res) {
-        const blockedById = req.session.user.id
+        const blockedById = req.session.user.id;
         const blockedId = req.params.id;
         const validUserId = await validateUserId(blockedId);
-        if (!validUserId) return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
+        if (!validUserId)
+            return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
 
         // add user to blocked
-        const userAlreadyBlocked = await BlockedUsersController.userAlreadyBlocked(res, blockedById, blockedId);
+        const userAlreadyBlocked =
+            await BlockedUsersController.userAlreadyBlocked(
+                res,
+                blockedById,
+                blockedId
+            );
         if (userAlreadyBlocked === null) return res;
-        if (userAlreadyBlocked) return res.json({ msg: StatusMessage.USER_ALREADY_BLOCKED })
+        if (userAlreadyBlocked)
+            return res.json({ msg: StatusMessage.USER_ALREADY_BLOCKED });
 
         const input = {
             blocked_by: blockedById,
-            blocked: blockedId
-        }
+            blocked: blockedId,
+        };
         const blockedUser = await blockedUsersModel.create({ input });
-        if (!blockedUser || blockedUser.length === 0) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+        if (!blockedUser || blockedUser.length === 0)
+            return res
+                .status(500)
+                .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
 
         // delete user match if exists
-        const deleteMatch = await matchesModel.deleteMatch(res, blockedById, blockedId);
+        const deleteMatch = await matchesModel.deleteMatch(
+            res,
+            blockedById,
+            blockedId
+        );
         if (!deleteMatch) return res;
 
         // delete user like if exists
-        const deleteLike = await BlockedUsersController.deleteLike(res, blockedById, blockedId);
+        const deleteLike = await BlockedUsersController.deleteLike(
+            res,
+            blockedById,
+            blockedId
+        );
         if (!deleteLike) return res;
 
-        return res.json({ msg: StatusMessage.USER_BLOCKED })
+        return res.json({ msg: StatusMessage.USER_BLOCKED });
     }
 
     static async userAlreadyBlocked(res, blockedById, blockedId) {
         const reference = {
             blocked_by: blockedById,
-            blocked: blockedId
-        }
+            blocked: blockedId,
+        };
 
-
-        const blockedUser = await blockedUsersModel.getByReference(reference, false);
+        const blockedUser = await blockedUsersModel.getByReference(
+            reference,
+            false
+        );
         if (!blockedUser) {
-            res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR })
+            res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
             return null;
         }
         if (blockedUser.length === 0) return false;
