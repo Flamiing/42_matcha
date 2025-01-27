@@ -38,7 +38,7 @@ export default class UsersRouter {
             checkValidUserIdMiddleware(),
             UsersController.deleteImage
         );
-        router.delete('/block/:id', BlockedUsersController.unblockUser)
+        router.delete('/block/:id', BlockedUsersController.unblockUser);
 
         // PATCH:
         router.patch(

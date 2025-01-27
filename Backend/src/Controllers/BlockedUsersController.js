@@ -63,11 +63,18 @@ export default class BlockedUsersController {
 
         const reference = {
             blocked_by: blockedById,
-            blocked: blockedId
-        }
-        const unblockUser = await blockedUsersModel.deleteByReference(reference);
-        if (unblockUser === null) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
-        if (!unblockUser) return res.status(400).json({ msg: StatusMessage.USER_NOT_BLOCKED })
+            blocked: blockedId,
+        };
+        const unblockUser =
+            await blockedUsersModel.deleteByReference(reference);
+        if (unblockUser === null)
+            return res
+                .status(500)
+                .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+        if (!unblockUser)
+            return res
+                .status(400)
+                .json({ msg: StatusMessage.USER_NOT_BLOCKED });
 
         return res.json({ msg: StatusMessage.USER_UNBLOCKED });
     }
