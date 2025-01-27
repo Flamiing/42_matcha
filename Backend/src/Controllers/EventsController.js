@@ -35,29 +35,33 @@ export default class EventsController {
     }
 
     static async createEvent(req, res) {
-        const validatedEventData = validateEvent(req.body).data;
+        const validatedEvent = (validateEvent(req.body));
+        if (!validatedEvent.success) {
+            const errorMessage = validatedEvent.error.errors[0].message;
+            return res.status(400).json({ msg: errorMessage });
+        }
 
         const validMatchId = await validateMatch(
             res,
-            validatedEventData.matchId,
+            validatedEvent.data.matchId,
             req.session.user.id,
-            validatedEventData.invitedUserId
+            validatedEvent.data.invitedUserId
         );
         if (!validMatchId) return res;
 
         const validInvitedUserId = await validateInvitedUserId(
             res,
-            validatedEventData.invitedUserId
+            validatedEvent.data.invitedUserId
         );
         if (!validInvitedUserId) return res;
 
         const input = {
             attendee_id_1: req.session.user.id,
-            attendee_id_2: validatedEventData.invitedUserId,
-            match_id: validatedEventData.matchId,
-            title: validatedEventData.title,
-            description: validatedEventData.description,
-            date: validatedEventData.date,
+            attendee_id_2: validatedEvent.data.invitedUserId,
+            match_id: validatedEvent.data.matchId,
+            title: validatedEvent.data.title,
+            description: validatedEvent.data.description,
+            date: validatedEvent.data.date,
         };
 
         const event = await eventsModel.create({ input });

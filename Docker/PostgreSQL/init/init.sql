@@ -58,7 +58,7 @@ CREATE TABLE events (
     match_id UUID REFERENCES matches(id) ON DELETE CASCADE,
     title VARCHAR(60),
     description VARCHAR(500),
-    date TIMESTAMP,
+    date TIMESTAMP
 );
 
 CREATE TABLE likes (

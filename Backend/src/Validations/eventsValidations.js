@@ -18,10 +18,9 @@ export async function validateMatch(
         return returnErrorStatus(res, 400, StatusMessage.BAD_REQUEST);
 
     // TODO: Fix this logic
-    if (match.user_id_1 !== attendeeOneId && match.user_id_2 !== attendeeOneId)
-        return returnErrorStatus(res, 403, StatusMessage.MATCH_DOES_NOT_EXIST);
-    if (match.user_id_1 !== attendeeTwoId && match.user_id_2 !== attendeeTwoId)
-        return returnErrorStatus(res, 403, StatusMessage.MATCH_DOES_NOT_EXIST);
+    if (match.user_id_1 !== attendeeOneId && match.user_id_2 !== attendeeTwoId)
+        if (match.user_id_1 !== attendeeTwoId && match.user_id_2 !== attendeeOneId)
+            return returnErrorStatus(res, 403, StatusMessage.MATCH_DOES_NOT_EXIST);
 
     return true;
 }
