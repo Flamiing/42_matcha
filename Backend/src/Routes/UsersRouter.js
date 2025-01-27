@@ -30,7 +30,7 @@ export default class UsersRouter {
             UsersController.uploadImages,
             removeImageOnFailureMiddleware
         );
-        router.post('/block/:id', BlockedUsersController.addBlockedUser);
+        router.post('/block/:id', BlockedUsersController.blockUser);
 
         // DELETE:
         router.delete(
@@ -38,6 +38,7 @@ export default class UsersRouter {
             checkValidUserIdMiddleware(),
             UsersController.deleteImage
         );
+        router.delete('/block/:id', BlockedUsersController.unblockUser)
 
         // PATCH:
         router.patch(
