@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-	profileApi,
-	ProfileData,
-} from "../../services/api/profile";
+import { profileApi, ProfileData } from "../../services/api/profile";
 
 export const useEditProfile = () => {
 	const [loading, setLoading] = useState(false);
@@ -96,12 +93,30 @@ export const useEditProfile = () => {
 		}
 	};
 
+	const resetPassword = async (email: string) => {
+		setLoading(true);
+		setError(null);
+		try {
+			const response = await profileApi.resetPassword(email);
+			return response;
+		} catch (err) {
+			const errorMessage = err.message
+				? err.message
+				: "Failed to reset password";
+			setError(errorMessage);
+			throw new Error(errorMessage);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	return {
 		updateProfile,
 		uploadProfilePicture,
 		uploadImages,
 		removeImage,
 		changePassword,
+		resetPassword,
 		loading,
 		error,
 	};

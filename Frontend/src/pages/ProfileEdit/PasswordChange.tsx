@@ -7,6 +7,7 @@ import { useEditProfile } from "../../hooks/PageData/useEditProfile";
 
 const PasswordChange: React.FC = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [viewPassword, setViewPassword] = useState(false);
 	const { changePassword, loading } = useEditProfile();
 
 	const [passwords, setPasswords] = useState({
@@ -115,12 +116,27 @@ const PasswordChange: React.FC = () => {
 							className="flex flex-col gap-4 md:gap-6 md:mx-5"
 							onSubmit={handleSubmit()}
 						>
+							<div className="w-full ">
+								<button
+									className="flex flex-row gap-1 items-center shadow-md p-2"
+									type="button"
+									onClick={(e) => (
+										e.preventDefault(),
+										setViewPassword(!viewPassword)
+									)}
+								>
+									<span className="fa fa-eye cursor-pointer" />
+									View Passwords
+								</button>
+							</div>
+
 							{/* OldPassword */}
 							<FormInput
 								name="old_password"
 								value={passwords.old_password}
 								onChange={onChange}
 								placeholder="Old Password"
+								type={viewPassword ? "text" : "password"}
 							/>
 							{/* NewPassword */}
 							<FormInput
@@ -128,6 +144,7 @@ const PasswordChange: React.FC = () => {
 								value={passwords.new_password}
 								onChange={onChange}
 								placeholder="New Password"
+								type={viewPassword ? "text" : "password"}
 							/>
 							{/* Confirm Password */}
 							<FormInput
@@ -135,6 +152,7 @@ const PasswordChange: React.FC = () => {
 								value={confirmPassword}
 								onChange={onChange}
 								placeholder="Confirm Password"
+								type={viewPassword ? "text" : "password"}
 							/>
 							{/* Submit Button */}
 							<RegularButton

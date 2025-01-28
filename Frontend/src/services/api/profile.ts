@@ -51,10 +51,9 @@ export const profileApi = {
 		userId: string,
 		userData: EditProfileData
 	): Promise<EditProfileData> => {
-		console.log("userdata",userData);
+		console.log("userdata", userData);
 		console.log(JSON.stringify(userData));
-		
-		
+
 		const response = await apiRequest(`users/${userId}`, {
 			method: "PATCH",
 			body: JSON.stringify(userData),
@@ -102,6 +101,14 @@ export const profileApi = {
 		const response = await apiRequest(`auth/password/change`, {
 			method: "POST",
 			body: JSON.stringify(passwords),
+		});
+		return response;
+	},
+
+	resetPassword: async (email: string) => {
+		const response = await apiRequest(`auth/password/reset`, {
+			method: "POST",
+			body: JSON.stringify({ email }),
 		});
 		return response;
 	},
