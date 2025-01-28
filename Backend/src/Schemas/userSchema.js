@@ -16,7 +16,11 @@ const disallowedUsernames = [
     'superuser',
     'backup',
     'me',
+    'blocked-users',
 ];
+
+const MIN_AGE = Date.now() - 18 * 365.25 * 24 * 60 * 60 * 1000;
+const MAX_AGE = Date.now() - 3124135674000;
 
 const userSchema = z.object({
     email: z
@@ -74,9 +78,8 @@ const userSchema = z.object({
         ),
     age: z
         .number({ invalid_type_error: 'Invalid age.' })
-        .int()
-        .min(18, 'Age must be at least 18.')
-        .max(99, 'Age must not be greater than 99.')
+        .max(MIN_AGE, 'Age must be at least 18.')
+        .min(MAX_AGE, 'Age must not be greater than 99.')
         .optional(),
     biography: z
         .string({
