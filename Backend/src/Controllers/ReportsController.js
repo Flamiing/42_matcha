@@ -15,12 +15,11 @@ export default class ReportsController {
             return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
 
         // add user to reported
-        const userAlreadyReported =
-            await ReportsController.userAlreadyReported(
-                res,
-                reportedById,
-                reportedId
-            );
+        const userAlreadyReported = await ReportsController.userAlreadyReported(
+            res,
+            reportedById,
+            reportedId
+        );
         if (userAlreadyReported === null) return res;
         if (userAlreadyReported)
             return res.json({ msg: StatusMessage.USER_ALREADY_REPORTED });
