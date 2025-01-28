@@ -10,7 +10,7 @@ CREATE TABLE users (
 	first_name VARCHAR(50),
 	last_name VARCHAR(50),
 	password VARCHAR(255) DEFAULT NULL,
-	age INTEGER CHECK (age >= 0),
+	age BIGINT DEFAULT 0,
 	biography VARCHAR(500),
 	profile_picture VARCHAR(255) DEFAULT NULL,
 	location VARCHAR(100),
@@ -43,6 +43,24 @@ CREATE TABLE user_tags (
 	UNIQUE(user_id, tag_id)
 );
 
+CREATE TABLE matches (
+	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+	user_id_1 UUID REFERENCES users(id) ON DELETE CASCADE,
+	user_id_2 UUID REFERENCES users(id) ON DELETE CASCADE,
+	time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id_1, user_id_2)
+);
+
+CREATE TABLE events (
+	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+	attendee_id_1 UUID REFERENCES users(id) ON DELETE CASCADE,
+	attendee_id_2 UUID REFERENCES users(id) ON DELETE CASCADE,
+    match_id UUID REFERENCES matches(id) ON DELETE CASCADE,
+    title VARCHAR(60),
+    description VARCHAR(500),
+    date TIMESTAMP
+);
+
 CREATE TABLE likes (
 	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
 	liked_by UUID REFERENCES users(id) ON DELETE CASCADE,
@@ -60,17 +78,17 @@ CREATE TABLE views_history (
 
 CREATE TABLE blocked_users (
 	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-	user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-	blocked_user UUID REFERENCES users(id) ON DELETE CASCADE,
-	UNIQUE(user_id, blocked_user)
+	blocked_by UUID REFERENCES users(id) ON DELETE CASCADE,
+	blocked UUID REFERENCES users(id) ON DELETE CASCADE,
+	UNIQUE(blocked_by, blocked)
 );
 
 CREATE TABLE reports (
 	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-	reporter UUID REFERENCES users(id) ON DELETE CASCADE,
+	reported_by UUID REFERENCES users(id) ON DELETE CASCADE,
 	reported UUID REFERENCES users(id) ON DELETE CASCADE,
 	time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	UNIQUE(reporter, reported)
+	UNIQUE(reported_by, reported)
 );
 
 CREATE TABLE chats (
