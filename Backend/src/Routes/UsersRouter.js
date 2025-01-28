@@ -3,6 +3,7 @@ import { Router } from 'express';
 
 // Local Imports:
 import UsersController from '../Controllers/UsersController.js';
+import BlockedUsersController from '../Controllers/BlockedUsersController.js';
 import { checkValidUserIdMiddleware } from '../Middlewares/checkValidUserIdMiddleware.js';
 import { imageUploadMiddleware } from '../Middlewares/imageUploadMiddleware.js';
 import { imagesValidationMiddleware } from '../Middlewares/imagesValidationMiddleware.js';
@@ -15,6 +16,7 @@ export default class UsersRouter {
         // GET:
         router.get('/', UsersController.getAllUsers);
         router.get('/me', UsersController.getMe);
+        router.get('/blocked-users', BlockedUsersController.getAllBlockedUsers);
         router.get('/:username', UsersController.getUserProfile);
         router.get('/:id/profile-picture', UsersController.getProfilePicture);
         router.get('/:id/images', UsersController.getImages);
@@ -29,6 +31,7 @@ export default class UsersRouter {
             UsersController.uploadImages,
             removeImageOnFailureMiddleware
         );
+        router.post('/block/:id', BlockedUsersController.blockUser);
 
         // DELETE:
         router.delete(
@@ -36,6 +39,7 @@ export default class UsersRouter {
             checkValidUserIdMiddleware(),
             UsersController.deleteImage
         );
+        router.delete('/block/:id', BlockedUsersController.unblockUser);
 
         // PATCH:
         router.patch(
