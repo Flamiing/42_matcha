@@ -13,7 +13,6 @@ class BlockedUsersModel extends Model {
         };
 
         const blockedUser = await this.getByReference(reference, false);
-        console.log('TEST: ', blockedUser);
         if (blockedUser === null) return null;
         if (blockedUser.length === 0) return false;
 

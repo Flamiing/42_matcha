@@ -8,6 +8,7 @@ import { checkValidUserIdMiddleware } from '../Middlewares/checkValidUserIdMiddl
 import { imageUploadMiddleware } from '../Middlewares/imageUploadMiddleware.js';
 import { imagesValidationMiddleware } from '../Middlewares/imagesValidationMiddleware.js';
 import { removeImageOnFailureMiddleware } from '../Middlewares/removeImageOnFailureMiddleware.js';
+import ReportsController from '../Controllers/ReportsController.js';
 
 export default class UsersRouter {
     static createRouter() {
@@ -32,6 +33,7 @@ export default class UsersRouter {
             removeImageOnFailureMiddleware
         );
         router.post('/block/:id', BlockedUsersController.blockUser);
+        router.post('/report/:id', ReportsController.reportUser);
 
         // DELETE:
         router.delete(
