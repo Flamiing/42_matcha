@@ -1,5 +1,6 @@
 // Local Imports:
 import likesModel from '../Models/LikesModel.js';
+import blockedUsersModel from '../Models/BlockedUsersModel.js';
 import userModel from '../Models/UserModel.js';
 import matchesModel from '../Models/MatchesModel.js';
 import { returnErrorStatus } from '../Utils/errorUtils.js';
@@ -87,6 +88,10 @@ export default class LikesController {
     }
 
     static async saveLike(res, likedById, likedId) {
+        const userIsBlocked = await blockedUsersModel.isUserBlocked(likedById, likedId);
+        if (userIsBlocked === null) return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR)
+        if (userIsBlocked) return returnErrorStatus(res, 400, StatusMessage.CANNOT_LIKE_BLOCKED_USER)
+
         let input = {
             liked_by: likedById,
             liked: likedId,
