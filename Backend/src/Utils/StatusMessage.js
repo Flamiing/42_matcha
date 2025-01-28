@@ -88,5 +88,5 @@ export default class StatusMessage {
     static USER_UNBLOCKED = 'User unblocked!';
     static USER_ALREADY_BLOCKED = 'User already blocked.';
     static USER_NOT_BLOCKED = 'User is not blocked.';
-    static CANNOT_LIKE_BLOCKED_USER = 'Cannot like a blocked user.'
+    static CANNOT_LIKE_BLOCKED_USER = 'Cannot like a blocked user.';
 }

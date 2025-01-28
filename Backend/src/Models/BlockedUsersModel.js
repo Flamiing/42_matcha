@@ -9,7 +9,7 @@ class BlockedUsersModel extends Model {
     async isUserBlocked(blockedById, blockedId) {
         const reference = {
             blocked_by: blockedById,
-            blocked: blockedId
+            blocked: blockedId,
         };
 
         const blockedUser = await this.getByReference(reference, false);

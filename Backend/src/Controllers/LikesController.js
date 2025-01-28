@@ -88,9 +88,22 @@ export default class LikesController {
     }
 
     static async saveLike(res, likedById, likedId) {
-        const userIsBlocked = await blockedUsersModel.isUserBlocked(likedById, likedId);
-        if (userIsBlocked === null) return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR)
-        if (userIsBlocked) return returnErrorStatus(res, 400, StatusMessage.CANNOT_LIKE_BLOCKED_USER)
+        const userIsBlocked = await blockedUsersModel.isUserBlocked(
+            likedById,
+            likedId
+        );
+        if (userIsBlocked === null)
+            return returnErrorStatus(
+                res,
+                500,
+                StatusMessage.INTERNAL_SERVER_ERROR
+            );
+        if (userIsBlocked)
+            return returnErrorStatus(
+                res,
+                400,
+                StatusMessage.CANNOT_LIKE_BLOCKED_USER
+            );
 
         let input = {
             liked_by: likedById,
