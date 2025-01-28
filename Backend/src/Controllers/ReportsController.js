@@ -61,10 +61,7 @@ export default class ReportsController {
             reported: reportedId,
         };
 
-        const report = await reportsModel.getByReference(
-            reference,
-            false
-        );
+        const report = await reportsModel.getByReference(reference, false);
         if (!report) {
             res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
             return null;
@@ -90,14 +87,14 @@ export default class ReportsController {
     }
 
     static async sendReportEmail(reportId) {
-        const subject = 'Reported Fake Account'
+        const subject = 'Reported Fake Account';
         const { REPORTS_EMAIL } = process.env;
         const body = `This is an automated notification regarding a fake account report.
 
 Report ID: ${reportId}
 Please review this report in the system and take the necessary action.
 
-This message was generated automatically. Do not reply to this email.`
+This message was generated automatically. Do not reply to this email.`;
 
         try {
             await sendEmail(REPORTS_EMAIL, subject, body);
