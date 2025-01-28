@@ -5,6 +5,7 @@ import matchesModel from '../Models/MatchesModel.js';
 import { returnErrorStatus } from '../Utils/errorUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { validateUserId } from '../Validations/blockedUsersValidations.js';
+import { sendEmail } from '../Utils/authUtils.js';
 
 export default class ReportsController {
     static async reportUser(req, res) {
@@ -28,8 +29,8 @@ export default class ReportsController {
             reported_by: reportedById,
             reported: reportedId,
         };
-        const reportedUser = await reportsModel.create({ input });
-        if (!reportedUser || reportedUser.length === 0)
+        const report = await reportsModel.create({ input });
+        if (!report || report.length === 0)
             return res
                 .status(500)
                 .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
@@ -50,6 +51,7 @@ export default class ReportsController {
         );
         if (!deleteLike) return res;
 
+        await ReportsController.sendReportEmail(report.id);
         return res.json({ msg: StatusMessage.USER_REPORTED });
     }
 
@@ -59,15 +61,15 @@ export default class ReportsController {
             reported: reportedId,
         };
 
-        const reportedUser = await reportsModel.getByReference(
+        const report = await reportsModel.getByReference(
             reference,
             false
         );
-        if (!reportedUser) {
+        if (!report) {
             res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
             return null;
         }
-        if (reportedUser.length === 0) return false;
+        if (report.length === 0) return false;
 
         return true;
     }
@@ -85,5 +87,22 @@ export default class ReportsController {
                 StatusMessage.INTERNAL_SERVER_ERROR
             );
         return true;
+    }
+
+    static async sendReportEmail(reportId) {
+        const subject = 'Reported Fake Account'
+        const { REPORTS_EMAIL } = process.env;
+        const body = `This is an automated notification regarding a fake account report.
+
+Report ID: ${reportId}
+Please review this report in the system and take the necessary action.
+
+This message was generated automatically. Do not reply to this email.`
+
+        try {
+            await sendEmail(REPORTS_EMAIL, subject, body);
+        } catch (error) {
+            console.error('ERROR: ', error);
+        }
     }
 }

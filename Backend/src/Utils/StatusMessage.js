@@ -91,4 +91,5 @@ export default class StatusMessage {
     static CANNOT_LIKE_BLOCKED_USER = 'Cannot like a blocked user.';
     static USER_ALREADY_REPORTED = 'User already reported.';
     static USER_REPORTED = 'User reported!';
+    static ERROR_SENDING_EMAIL = 'There was an error submitting report. Please try again.'
 }
