@@ -55,16 +55,16 @@ class UserTagsModel extends Model {
 
     async getUserTags(userId) {
         const query = {
-            text: `SELECT 
-                tags.id AS tag_id,
-                tags.value AS tag_value
-            FROM 
+            text: `SELECT
+                tags.id AS id,
+                tags.value AS value
+            FROM
                 user_tags
-            INNER JOIN 
+            INNER JOIN
                 tags
-            ON 
+            ON
                 user_tags.tag_id = tags.id
-            WHERE 
+            WHERE
                 user_tags.user_id = '${userId}';`,
         };
 
