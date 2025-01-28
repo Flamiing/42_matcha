@@ -2,11 +2,33 @@
 import blockedUsersModel from '../Models/BlockedUsersModel.js';
 import likesModel from '../Models/LikesModel.js';
 import matchesModel from '../Models/MatchesModel.js';
+import userModel from '../Models/UserModel.js';
 import { returnErrorStatus } from '../Utils/errorUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { validateUserId } from '../Validations/blockedUsersValidations.js';
 
 export default class BlockedUsersController {
+    static async getAllBlockedUsers(req, res) {
+        let reference = {
+            blocked_by: req.session.user.id,
+        };
+
+        const rawBlockedUsers = await blockedUsersModel.getByReference(reference, false);
+        if (!rawBlockedUsers)
+            return res
+                .status(500)
+                .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+
+        const blockedUsers = await BlockedUsersController.getBlockedUsersInfo(
+            req,
+            res,
+            rawBlockedUsers
+        );
+        if (!blockedUsers) return res;
+
+        return res.json({ msg: blockedUsers });
+    }
+
     static async blockUser(req, res) {
         const blockedById = req.session.user.id;
         const blockedId = req.params.id;
@@ -111,5 +133,33 @@ export default class BlockedUsersController {
                 StatusMessage.INTERNAL_SERVER_ERROR
             );
         return true;
+    }
+
+    static async getBlockedUsersInfo(req, res, rawBlockedUsers) {
+        const { API_HOST, API_PORT, API_VERSION } = process.env;
+
+        let blockeUsers = [];
+
+        for (const blockedUser of rawBlockedUsers) {
+            const id = blockedUser.blocked;
+            const user = await userModel.getById({ id });
+            if (!user || user.length === 0)
+                return returnErrorStatus(
+                    res,
+                    500,
+                    StatusMessage.INTERNAL_SERVER_ERROR
+                );
+
+            const profilePictureURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${id}/profile-picture`;
+
+            const newBlockedUser = {
+                userId: id,
+                username: user.username,
+                profilePicture: profilePictureURL,
+            };
+            blockeUsers.push(newBlockedUser);
+        }
+
+        return blockeUsers;
     }
 }

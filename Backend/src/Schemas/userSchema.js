@@ -16,6 +16,7 @@ const disallowedUsernames = [
     'superuser',
     'backup',
     'me',
+    'blocked-users',
 ];
 
 const MIN_AGE = Date.now() - 18 * 365.25 * 24 * 60 * 60 * 1000;
