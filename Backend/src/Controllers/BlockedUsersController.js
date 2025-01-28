@@ -13,7 +13,10 @@ export default class BlockedUsersController {
             blocked_by: req.session.user.id,
         };
 
-        const rawBlockedUsers = await blockedUsersModel.getByReference(reference, false);
+        const rawBlockedUsers = await blockedUsersModel.getByReference(
+            reference,
+            false
+        );
         if (!rawBlockedUsers)
             return res
                 .status(500)
