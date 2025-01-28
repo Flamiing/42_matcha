@@ -148,4 +148,16 @@ export default class LikesController {
 
         return true;
     }
+
+    static async checkIfCanLike(res, id) {
+        const user = await userModel.getById({ id });
+        if (!user)
+            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+        if (user.length === 0)
+            return returnErrorStatus(res, 404, StatusMessage.USER_NOT_FOUND);
+
+        if (!user.profile_picture)
+            return returnErrorStatus(res, 403, StatusMessage.USER_CANNOT_LIKE);
+        return true;
+    }
 }
