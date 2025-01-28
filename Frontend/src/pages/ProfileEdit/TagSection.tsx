@@ -5,20 +5,27 @@ import capitalizeLetters from "../../utils/capitalizeLetters";
 
 interface TagSectionProps {
 	availableTags: TagData[];
-	selectedTagIds: string[];
+	previousSelectedTags: string[];
 	onTagsChange: (tagIds: string[]) => void;
 	isLoading?: boolean;
 }
 
 const TagSection = ({
 	availableTags = [],
-	selectedTagIds = [],
+	previousSelectedTags = [],
 	onTagsChange,
 	isLoading = false,
 }: TagSectionProps) => {
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const [searchQuery, setSearchQuery] = useState("");
 	const dropdownRef = useRef<HTMLDivElement>(null);
+	const [selectedTags, setSelectedTags] =
+		useState<string[]>(previousSelectedTags);
+
+	// load previously selected tags
+	useEffect(() => {
+		setSelectedTags(selectedTags);
+	}, [previousSelectedTags]);
 
 	// Close dropdown when clicking outside
 	useEffect(() => {
@@ -36,31 +43,25 @@ const TagSection = ({
 			document.removeEventListener("mousedown", handleClickOutside);
 	}, []);
 
-	// Memoize selected and available tags
-	const selectedTags = useMemo(
-		() => availableTags.filter((tag) => selectedTagIds.includes(tag.id)),
-		[availableTags, selectedTagIds]
-	);
-
-	const filteredAvailableTags = useMemo(
-		() =>
-			availableTags.filter(
-				(tag) =>
-					tag.value
-						.toLowerCase()
-						.includes(searchQuery.toLowerCase()) &&
-					!selectedTagIds.includes(tag.id)
-			),
-		[availableTags, selectedTagIds, searchQuery]
-	);
+	// Filter available tags: exclude selected ones and apply search
+	const filteredAvailableTags = useMemo(() => {
+		return availableTags.filter((tag) => {
+			!selectedTags.includes(tag) &&
+				tag.value.toLowerCase().includes(searchQuery.toLowerCase());
+		});
+	}, [availableTags, selectedTags, searchQuery]);
 
 	const handleAddTag = (tagId: string) => {
-		onTagsChange([...selectedTagIds, tagId]);
+		const newSelectedTags = [...selectedTags, tagId];
+		setSelectedTas(newSelectedTags);
+		onTagsChange(newSelectedTags);
 		setSearchQuery("");
 	};
 
 	const handleRemoveTag = (tagId: string) => {
-		onTagsChange(selectedTagIds.filter((id) => id !== tagId));
+		const newSelectedTags = selectedTags.filter((id) => id !== tagId);
+		setSelectedTags(newSelectedTags);
+		onTagsChange(newSelectedTags);
 	};
 
 	if (isLoading) {
@@ -76,6 +77,9 @@ const TagSection = ({
 		);
 	}
 
+	console.log(selectedTags);
+	console.log("______________________");
+
 	return (
 		<div className="space-y-4">
 			<div className="flex flex-wrap gap-2">
@@ -83,7 +87,7 @@ const TagSection = ({
 				{selectedTags.map((tag) => (
 					<Tag
 						key={tag.id}
-						value={capitalizeLetters(tag.value)}
+						value={capitalizeLetters(tag.tag_value)}
 						onRemove={() => handleRemoveTag(tag.id)}
 					/>
 				))}
@@ -132,7 +136,9 @@ const TagSection = ({
 									</div>
 								) : (
 									<div className="p-4 text-sm text-gray-500 text-center">
-										No matching tags found
+										{searchQuery
+											? "No matching tags found"
+											: "No more tags available"}
 									</div>
 								)}
 							</div>

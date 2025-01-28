@@ -39,15 +39,16 @@ const Info: React.FC<InfoProps> = ({ user }) => {
 						</div>
 					</div>
 				) : null}
-
-				{user.biography ? (
-					<div className="prose prose-gray max-w-2xl">
-						<p className="text-gray-700 leading-relaxed text-pretty">
-							{user.biography}
-						</p>
-					</div>
-				) : null}
 			</div>
+
+			{user.biography ? (
+				<div className="prose prose-gray max-w-2xl">
+					<h2 className="text-font-main text-xl">Biography</h2>
+					<p className="text-gray-700 leading-relaxed text-pretty text-center md:text-start">
+						{user.biography}
+					</p>
+				</div>
+			) : null}
 		</section>
 	);
 };

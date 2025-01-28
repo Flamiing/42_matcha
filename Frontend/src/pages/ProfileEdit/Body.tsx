@@ -125,7 +125,7 @@ const Body = ({ user, onChange, onSelectChange }: BodyProps) => {
 
 					<TagSection
 						availableTags={tags || []}
-						selectedTagIds={user.tags || []}
+						previousSelectedTags={user.tags || []}
 						onTagsChange={handleTagsChange}
 						isLoading={loading}
 					/>

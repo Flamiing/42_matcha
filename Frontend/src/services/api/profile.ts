@@ -51,6 +51,10 @@ export const profileApi = {
 		userId: string,
 		userData: EditProfileData
 	): Promise<EditProfileData> => {
+		console.log("userdata",userData);
+		console.log(JSON.stringify(userData));
+		
+		
 		const response = await apiRequest(`users/${userId}`, {
 			method: "PATCH",
 			body: JSON.stringify(userData),

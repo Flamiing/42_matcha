@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import Face from "./Face";
 import Body from "./Body";
@@ -16,6 +16,9 @@ const index = () => {
 	const { updateProfile, loading: isUpdating } = useEditProfile();
 
 	const [formData, setFormData] = useState<EditProfileData | null>(null);
+	const [originalData, setOriginalData] = useState<EditProfileData | null>(
+		null
+	);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [msg, setMsg] = useState<{
 		type: "error" | "success";
@@ -26,8 +29,44 @@ const index = () => {
 	useEffect(() => {
 		if (profile) {
 			setFormData(profile);
+			setOriginalData(profile);
 		}
 	}, [profile]);
+
+	// Helper function to detect changes between two values
+	const hasValueChanged = (newValue: any, originalValue: any) => {
+		if (Array.isArray(newValue) && Array.isArray(originalValue)) {
+			if (newValue.length !== originalValue.length) return true;
+			return newValue.some(
+				(value, index) => value !== originalValue[index]
+			);
+		}
+		if (!newValue && !originalValue) return false;
+		if (!newValue || !originalValue) return true;
+		return newValue !== originalValue;
+	};
+
+	// Get changed fields and always include tags
+	const getChangedFields = () => {
+		if (!formData || !originalData) return {};
+
+		const changes: Partial<EditProfileData> = {
+			// Always include tags, even if unchanged
+			tags: formData.tags || [],
+		};
+
+		Object.keys(formData).forEach((key) => {
+			const typedKey = key as keyof EditProfileData;
+			// Skip tags as we've already handled them
+			if (typedKey === "tags") return;
+
+			if (hasValueChanged(formData[typedKey], originalData[typedKey])) {
+				changes[typedKey] = formData[typedKey];
+			}
+		});
+
+		return changes;
+	};
 
 	const handleInputChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -72,29 +111,27 @@ const index = () => {
 		e.preventDefault();
 		if (!formData || !user?.id) return;
 
+		const changedFields = getChangedFields();
+
+		if (
+			Object.keys(changedFields).length === 1 &&
+			"tags" in changedFields &&
+			!hasValueChanged(changedFields.tags, originalData.tags)
+		)
+			return;
+
 		setIsSubmitting(true);
 		try {
-			// ! Temporary fix
-			// remove all null values from formData
-			let submitData = { ...formData };
-
-			for (const key in submitData) {
-				if (
-					submitData[key] === null ||
-					submitData[key] === "" ||
-					submitData[key] === false
-				) {
-					delete submitData[key];
-				}
+			const response = await updateProfile(user.id, changedFields);
+			if (response) {
+				setMsg({
+					type: "success",
+					message: "Profile updated successfully",
+					key: Date.now(),
+				});
+				// Update original data to match current state
+				setOriginalData(formData);
 			}
-			// TODO -> replace submitdata with formData
-			const response = await updateProfile(user.id, submitData);
-			setMsg({
-				type: "success",
-				message: "Profile updated successfully",
-				key: Date.now(),
-			});
-			setFormData(response);
 		} catch (error) {
 			setMsg({
 				type: "error",
@@ -140,7 +177,7 @@ const index = () => {
 					onChange={handleInputChange}
 					onSelectChange={handleSelectChange}
 				/>
-				<section className="container max-w-4xl px-3 relative text-font-main  mb-10 mt-9">
+				<section className="container max-w-4xl px-3 relative text-font-main mb-10 mt-9">
 					<div className="max-w-4xl w-full text-start">
 						<RegularButton
 							value="Update profile"
@@ -151,7 +188,7 @@ const index = () => {
 			</form>
 			{!user.oauth && (
 				<section className="container max-w-4xl px-3 relative text-font-main mb-10 flex flex-col gap-5">
-					<h2 className="text-font-main text-xl ">
+					<h2 className="text-font-main text-xl">
 						Additional settings
 					</h2>
 					<PasswordChange />
