@@ -5,7 +5,7 @@ export async function removeImageOnFailureMiddleware(err, req, res, next) {
     for (const image of req.files) {
         try {
             await fsExtra.remove(image.path);
-            console.log(
+            console.info(
                 `Image with path '${image.path}' has been removed successfully!`
             );
         } catch (error) {
