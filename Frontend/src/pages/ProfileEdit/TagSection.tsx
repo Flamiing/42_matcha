@@ -5,27 +5,39 @@ import capitalizeLetters from "../../utils/capitalizeLetters";
 
 interface TagSectionProps {
 	availableTags: TagData[];
-	previousSelectedTags: string[];
+	selectedTagIds: string[];
 	onTagsChange: (tagIds: string[]) => void;
 	isLoading?: boolean;
 }
 
 const TagSection = ({
 	availableTags = [],
-	previousSelectedTags = [],
+	selectedTagIds = [],
 	onTagsChange,
 	isLoading = false,
 }: TagSectionProps) => {
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const [searchQuery, setSearchQuery] = useState("");
 	const dropdownRef = useRef<HTMLDivElement>(null);
-	const [selectedTags, setSelectedTags] =
-		useState<string[]>(previousSelectedTags);
 
-	// load previously selected tags
-	useEffect(() => {
-		setSelectedTags(selectedTags);
-	}, [previousSelectedTags]);
+	// Create a map for quick tag lookups
+	const tagMap = useMemo(() => {
+		return availableTags.reduce((acc, tag) => {
+			acc[tag.id] = tag;
+			return acc;
+		}, {} as Record<string, TagData>);
+	}, [availableTags]);
+
+	// Filter available tags: exclude selected ones and apply search
+	const filteredAvailableTags = useMemo(() => {
+		return availableTags.filter((tag) => {
+			const isNotSelected = !selectedTagIds.includes(tag.id);
+			const matchesSearch = tag.value
+				.toLowerCase()
+				.includes(searchQuery.toLowerCase());
+			return isNotSelected && matchesSearch;
+		});
+	}, [availableTags, selectedTagIds, searchQuery]);
 
 	// Close dropdown when clicking outside
 	useEffect(() => {
@@ -43,25 +55,15 @@ const TagSection = ({
 			document.removeEventListener("mousedown", handleClickOutside);
 	}, []);
 
-	// Filter available tags: exclude selected ones and apply search
-	const filteredAvailableTags = useMemo(() => {
-		return availableTags.filter((tag) => {
-			!selectedTags.includes(tag) &&
-				tag.value.toLowerCase().includes(searchQuery.toLowerCase());
-		});
-	}, [availableTags, selectedTags, searchQuery]);
-
-	const handleAddTag = (tagId: string) => {
-		const newSelectedTags = [...selectedTags, tagId];
-		setSelectedTas(newSelectedTags);
-		onTagsChange(newSelectedTags);
+	const handleAddTag = (tagToAdd: TagData) => {
+		const newSelectedIds = [...selectedTagIds, tagToAdd.id];
+		onTagsChange(newSelectedIds);
 		setSearchQuery("");
 	};
 
 	const handleRemoveTag = (tagId: string) => {
-		const newSelectedTags = selectedTags.filter((id) => id !== tagId);
-		setSelectedTags(newSelectedTags);
-		onTagsChange(newSelectedTags);
+		const newSelectedIds = selectedTagIds.filter((id) => id !== tagId);
+		onTagsChange(newSelectedIds);
 	};
 
 	if (isLoading) {
@@ -77,24 +79,27 @@ const TagSection = ({
 		);
 	}
 
-	console.log(selectedTags);
-	console.log("______________________");
-
 	return (
 		<div className="space-y-4">
 			<div className="flex flex-wrap gap-2">
 				{/* Selected tags list */}
-				{selectedTags.map((tag) => (
-					<Tag
-						key={tag.id}
-						value={capitalizeLetters(tag.tag_value)}
-						onRemove={() => handleRemoveTag(tag.id)}
-					/>
-				))}
+				{selectedTagIds.map((tagId) => {
+					const tag = tagMap[tagId];
+					if (!tag) return null;
+
+					return (
+						<Tag
+							key={tagId}
+							value={capitalizeLetters(tag.value)}
+							onRemove={() => handleRemoveTag(tagId)}
+						/>
+					);
+				})}
 
 				{/* Add tag dropdown */}
 				<div className="relative" ref={dropdownRef}>
 					<button
+						type="button"
 						onClick={(e) => {
 							e.preventDefault();
 							setIsDropdownOpen(!isDropdownOpen);
@@ -124,9 +129,10 @@ const TagSection = ({
 									<div className="p-2 grid gap-1">
 										{filteredAvailableTags.map((tag) => (
 											<button
+												type="button"
 												key={tag.id}
 												onClick={() =>
-													handleAddTag(tag.id)
+													handleAddTag(tag)
 												}
 												className="text-left px-3 py-2 w-full text-sm hover:bg-gray-100 rounded-md transition-colors"
 											>

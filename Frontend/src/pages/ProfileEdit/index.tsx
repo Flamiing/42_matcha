@@ -52,7 +52,7 @@ const index = () => {
 
 		const changes: Partial<EditProfileData> = {
 			// Always include tags, even if unchanged
-			tags: formData.tags || [],
+			tags: formData.tags.map((tag) => tag.id) || [],
 		};
 
 		Object.keys(formData).forEach((key) => {

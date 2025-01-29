@@ -23,7 +23,10 @@ const Body = ({ user, onChange, onSelectChange }: BodyProps) => {
 		const syntheticEvent = {
 			target: {
 				name: "tags",
-				value: newTagIds,
+				value: newTagIds.map((tagId) => {
+					const tagObject = tags?.find((tag) => tag.id === tagId);
+					return tagObject || { id: tagId, value: "" };
+				}),
 			},
 		} as React.ChangeEvent<HTMLInputElement>;
 		onChange(syntheticEvent);
@@ -48,10 +51,8 @@ const Body = ({ user, onChange, onSelectChange }: BodyProps) => {
 
 	const dateFormatConversion = (timestamp: string) => {
 		if (!timestamp) return "";
-
 		const date = new Date(timestamp);
 		const formattedDate = date.toISOString().split("T")[0];
-
 		return formattedDate;
 	};
 
@@ -122,10 +123,9 @@ const Body = ({ user, onChange, onSelectChange }: BodyProps) => {
 				</div>
 				<div>
 					<p>Tags</p>
-
 					<TagSection
 						availableTags={tags || []}
-						previousSelectedTags={user.tags || []}
+						selectedTagIds={user.tags?.map((tag) => tag.id) || []}
 						onTagsChange={handleTagsChange}
 						isLoading={loading}
 					/>

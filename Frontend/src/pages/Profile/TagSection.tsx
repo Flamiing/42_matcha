@@ -33,8 +33,8 @@ const TagsSection = ({
 					{tags.length > 0 ? (
 						tags.map((tag) => (
 							<Tag
-								key={tag.tag_id}
-								value={capitalizeLetters(tag.tag_value)}
+								key={tag.id}
+								value={capitalizeLetters(tag.value)}
 								removable={editable}
 							/>
 						))

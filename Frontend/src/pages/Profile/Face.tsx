@@ -58,7 +58,7 @@ const Face = ({ user, editable = false }: FaceProps) => {
 					</div>
 
 					{user.location ? (
-						<div>
+						<div className="flex items-center justify-center">
 							<p className="text-gray-700 leading-relaxed text-pretty text-start flex flex-row items-center gap-1">
 								<span className="fa fa-map-marker font-semibold text-red-500" />
 								<span className="truncate max-w-[200px]">

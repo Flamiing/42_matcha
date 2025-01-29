@@ -1,3 +1,5 @@
+import capitalizeLetters from "../../utils/capitalizeLetters";
+
 interface UserData {
 	first_name: string;
 	last_name: string;
@@ -28,13 +30,13 @@ const Info: React.FC<InfoProps> = ({ user }) => {
 					<div className="bg-gray-50 rounded-lg px-6 py-3 shadow-sm">
 						<div className="flex items-center gap-3 text-lg">
 							<span className="font-medium text-gray-900">
-								{user.gender}
+								{capitalizeLetters(user.gender)}
 							</span>
 							<span className="text-gray-500 text-base">
 								looking for
 							</span>
 							<span className="font-medium text-gray-900">
-								{preferenceDisplay}
+								{capitalizeLetters(preferenceDisplay)}
 							</span>
 						</div>
 					</div>
