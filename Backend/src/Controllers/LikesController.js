@@ -161,4 +161,68 @@ export default class LikesController {
             return returnErrorStatus(res, 403, StatusMessage.USER_CANNOT_LIKE);
         return true;
     }
+
+    static async saveLike(res, likedById, likedId) {
+        let input = {
+            liked_by: likedById,
+            liked: likedId,
+        };
+        const saveLikeResult = await likesModel.create({ input });
+        if (!saveLikeResult)
+            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+
+        const isMatch = await likesModel.checkIfMatch(likedById, likedId);
+        if (isMatch === null)
+            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+
+        if (isMatch) {
+            input = {
+                user_id_1: likedById,
+                user_id_2: likedId,
+            };
+
+            const matchResult = await matchesModel.create({ input });
+            if (!matchResult || matchResult.length === 0)
+                return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+            console.info(`Match created with ID: ${matchResult.id}`);
+
+            // TODO: Send notification
+        }
+
+        return true;
+    }
+
+    static async removeLike(res, id, likedById, likedId) {
+        const removeLike = await likesModel.delete({ id });
+        if (!removeLike)
+            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+
+        let reference = {
+            user_id_1: likedById,
+            user_id_2: likedId,
+        };
+        let removeMatch = await matchesModel.deleteByReference(reference);
+        if (removeMatch === null)
+            return returnErrorStatus(
+                res,
+                500,
+                StatusMessage.INTERNAL_SERVER_ERROR
+            );
+        if (!removeMatch) {
+            reference = {
+                user_id_1: likedId,
+                user_id_2: likedById,
+            };
+
+            removeMatch = await matchesModel.deleteByReference(reference);
+            if (!removeMatch)
+                return returnErrorStatus(
+                    res,
+                    500,
+                    StatusMessage.INTERNAL_SERVER_ERROR
+                );
+        }
+
+        return true;
+    }
 }
