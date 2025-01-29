@@ -56,7 +56,7 @@ export async function sendResetPasswordEmail({
     await sendEmail(email, subject, body);
 }
 
-async function sendEmail(email, subject, body) {
+export async function sendEmail(email, subject, body) {
     const { EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASSWORD } = process.env;
 
     const transporter = nodemailer.createTransport({
@@ -77,7 +77,7 @@ async function sendEmail(email, subject, body) {
     };
 
     const info = await transporter.sendMail(mail);
-    console.log('Email info: ', info);
+    console.info('Email info: ', info);
 }
 
 export async function hashPassword(password) {

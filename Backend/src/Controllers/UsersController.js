@@ -96,6 +96,15 @@ export default class UsersController {
                     req.session.user.id
                 );
                 if (!viewResult) return res;
+
+                const updateFameResult = await userModel.updateFame(
+                    user.id,
+                    publicUser
+                );
+                if (!updateFameResult)
+                    return res
+                        .status(500)
+                        .json({ msg: StatusMessage.QUERY_ERROR });
             }
 
             return res.json({ msg: publicUser });
@@ -431,7 +440,7 @@ export default class UsersController {
 
         try {
             await fsExtra.remove(image.image_path);
-            console.log(
+            console.info(
                 `Image with path '${image.image_path}' has been removed successfully!`
             );
             return res.json({ msg: StatusMessage.IMAGE_DELETED_SUCCESSFULLY });
