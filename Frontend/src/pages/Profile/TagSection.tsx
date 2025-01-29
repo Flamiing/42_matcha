@@ -1,4 +1,5 @@
 import Tag from "../../components/common/Tag";
+import capitalizeLetters from "../../utils/capitalizeLetters";
 
 interface TagsSectionProps {
 	tags: string[];
@@ -31,7 +32,11 @@ const TagsSection = ({
 				<div className="flex flex-wrap gap-2">
 					{tags.length > 0 ? (
 						tags.map((tag) => (
-							<Tag key={tag} value={tag} removable={editable} />
+							<Tag
+								key={tag.id}
+								value={capitalizeLetters(tag.value)}
+								removable={editable}
+							/>
 						))
 					) : (
 						<p className="text-gray-500 text-sm">

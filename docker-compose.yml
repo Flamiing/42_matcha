@@ -47,7 +47,7 @@ services:
         restart: on-failure
 
     frontend:
-        container_name: Frontend
+        container_name: frontend
         build:
             context: ./Docker/Frontend
             dockerfile: Dockerfile

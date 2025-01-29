@@ -1,97 +1,199 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import Face from "./Face";
 import Body from "./Body";
-/* import Body from "./Body";
-import Info from "./Info";
-import Images from "./Images";
-import TagSection from "./TagSection"; */
-
-interface ProfileFormData {
-	username: string;
-	first_name: string;
-	last_name: string;
-	email: string;
-	age: number;
-	biography: string;
-	gender: string;
-	sexual_preference: string;
-	location: string;
-	images: string[];
-	profile_picture: string;
-}
+import { useProfile } from "../../hooks/PageData/useProfile";
+import Spinner from "../../components/common/Spinner";
+import RegularButton from "../../components/common/RegularButton";
+import MsgCard from "../../components/common/MsgCard";
+import { useEditProfile } from "../../hooks/PageData/useEditProfile";
+import { EditProfileData } from "../../services/api/profile";
+import PasswordChange from "./PasswordChange";
 
 const index = () => {
-	/* const { user } = useAuth(); */
+	const { user } = useAuth();
+	const { profile, loading, error } = useProfile(user?.id || "");
+	const { updateProfile, loading: isUpdating } = useEditProfile();
 
-	const [formData, setFormData] = useState<UserData>({
-		username: "alaparic",
-		email: "test@test.com",
-		first_name: "Dennis",
-		last_name: "Bateman",
-		age: 27,
-		biography:
-			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime iusto accusamus quae. Tenetur sed temporibus odio consectetur natus perferendis atque facilis tempore velit quidem magnam delectus, quam ex qui architecto?",
-		gender: "",
-		sexual_preference: "",
-		location: "",
-		profile_picture: "/person.png",
-		images: [
-			"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn1.matadornetwork.com%2Fblogs%2F1%2F2024%2F02%2Fcherry-blossoms-bike-ride-1.jpg&f=1&nofb=1&ipt=154498e6af1a251026eb3331fbe588f58febbbf00d3e4d1e82356aa4df179b2a&ipo=images",
-			"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.wallpaperflare.com%2Fstatic%2F173%2F680%2F888%2Fvancouver-canada-panoramic-view-city-river-wallpaper.jpg&f=1&nofb=1&ipt=40cea784189c2794d599d5e1fd0445710add1807e0d89d8445dca03c6bcf04af&ipo=images",
-			"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.travelandleisure.com%2Fthmb%2F2rL0_3WlarpxlX2jJfqDi1DH2Kw%3D%2F1500x0%2Ffilters%3Ano_upscale()%3Amax_bytes(150000)%3Astrip_icc()%2FTAL-vancouver-science-center-TODOVANCOUVER0723-373ccb7bf8b94f0b92092d39713139ea.jpg&f=1&nofb=1&ipt=83dba252e90d0c5bf0ab3a36febfef1a0d6d55c8b992f9dcc1e102b346a23a69&ipo=images",
-		],
-		tags: [
-			"Gaming",
-			"Programming",
-			"Ipsum",
-			"Ipsum"
-		]
-	});
+	const [formData, setFormData] = useState<EditProfileData | null>(null);
+	const [originalData, setOriginalData] = useState<EditProfileData | null>(
+		null
+	);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [msg, setMsg] = useState<{
+		type: "error" | "success";
+		message: string;
+		key: number;
+	} | null>(null);
 
-	const genderOptions = [
-		{ value: "Male", label: "Male" },
-		{ value: "Female", label: "Female" },
-	];
+	useEffect(() => {
+		if (profile) {
+			setFormData(profile);
+			setOriginalData(profile);
+		}
+	}, [profile]);
 
-	const preferenceOptions = [
-		{ value: "Male", label: "Male" },
-		{ value: "Female", label: "Female" },
-		{ value: "Bisexual", label: "Both" },
-	];
+	// Helper function to detect changes between two values
+	const hasValueChanged = (newValue: any, originalValue: any) => {
+		if (Array.isArray(newValue) && Array.isArray(originalValue)) {
+			if (newValue.length !== originalValue.length) return true;
+			return newValue.some(
+				(value, index) => value !== originalValue[index]
+			);
+		}
+		if (!newValue && !originalValue) return false;
+		if (!newValue || !originalValue) return true;
+		return newValue !== originalValue;
+	};
 
-	const [errors, setErrors] = useState<Partial<UserData>>({});
+	// Get changed fields and always include tags
+	const getChangedFields = () => {
+		if (!formData || !originalData) return {};
+
+		const changes: Partial<EditProfileData> = {
+			// Always include tags, even if unchanged
+			tags: formData.tags.map((tag) => tag.id) || [],
+		};
+
+		Object.keys(formData).forEach((key) => {
+			const typedKey = key as keyof EditProfileData;
+			// Skip tags as we've already handled them
+			if (typedKey === "tags") return;
+
+			if (hasValueChanged(formData[typedKey], originalData[typedKey])) {
+				changes[typedKey] = formData[typedKey];
+			}
+		});
+
+		return changes;
+	};
 
 	const handleInputChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 	) => {
 		const { name, value } = e.target;
-		setFormData((prev) => ({
-			...prev,
-			[name]: value,
-		}));
+		setFormData((prev) =>
+			prev
+				? {
+						...prev,
+						[name]: value,
+				  }
+				: null
+		);
 	};
 
 	const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		if (!formData || !user?.id) return;
+
 		const { name, value } = e.target;
-		setFormData((prev) => ({
-			...prev,
-			[name]: value,
-		}));
+		setFormData((prev) =>
+			prev
+				? {
+						...prev,
+						[name]: value,
+				  }
+				: null
+		);
 	};
 
-	const handleImageUpload = async (
-		e: React.ChangeEvent<HTMLInputElement>
-	) => {
-		// TODO: implement this!!
+	const handleImagesUpdate = (newImages: string[]) => {
+		setFormData((prev) =>
+			prev
+				? {
+						...prev,
+						images: newImages,
+				  }
+				: null
+		);
 	};
+
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		if (!formData || !user?.id) return;
+
+		const changedFields = getChangedFields();
+
+		if (
+			Object.keys(changedFields).length === 1 &&
+			"tags" in changedFields &&
+			!hasValueChanged(changedFields.tags, originalData.tags)
+		)
+			return;
+
+		setIsSubmitting(true);
+		try {
+			const response = await updateProfile(user.id, changedFields);
+			if (response) {
+				setMsg({
+					type: "success",
+					message: "Profile updated successfully",
+					key: Date.now(),
+				});
+				// Update original data to match current state
+				setOriginalData(formData);
+			}
+		} catch (error) {
+			setMsg({
+				type: "error",
+				message:
+					error instanceof Error
+						? error.message
+						: "Failed to update profile",
+				key: Date.now(),
+			});
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
+
+	if (loading) return <Spinner />;
+	if (error) return <div>Error: {error}</div>;
+	if (!formData) return <div>No profile data</div>;
 
 	return (
 		<main className="flex flex-1 justify-center items-center flex-col">
-			<section className="w-full bg-gradient-to-br from-orange-200 to-purple-200 flex flex-col items-center gap-12 pb-5">
-				<Face user={formData} onImagesUpdate={handleImageUpload} />
-			</section>
-			<Body user={formData} />
+			{msg && (
+				<MsgCard
+					key={msg.key}
+					type={msg.type}
+					message={msg.message}
+					onClose={() => setMsg(null)}
+				/>
+			)}
+			<form
+				onSubmit={handleSubmit}
+				className="flex justify-center items-center flex-col w-full"
+			>
+				<section className="w-full bg-gradient-to-br from-orange-200 to-purple-200 flex flex-col items-center gap-12 pb-5">
+					<Face
+						oauth={user.oauth}
+						user={formData}
+						onImagesUpdate={handleImagesUpdate}
+						onChange={handleInputChange}
+					/>
+				</section>
+				<Body
+					user={formData}
+					onChange={handleInputChange}
+					onSelectChange={handleSelectChange}
+				/>
+				<section className="container max-w-4xl px-3 relative text-font-main mb-10 mt-9">
+					<div className="max-w-4xl w-full text-start">
+						<RegularButton
+							value="Update profile"
+							disabled={isSubmitting || isUpdating}
+						/>
+					</div>
+				</section>
+			</form>
+			{!user.oauth && (
+				<section className="container max-w-4xl px-3 relative text-font-main mb-10 flex flex-col gap-5">
+					<h2 className="text-font-main text-xl">
+						Additional settings
+					</h2>
+					<PasswordChange />
+				</section>
+			)}
 		</main>
 	);
 };

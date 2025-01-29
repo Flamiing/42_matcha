@@ -24,6 +24,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
 	return (
 		<div className="w-full">
 			<select
+				id={name}
 				name={name}
 				value={value}
 				onChange={onChange}

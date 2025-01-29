@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FormInput from "../../components/common/FormInput";
 import MsgCard from "../../components/common/MsgCard";
 import OauthButton from "../../components/common/Oauth42Button";
 import { useAuth } from "../../context/AuthContext";
 import RegularButton from "../../components/common/RegularButton";
+import ResetPassword from "./ResetPassword";
 
 const LoginForm: React.FC = () => {
 	const { login } = useAuth();
+	const navigate = useNavigate();
+
 	const [formData, setFormData] = useState({
 		username: "",
 		password: "",
@@ -18,6 +21,11 @@ const LoginForm: React.FC = () => {
 		message: string;
 		key: number; // Add a key to force re-render
 	} | null>(null);
+
+
+	const handleResetPassword = () => {
+
+	}
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setFormData((prev) => ({
@@ -57,27 +65,29 @@ const LoginForm: React.FC = () => {
 					onClose={() => setMsg(null)}
 				/>
 			)}
-			<form
-				onSubmit={submitForm}
-				className="bg-white shadow-md flex flex-col gap-8 p-10 rounded max-w-3xl items-center"
-			>
-				<OauthButton action="Login" />
-				<p>Or enter your credentials to access your account</p>
-				<FormInput
-					name="username"
-					onChange={handleChange}
-					value={formData.username}
-					placeholder="Username*"
-				/>
-				<FormInput
-					name="password"
-					onChange={handleChange}
-					value={formData.password}
-					type="password"
-					placeholder="Password*"
-				/>
-				<RegularButton value="Access Account" />
-				<div className="w-full text-start p-0">
+			<div className="bg-white shadow-md p-10 rounded max-w-3xl">
+				<form
+					onSubmit={submitForm}
+					className="flex gap-8 flex-col items-center"
+				>
+					<OauthButton action="Login" />
+					<p>Or enter your credentials to access your account</p>
+					<FormInput
+						name="username"
+						onChange={handleChange}
+						value={formData.username}
+						placeholder="Username*"
+					/>
+					<FormInput
+						name="password"
+						onChange={handleChange}
+						value={formData.password}
+						type="password"
+						placeholder="Password*"
+					/>
+					<RegularButton value="Access Account" />
+				</form>
+				<div className="w-full text-start p-0 mt-8">
 					<p>
 						Don't have an account yet?{" "}
 						<Link
@@ -88,7 +98,8 @@ const LoginForm: React.FC = () => {
 						</Link>
 					</p>
 				</div>
-			</form>
+				<ResetPassword />
+			</div>
 		</>
 	);
 };
