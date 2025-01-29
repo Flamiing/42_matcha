@@ -2,27 +2,9 @@ import React from "react";
 import Modal from "../../components/common/Modal";
 import LikesAndViewsCard from "./LikesAndViewsCard";
 
-const mockUserData = {
-	first_name: "Dennis",
-	likedProfiles: Array(15)
-		.fill(null)
-		.map((_, index) => ({
-			username: `user_${index + 1}`,
-			profilePicture: "/person2.png",
-			actionTime: Date.now() - 1000 * 60 * (30 * (index + 1)), // Increasing time intervals
-		})),
-	viewedProfiles: Array(20)
-		.fill(null)
-		.map((_, index) => ({
-			username: `viewer_${index + 1}`,
-			profilePicture: "/person2.png",
-			actionTime: Date.now() - 1000 * 60 * (15 * (index + 1)), // Increasing time intervals
-		})),
-};
-
 interface OtherUsers {
 	first_name: string;
-	profilePicture: string;
+	profile_picture: string;
 	time: string;
 }
 
@@ -34,7 +16,7 @@ interface User {
 	viewedProfiles: OtherUsers[];
 }
 
-const LikesAndViews: React.FC = ({ user }) => {
+const LikesAndViews: React.FC = ({ profileLikes, profileViews }) => {
 	const [isModalOpen, setIsModalOpen] = React.useState(false);
 	const [activeTab, setActiveTab] = React.useState("likes");
 
@@ -71,7 +53,7 @@ const LikesAndViews: React.FC = ({ user }) => {
 								onClick={() => handleTabChange("likes")}
 							>
 								<span className="fa fa-heart" /> Likes (
-								{mockUserData.likedProfiles.length})
+								{profileLikes.length})
 							</button>
 							<button
 								className={`flex-1 py-2.5 md:py-3 px-4 text-sm font-medium transition-colors ${
@@ -82,36 +64,32 @@ const LikesAndViews: React.FC = ({ user }) => {
 								onClick={() => handleTabChange("views")}
 							>
 								<span className="fa fa-eye" /> Views (
-								{mockUserData.viewedProfiles.length})
+								{profileViews.length})
 							</button>
 						</div>
 						{/* Content */}
 						<div className="flex-1 overflow-y-auto overscroll-contain bg-white">
 							<div className="divide-y divide-gray-200">
 								{activeTab === "likes" ? (
-									mockUserData.likedProfiles.length > 0 ? (
-										mockUserData.likedProfiles.map(
-											(profile, index) => (
-												<LikesAndViewsCard
-													key={`like-${index}`}
-													profile={profile}
-												/>
-											)
-										)
+									profileLikes.length > 0 ? (
+										profileLikes.map((profile, index) => (
+											<LikesAndViewsCard
+												key={`like-${index}`}
+												profile={profile}
+											/>
+										))
 									) : (
 										<div className="p-4 text-center text-gray-500">
 											No likes yet
 										</div>
 									)
-								) : mockUserData.viewedProfiles.length > 0 ? (
-									mockUserData.viewedProfiles.map(
-										(profile, index) => (
-											<LikesAndViewsCard
-												key={`view-${index}`}
-												profile={profile}
-											/>
-										)
-									)
+								) : profileViews.length > 0 ? (
+									profileViews.map((profile, index) => (
+										<LikesAndViewsCard
+											key={`view-${index}`}
+											profile={profile}
+										/>
+									))
 								) : (
 									<div className="p-4 text-center text-gray-500">
 										No views yet
