@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import Face from "./Face";
-import Body from "./Body";
+import ProfileHeader from "./ProfileHeader";
+import ProfileDetails from "./ProfileDetails";
 import Info from "./Info";
-import Images from "./Images";
+import Images from "../../components/profile/Images";
 import LikesAndViews from "./LikesAndViews";
 import TagSection from "./TagSection";
 import { useProfile } from "../../hooks/PageData/useProfile";
@@ -35,8 +35,8 @@ const index = () => {
 	return (
 		<main className="flex flex-1 justify-center items-center flex-col">
 			<section className="w-full bg-gradient-to-br from-orange-200 to-purple-200 flex flex-col items-center gap-12">
-				<Face editable={true} user={profile} />
-				<Body user={profile} />
+				<ProfileHeader user={profile} />
+				<ProfileDetails user={profile} />
 				<section className="flex flex-wrap flex-row w-fit items-center justify-center mb-10 gap-7 px-4">
 					<Images user={profile} />
 					<LikesAndViews

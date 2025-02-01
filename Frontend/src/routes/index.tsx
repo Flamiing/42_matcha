@@ -10,18 +10,11 @@ import NotFound from "../pages/NotFound";
 import Oauth from "../pages/Callbacks/Oauth";
 import ConfirmEmail from "../pages/Callbacks/ConfirmEmail";
 import Browse from "../pages/Browse";
+import PublicProfile from "../pages/PublicProfile";
 
 import AuthTestPage from "../pages/AuthTestPage";
 
 const protectedRoutes = {
-	profile: {
-		path: "profile",
-		element: (
-			<ProtectedRoute>
-				<Profile />
-			</ProtectedRoute>
-		),
-	},
 	profileEdit: {
 		path: "profile/edit",
 		element: (
@@ -35,6 +28,22 @@ const protectedRoutes = {
 		element: (
 			<ProtectedRoute>
 				<Browse />
+			</ProtectedRoute>
+		),
+	},
+	profile: {
+		path: "profile",
+		element: (
+			<ProtectedRoute>
+				<Profile />
+			</ProtectedRoute>
+		),
+	},
+	publicProfile: {
+		path: "profile/view/:username",
+		element: (
+			<ProtectedRoute>
+				<PublicProfile />
 			</ProtectedRoute>
 		),
 	},
