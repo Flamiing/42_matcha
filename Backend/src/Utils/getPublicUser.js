@@ -2,7 +2,7 @@
 import userTagsModel from '../Models/UserTagsModel.js';
 import imagesModel from '../Models/ImagesModel.js';
 import { parseImages } from './imagesUtils.js';
-import geolocationModel from '../Models/GeolocationModel.js';
+import geolocationModel from '../Models/UserLocationModel.js';
 
 export default async function getPublicUser(user) {
     const { API_HOST, API_PORT, API_VERSION } = process.env;
@@ -31,7 +31,7 @@ export default async function getPublicUser(user) {
         age: parseInt(user.age),
         biography: user.biography,
         profile_picture: profilePicture,
-        location: userLocation,
+        location: userLocation.length === 0 ? {} : userLocation,
         fame: parseInt(user.fame),
         last_online: user.last_online,
         is_online: user.is_online,

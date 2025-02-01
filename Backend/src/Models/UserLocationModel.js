@@ -1,9 +1,9 @@
 // Local Imports:
 import Model from '../Core/Model.js';
 
-class GeolocationModel extends Model {
+class UserLocationModel extends Model {
     constructor() {
-        super('geolocation');
+        super('user_location');
     }
 
     async update(location, id) {
@@ -20,7 +20,7 @@ class GeolocationModel extends Model {
 
         try {
             const result = await this.db.query(query);
-            if (result.rows.length === 0) return [];
+            if (result.rows.length === 0) return {};
             return result.rows[0];
         } catch (error) {
             console.error('Error making the query: ', error.message);
@@ -29,5 +29,5 @@ class GeolocationModel extends Model {
     }
 }
 
-const geolocationModel = new GeolocationModel();
-export default geolocationModel;
+const userLocationModel = new UserLocationModel();
+export default userLocationModel;

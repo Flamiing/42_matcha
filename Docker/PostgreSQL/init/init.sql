@@ -24,7 +24,7 @@ CREATE TABLE users (
 	sexual_preference gender_preference_enum
 );
 
-CREATE TABLE geolocation (
+CREATE TABLE user_location (
   id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
   latitude DECIMAL(9, 6),
   longitude DECIMAL(9, 6)
