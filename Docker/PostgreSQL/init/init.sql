@@ -13,7 +13,6 @@ CREATE TABLE users (
 	age BIGINT DEFAULT 0,
 	biography VARCHAR(500),
 	profile_picture VARCHAR(255) DEFAULT NULL,
-	location VARCHAR(100),
 	fame INTEGER DEFAULT 0,
 	last_online TIMESTAMP,
 	is_online BOOLEAN DEFAULT FALSE,
@@ -23,6 +22,12 @@ CREATE TABLE users (
     reset_pass_token VARCHAR(2048) DEFAULT NULL,
 	gender gender_enum,
 	sexual_preference gender_preference_enum
+);
+
+CREATE TABLE geolocation (
+  id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  latitude DECIMAL(9, 6),
+  longitude DECIMAL(9, 6)
 );
 
 CREATE TABLE images (
