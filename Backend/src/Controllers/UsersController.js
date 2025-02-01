@@ -5,6 +5,7 @@ import fsExtra from 'fs-extra';
 // Local Imports:
 import userModel from '../Models/UserModel.js';
 import likesModel from '../Models/LikesModel.js';
+import geolocationModel from '../Models/GeolocationModel.js';
 import userTagsModel from '../Models/UserTagsModel.js';
 import { validatePartialUser } from '../Schemas/userSchema.js';
 import getPublicUser from '../Utils/getPublicUser.js';
@@ -183,6 +184,10 @@ export default class UsersController {
 
         let user = null;
         if (!inputHasNoContent) {
+            const geolocationUpdate = await geolocationModel.update(input.location, id);
+            if (!geolocationUpdate) return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+            if (geolocationUpdate.length === 0) return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
+            delete input.location;
             user = await userModel.update({ input, id });
         } else {
             user = await userModel.getById({ id });
