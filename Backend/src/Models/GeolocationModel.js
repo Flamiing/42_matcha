@@ -7,11 +7,7 @@ class GeolocationModel extends Model {
     }
 
     async update(location, id) {
-        const values = [
-            id,
-            location.latitude,
-            location.longitude
-        ]
+        const values = [id, location.latitude, location.longitude];
 
         const query = {
             text: `INSERT INTO ${this.table} (id, latitude, longitude)

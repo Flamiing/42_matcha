@@ -184,9 +184,16 @@ export default class UsersController {
 
         let user = null;
         if (!inputHasNoContent) {
-            const geolocationUpdate = await geolocationModel.update(input.location, id);
-            if (!geolocationUpdate) return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
-            if (geolocationUpdate.length === 0) return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
+            const geolocationUpdate = await geolocationModel.update(
+                input.location,
+                id
+            );
+            if (!geolocationUpdate)
+                return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+            if (geolocationUpdate.length === 0)
+                return res
+                    .status(404)
+                    .json({ msg: StatusMessage.USER_NOT_FOUND });
             delete input.location;
             user = await userModel.update({ input, id });
         } else {
