@@ -402,7 +402,11 @@ export default class AuthController {
                     .json({ error: StatusMessage.USER_NOT_FOUND });
             }
 
-            const saveUserLocationResult = await saveUserLocation(res, location, user.id);
+            const saveUserLocationResult = await saveUserLocation(
+                res,
+                location,
+                user.id
+            );
             if (!saveUserLocationResult) return res;
 
             if (!oauth) await sendConfirmationEmail(user);

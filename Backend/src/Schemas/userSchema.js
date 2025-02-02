@@ -103,7 +103,7 @@ const userSchema = z.object({
                 }),
             allows_location: z.boolean({
                 invalid_type_error: 'Invalid location.',
-            })
+            }),
         })
         .optional(),
     last_online: z.string().optional(),
