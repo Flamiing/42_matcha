@@ -27,7 +27,8 @@ CREATE TABLE users (
 CREATE TABLE user_location (
   id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
   latitude DECIMAL(9, 6),
-  longitude DECIMAL(9, 6)
+  longitude DECIMAL(9, 6),
+  allows_location BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE images (

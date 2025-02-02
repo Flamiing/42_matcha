@@ -7,13 +7,13 @@ class UserLocationModel extends Model {
     }
 
     async update(location, id) {
-        const values = [id, location.latitude, location.longitude];
+        const values = [id, location.latitude, location.longitude, location.allows_location];
 
         const query = {
-            text: `INSERT INTO ${this.table} (id, latitude, longitude)
-            VALUES ($1, $2, $3)
+            text: `INSERT INTO ${this.table} (id, latitude, longitude, allows_location)
+            VALUES ($1, $2, $3, $4)
             ON CONFLICT (id) DO UPDATE
-            SET latitude = $2, longitude = $3
+            SET latitude = $2, longitude = $3, allows_location = $4
             RETURNING *;`,
             values: values,
         };
