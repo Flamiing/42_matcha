@@ -7,7 +7,12 @@ class UserLocationModel extends Model {
     }
 
     async update(location, id) {
-        const values = [id, location.latitude, location.longitude, location.allows_location];
+        const values = [
+            id,
+            location.latitude,
+            location.longitude,
+            location.allows_location,
+        ];
 
         const query = {
             text: `INSERT INTO ${this.table} (id, latitude, longitude, allows_location)
