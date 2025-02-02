@@ -184,7 +184,6 @@ export default class UsersController {
 
         let user = null;
         if (!inputHasNoContent) {
-            input.location.allows_location = true;
             const userLocationUpdate = await userLocationModel.update(
                 input.location,
                 id

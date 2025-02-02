@@ -101,6 +101,9 @@ const userSchema = z.object({
                 .max(180, {
                     message: 'Longitude must be between -180 and 180',
                 }),
+            allows_location: z.boolean({
+                invalid_type_error: 'Invalid location.',
+            })
         })
         .optional(),
     last_online: z.string().optional(),
