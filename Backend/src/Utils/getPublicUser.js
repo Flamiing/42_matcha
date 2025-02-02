@@ -2,6 +2,7 @@
 import userTagsModel from '../Models/UserTagsModel.js';
 import imagesModel from '../Models/ImagesModel.js';
 import { parseImages } from './imagesUtils.js';
+import geolocationModel from '../Models/UserLocationModel.js';
 
 export default async function getPublicUser(user) {
     const { API_HOST, API_PORT, API_VERSION } = process.env;
@@ -14,6 +15,11 @@ export default async function getPublicUser(user) {
     const imagesToParse = await imagesModel.getByReference(reference, false);
     if (!imagesToParse) return null;
 
+    const { id } = user;
+    const userLocation = await geolocationModel.getById({ id });
+    if (!userLocation) return null;
+    delete userLocation.id;
+
     const images =
         imagesToParse.length !== 0 ? parseImages(user.id, imagesToParse) : [];
 
@@ -25,7 +31,7 @@ export default async function getPublicUser(user) {
         age: parseInt(user.age),
         biography: user.biography,
         profile_picture: profilePicture,
-        location: user.location,
+        location: userLocation.length === 0 ? {} : userLocation,
         fame: parseInt(user.fame),
         last_online: user.last_online,
         is_online: user.is_online,
