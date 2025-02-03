@@ -1,24 +1,7 @@
 import { timeAgo } from "../../hooks/timeAgo";
 import FameRating from "../../components/common/FameRating";
 
-interface UserData {
-	first_name: string;
-	last_name: string;
-	username: string;
-	email: string;
-	age: number;
-	biography: string;
-	fame: number;
-	last_online: number;
-	gender: string;
-	sexual_preference: string;
-}
-
-interface FaceProps {
-	user: UserData;
-}
-
-const Face: React.FC<FaceProps> = ({ user }) => {
+const ProfileDetails: React.FC = ({ user }) => {
 	return (
 		<section className="container max-w-4xl text-center px-3 flex justify-center">
 			<div className="flex flex-row justify-center gap-3 w-fit py-5">
@@ -43,4 +26,4 @@ const Face: React.FC<FaceProps> = ({ user }) => {
 	);
 };
 
-export default Face;
+export default ProfileDetails;
