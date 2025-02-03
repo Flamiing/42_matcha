@@ -40,9 +40,7 @@ class UserModel extends Model {
         }
     }
 
-    async getUsersForHeterosexual(userGender) {
-        
-    }
+    async getUsersForHeterosexual(userGender) {}
 }
 
 const userModel = new UserModel();
