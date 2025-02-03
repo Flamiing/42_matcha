@@ -108,7 +108,14 @@ export default class UsersController {
                         .json({ msg: StatusMessage.QUERY_ERROR });
             }
 
-            if (!await getUserLikesAndBlocks(res, req.session.user.id, publicUser)) return res;
+            if (
+                !(await getUserLikesAndBlocks(
+                    res,
+                    req.session.user.id,
+                    publicUser
+                ))
+            )
+                return res;
 
             return res.json({ msg: publicUser });
         }

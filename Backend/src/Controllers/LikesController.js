@@ -37,7 +37,7 @@ export default class LikesController {
                 likedById,
                 likedId
             );
-            console.log('HERE!  - ', removeLikeResult)
+            console.log('HERE!  - ', removeLikeResult);
             if (!removeLikeResult) return res;
             return res.json({ msg: StatusMessage.USER_LIKED_REMOVED });
         }
