@@ -18,6 +18,7 @@ import TagsRouter from '../Routes/TagsRouter.js';
 import LikesRouter from '../Routes/LikesRouter.js';
 import MatchesRouter from '../Routes/MatchesRouter.js';
 import EventsRouter from '../Routes/EventsRouter.js';
+import BrowserRouter from '../Routes/BrowserRouter.js';
 
 export default class App {
     constructor() {
@@ -68,6 +69,7 @@ export default class App {
         this.app.use(`${this.API_PREFIX}/tags`, TagsRouter.createRouter());
         this.app.use(`${this.API_PREFIX}/likes`, LikesRouter.createRouter());
         this.app.use(`${this.API_PREFIX}/events`, EventsRouter.createRouter());
+        this.app.use(`${this.API_PREFIX}/browser`, BrowserRouter.createRouter());
         this.app.use(
             `${this.API_PREFIX}/matches`,
             MatchesRouter.createRouter()

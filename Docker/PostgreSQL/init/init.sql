@@ -21,7 +21,7 @@ CREATE TABLE users (
     refresh_token VARCHAR(2048) DEFAULT NULL,
     reset_pass_token VARCHAR(2048) DEFAULT NULL,
 	gender gender_enum,
-	sexual_preference gender_preference_enum
+	sexual_preference gender_preference_enum DEFAULT 'bisexual'
 );
 
 CREATE TABLE user_location (
