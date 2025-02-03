@@ -39,6 +39,10 @@ class UserModel extends Model {
             return false;
         }
     }
+
+    async getUsersForHeterosexual(userGender) {
+        
+    }
 }
 
 const userModel = new UserModel();

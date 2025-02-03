@@ -28,6 +28,7 @@ import {
     passwordValidations,
     loginValidations,
 } from '../Validations/authValidations.js';
+import { saveUserLocation } from '../Utils/userUtils.js';
 
 export default class AuthController {
     static async login(req, res) {
@@ -387,6 +388,9 @@ export default class AuthController {
             if (!oauth)
                 validatedUser.data.password = await hashPassword(password);
 
+            const { location } = validatedUser.data;
+            delete validatedUser.data.location;
+
             const user = await userModel.create({ input: validatedUser.data });
             if (user === null) {
                 return res
@@ -397,6 +401,13 @@ export default class AuthController {
                     .status(400)
                     .json({ error: StatusMessage.USER_NOT_FOUND });
             }
+
+            const saveUserLocationResult = await saveUserLocation(
+                res,
+                location,
+                user.id
+            );
+            if (!saveUserLocationResult) return res;
 
             if (!oauth) await sendConfirmationEmail(user);
 
