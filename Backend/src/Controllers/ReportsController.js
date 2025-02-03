@@ -23,7 +23,7 @@ export default class ReportsController {
         );
         if (userAlreadyReported === null) return res;
         if (userAlreadyReported)
-            return res.json({ msg: StatusMessage.USER_ALREADY_REPORTED });
+            return res.status(400).json({ msg: StatusMessage.USER_ALREADY_REPORTED });
 
         const input = {
             reported_by: reportedById,
