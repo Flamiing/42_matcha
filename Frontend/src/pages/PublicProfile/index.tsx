@@ -6,6 +6,8 @@ import Spinner from "../../components/common/Spinner";
 import ProfileHeader from "./ProfileHeader";
 import ProfileDetails from "./ProfileDetails";
 import Images from "../../components/profile/Images";
+import Info from "../../components/profile/Info";
+import TagSection from "../../components/profile/TagSection";
 
 const index = () => {
 	const { username } = useParams<{ username: string }>();
@@ -24,24 +26,8 @@ const index = () => {
 	if (error) return <div>Error: {error}</div>;
 	if (!profile) return null;
 
-	console.log(profile);
-	console.log("what???");
-
 	return (
 		<main className="flex flex-1 justify-center items-center flex-col">
-			{/* <section className="w-full bg-gradient-to-br from-orange-200 to-purple-200 flex flex-col items-center gap-12">
-				<Face user={profile} editable={false} />
-				<Body user={profile} />
-				<section className="flex flex-wrap flex-row w-fit items-center justify-center mb-10 gap-7 px-4">
-					<Images user={profile} />
-					<LikesAndViews
-						profileLikes={profile.likes}
-						profileViews={profile.views}
-					/>
-				</section>
-			</section>
-			<Info user={profile} />
-			<TagSection tags={profile.tags} editable={false} /> */}
 			<section className="w-full bg-gradient-to-br from-red-200 to-purple-200 flex flex-col items-center gap-12">
 				<ProfileHeader user={profile} />
 				<ProfileDetails user={profile} />
@@ -50,6 +36,8 @@ const index = () => {
 					{/* TODO -> Like for matching */}
 				</section>
 			</section>
+			<Info user={profile} />
+			<TagSection tags={profile.tags} />
 		</main>
 	);
 };

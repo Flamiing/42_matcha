@@ -1,4 +1,4 @@
-export const timeAgo = (timestamp: number) => {
+export const timeAgo = (timestamp: number, regular?: boolean = false) => {
 	const seconds = Math.floor((Date.now() - timestamp) / 1000);
 
 	const intervals = {
@@ -21,5 +21,5 @@ export const timeAgo = (timestamp: number) => {
 		}
 	}
 
-	return "Currently online";
+	return regular ? "Just now" : "Currently online";
 };

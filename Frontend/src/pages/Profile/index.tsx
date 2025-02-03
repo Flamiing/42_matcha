@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import ProfileHeader from "./ProfileHeader";
 import ProfileDetails from "./ProfileDetails";
-import Info from "./Info";
+import Info from "../../components/profile/Info";
 import Images from "../../components/profile/Images";
 import LikesAndViews from "./LikesAndViews";
-import TagSection from "./TagSection";
+import TagSection from "../../components/profile/TagSection";
 import { useProfile } from "../../hooks/PageData/useProfile";
 import Spinner from "../../components/common/Spinner";
 
@@ -38,7 +38,7 @@ const index = () => {
 				<ProfileHeader user={profile} />
 				<ProfileDetails user={profile} />
 				<section className="flex flex-wrap flex-row w-fit items-center justify-center mb-10 gap-7 px-4">
-					<Images user={profile} />
+					<Images user={profile} privateProfile={true} />
 					<LikesAndViews
 						profileLikes={profile.likes}
 						profileViews={profile.views}
