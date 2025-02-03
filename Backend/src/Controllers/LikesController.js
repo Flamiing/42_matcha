@@ -37,6 +37,7 @@ export default class LikesController {
                 likedById,
                 likedId
             );
+            console.log('HERE!  - ', removeLikeResult)
             if (!removeLikeResult) return res;
             return res.json({ msg: StatusMessage.USER_LIKED_REMOVED });
         }
@@ -134,20 +135,21 @@ export default class LikesController {
         return true;
     }
 
-    static async removeLike(res, id, likedById, likedId) {
+    /* static async removeLike(res, id, likedById, likedId) {
         const removeLike = await likesModel.delete({ id });
-        if (!removeLike)
+        if (!removeLike) {
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
-
+        }
         const deleteMatch = await matchesModel.deleteMatch(
             res,
             likedById,
             likedId
         );
-        if (!deleteMatch) return false;
-
+        if (!deleteMatch) {
+            return false;
+        }
         return true;
-    }
+    } */
 
     static async checkIfCanLike(res, id) {
         const user = await userModel.getById({ id });
@@ -214,7 +216,7 @@ export default class LikesController {
             };
 
             removeMatch = await matchesModel.deleteByReference(reference);
-            if (!removeMatch)
+            if (removeMatch === null)
                 return returnErrorStatus(
                     res,
                     500,

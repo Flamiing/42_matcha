@@ -7,9 +7,12 @@ class ViewsHistoryModel extends Model {
     }
 
     async getUserViewsHistory(viewedUserId) {
+        const { API_HOST, API_PORT, API_VERSION } = process.env;
+
         const query = {
             text: `SELECT 
-                u.username, 
+                u.username,
+                u.id,
                 v.time
             FROM 
                 views_history v
@@ -25,7 +28,14 @@ class ViewsHistoryModel extends Model {
         try {
             const result = await this.db.query(query);
             if (result.rows.length === 0) return [];
-            return result.rows;
+            let views = [];
+            for (const view of result.rows) {
+                const profilePictureURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${view.id}/profile-picture`;
+                view.profilePicture = profilePictureURL;
+                delete view.id;
+                views.push(view);
+            }
+            return views;
         } catch (error) {
             console.error('Error making the query: ', error.message);
             return null;

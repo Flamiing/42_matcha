@@ -8,9 +8,12 @@ class LikesModel extends Model {
     }
 
     async getUserLikes(likedUserId) {
+        const { API_HOST, API_PORT, API_VERSION } = process.env;
+
         const query = {
             text: `SELECT 
-                u.username, 
+                u.username,
+                u.id,
                 l.time
             FROM 
                 likes l
@@ -26,7 +29,14 @@ class LikesModel extends Model {
         try {
             const result = await this.db.query(query);
             if (result.rows.length === 0) return [];
-            return result.rows;
+            let likes = [];
+            for (const like of result.rows) {
+                const profilePictureURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${like.id}/profile-picture`;
+                like.profilePicture = profilePictureURL;
+                delete like.id;
+                likes.push(like);
+            }
+            return likes;
         } catch (error) {
             console.error('Error making the query: ', error.message);
             return null;

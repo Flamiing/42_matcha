@@ -5,4 +5,8 @@ export const usersApi = {
 		const response = await apiRequest(`users`);
 		return response;
 	},
+	getPublicProfile: async (username: string) => {
+		const response = await apiRequest(`users/${username}`);
+		return response;
+	}
 };
