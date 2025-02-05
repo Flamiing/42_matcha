@@ -12,8 +12,6 @@ import ConfirmEmail from "../pages/Callbacks/ConfirmEmail";
 import Browse from "../pages/Browse";
 import PublicProfile from "../pages/PublicProfile";
 
-import AuthTestPage from "../pages/AuthTestPage";
-
 const protectedRoutes = {
 	profileEdit: {
 		path: "profile/edit",
@@ -61,10 +59,6 @@ const publicRoutes = {
 	register: {
 		path: "register",
 		element: <Register />,
-	},
-	authtestpage: {
-		path: "test",
-		element: <AuthTestPage />,
 	},
 };
 
