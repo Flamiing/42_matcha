@@ -1,16 +1,12 @@
 import { useState } from "react";
 
-const ProfileOptionsMenu = () => {
+const ProfileOptionsMenu = ({ user, onBlock, onReport }) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const handleClick = (action: () => void) => {
 		action();
 		setIsOpen(false);
 	};
-
-	const onBlock = () => {};
-
-	const onReport = () => {};
 
 	return (
 		<div className="relative">
@@ -35,14 +31,14 @@ const ProfileOptionsMenu = () => {
 							className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
 						>
 							<span className="fa fa-ban text-red-500" />
-							Block
+							{user.blocked ? "Unblock" : "Block"}
 						</button>
 						<button
 							onClick={() => handleClick(onReport)}
 							className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
 						>
 							<span className="fa fa-flag text-yellow-500" />
-							Report
+							Report as fake account
 						</button>
 					</div>
 				</>

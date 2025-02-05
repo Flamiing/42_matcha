@@ -3,8 +3,6 @@ import { timeAgo } from "../../hooks/timeAgo";
 import { Link } from "react-router-dom";
 
 const LikesAndViewsCard: React.FC = ({ profile }) => {
-	console.log(profile);
-
 	return (
 		<Link
 			to={`/profile/view/${profile.username}`}
