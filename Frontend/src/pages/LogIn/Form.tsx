@@ -10,6 +10,7 @@ import ResetPassword from "./ResetPassword";
 const LoginForm: React.FC = () => {
 	const { login } = useAuth();
 	const navigate = useNavigate();
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const [formData, setFormData] = useState({
 		username: "",
@@ -22,11 +23,6 @@ const LoginForm: React.FC = () => {
 		key: number; // Add a key to force re-render
 	} | null>(null);
 
-
-	const handleResetPassword = () => {
-
-	}
-
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setFormData((prev) => ({
 			...prev,
@@ -36,23 +32,29 @@ const LoginForm: React.FC = () => {
 
 	const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const { success, message } = await login(formData);
+		setIsSubmitting(true);
 
-		if (success) {
-			setFormData({
-				username: "",
-				password: "",
+		try {
+			const { success, message } = await login(formData);
+
+			if (success) {
+				setFormData({
+					username: "",
+					password: "",
+				});
+				// Add a small delay before navigation to allow context to update
+				setTimeout(() => {
+					navigate("/profile");
+				}, 1000);
+			}
+			setMsg({
+				type: success ? "success" : "error",
+				message: message,
+				key: Date.now(),
 			});
-			// Add a small delay before navigation to allow context to update
-			setTimeout(() => {
-				navigate("/profile");
-			}, 1000);
+		} finally {
+			setIsSubmitting(false);
 		}
-		setMsg({
-			type: success ? "success" : "error",
-			message: message,
-			key: Date.now(),
-		});
 	};
 
 	return (
@@ -70,13 +72,14 @@ const LoginForm: React.FC = () => {
 					onSubmit={submitForm}
 					className="flex gap-8 flex-col items-center"
 				>
-					<OauthButton action="Login" />
+					<OauthButton action="Login" disabled={isSubmitting} />
 					<p>Or enter your credentials to access your account</p>
 					<FormInput
 						name="username"
 						onChange={handleChange}
 						value={formData.username}
 						placeholder="Username*"
+						disabled={isSubmitting}
 					/>
 					<FormInput
 						name="password"
@@ -84,8 +87,12 @@ const LoginForm: React.FC = () => {
 						value={formData.password}
 						type="password"
 						placeholder="Password*"
+						disabled={isSubmitting}
 					/>
-					<RegularButton value="Access Account" />
+					<RegularButton
+						value="Access Account"
+						disabled={isSubmitting}
+					/>
 				</form>
 				<div className="w-full text-start p-0 mt-8">
 					<p>

@@ -17,7 +17,7 @@ const MainHeader: React.FC = () => {
 					Because, love too can be industrialized. ❤️
 				</p>
 				<Link to="/login">
-					<StyledButton value="Start Here"></StyledButton>
+					<StyledButton value="Start Here" />
 				</Link>
 			</div>
 		</section>
