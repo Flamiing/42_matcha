@@ -3,7 +3,7 @@ import { useUsers } from "../../../hooks/PageData/useUsers";
 import Spinner from "../../../components/common/Spinner";
 
 const index: React.FC = () => {
-	const { getAllUsers, loading } = useUsers();
+	const { getAllUsers, loading, error } = useUsers();
 
 	const [users, setUsers] = useState<UsersData[]>([]);
 
@@ -17,19 +17,19 @@ const index: React.FC = () => {
 		fetchUsers();
 	}, []);
 
-	if (loading) {
-		return <Spinner />;
-	}
+	if (loading) return <Spinner />;
+	if (error) return <div>An error occurred when loading the browse page</div>;
 
 	console.log(users);
+	
 
 	return (
 		<div>
 			<p>DesktopBrowse</p>
-			{users.map((user) => (
-				<div key={user.id}>
-					<p>{user.name}</p>
-					<p>{user.email}</p>
+			{users.map((user, index) => (
+
+				<div key={user.index}>
+					<p>{user.username}</p>
 				</div>
 			))}
 		</div>

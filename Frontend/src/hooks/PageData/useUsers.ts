@@ -2,7 +2,7 @@ import { useState } from "react";
 import { usersApi } from "../../services/api/users";
 
 export const useUsers = () => {
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 
 	const getAllUsers = async () => {
@@ -10,7 +10,7 @@ export const useUsers = () => {
 		setError(null);
 		try {
 			const response = await usersApi.getAllUsers();
-			return response;
+			return response.msg;
 		} catch (err) {
 			const errorMessage = err.message ? err.message : "Request failed";
 			setError(errorMessage);
