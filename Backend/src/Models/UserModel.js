@@ -40,7 +40,34 @@ class UserModel extends Model {
         }
     }
 
-    async getUsersForHeterosexual(userGender) {}
+    async getUsersForBrowser(user) {
+        const FAME_TOLERANCE = 100;
+        const tagIds = user.tags.map(tag => tag.id);
+        const targetGender = user.gender_preference === 'bisexual' ? '*' : user.gender_preference;
+
+        const query = {
+            text: `
+                SELECT DISTINCT u.*
+                FROM users u
+                JOIN user_tags ut ON u.id = ut.user_id
+                LEFT JOIN blocked_users bu ON u.id = bu.blocked AND bu.blocked_by = $1
+                WHERE u.fame BETWEEN $2 AND $3
+                AND ut.tag_id = ANY($4)
+                AND bu.blocked IS NULL
+                AND u.id != $1;
+            `,
+            values: [user.id, user.fame - FAME_TOLERANCE, user.fame + FAME_TOLERANCE, tagIds],
+        };
+    
+        try {
+            const result = await this.db.query(query);
+            if (result.rows.length === 0) return [];
+            return result.rows;
+        } catch (error) {
+            console.error('Error making the query: ', error.message);
+            return null;
+        }
+    }
 }
 
 const userModel = new UserModel();

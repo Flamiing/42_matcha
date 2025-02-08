@@ -93,4 +93,5 @@ export default class StatusMessage {
     static USER_REPORTED = 'User reported!';
     static ERROR_SENDING_EMAIL =
         'There was an error submitting report. Please try again.';
+    static NO_USERS_FOUND = 'There are no interesting profiles for you. We are sorry :(.'
 }

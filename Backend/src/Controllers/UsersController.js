@@ -164,7 +164,6 @@ export default class UsersController {
             profilePicturePath =
                 '/backend/static/images/default-profile-picture.png';
         const imagePath = path.join(profilePicturePath);
-        console.log('TEST: ', imagePath);
         res.sendFile(imagePath, (err) => {
             if (err) {
                 res.status(404).json({ msg: StatusMessage.IMAGE_NOT_FOUND });
