@@ -20,25 +20,10 @@ export default class BrowserController {
         if (!interestingUsers) return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
         if (interestingUsers.length === 0) return res.status(404).json({ msg: StatusMessage.NO_USERS_FOUND })
 
-        const nonBlockedUsers = await BrowserController.removeBlockedUsers(res, interestingUsers, publicUser.id);
-        if (!nonBlockedUsers) return res;
-
         const publicProfiles = await BrowserController.getPublicProfiles(res, nonBlockedUsers);
         if (!publicProfiles) return res;
 
         return res.json({ msg: publicProfiles });
-    }
-
-    static async removeBlockedUsers(res, usersToFilter, userId) {
-        let filteredUsers = [];
-        for (const userToFilter of usersToFilter) {
-            const userBlocked = await blockedUsersModel.isUserBlocked(userId, userToFilter.id);
-            if (userBlocked === null) return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR);
-            if (!userBlocked)
-                filteredUsers.push(userToFilter);
-        }
-
-        return filteredUsers;
     }
 
     static async getPublicProfiles(res, users) {
