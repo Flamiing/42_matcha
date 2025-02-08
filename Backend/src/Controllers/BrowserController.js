@@ -1,5 +1,7 @@
 // Local Imports:
+import blockedUsersModel from '../Models/BlockedUsersModel.js';
 import userModel from '../Models/UserModel.js';
+import { returnErrorStatus } from '../Utils/errorUtils.js';
 import getPublicUser from '../Utils/getPublicUser.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 
@@ -18,6 +20,36 @@ export default class BrowserController {
         if (!interestingUsers) return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
         if (interestingUsers.length === 0) return res.status(404).json({ msg: StatusMessage.NO_USERS_FOUND })
 
-        return res.json({ msg: interestingUsers });
+        const filteredUsers = await BrowserController.removeBlockedUsers(res, interestingUsers, publicUser.id);
+        if (!filteredUsers) return res;
+
+        const publicProfiles = await BrowserController.getPublicProfiles(res, filteredUsers);
+        if (!publicProfiles) return res;
+
+        return res.json({ msg: publicProfiles });
+    }
+
+    static async removeBlockedUsers(res, usersToFilter, userId) {
+        let filteredUsers = [];
+        for (const userToFilter of usersToFilter) {
+            const userBlocked = await blockedUsersModel.isUserBlocked(userId, userToFilter.id);
+            if (userBlocked === null) return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR);
+            if (!userBlocked)
+                filteredUsers.push(userToFilter);
+        }
+
+        return filteredUsers;
+    }
+
+    static async getPublicProfiles(res, users) {
+        let publicProfiles = [];
+
+        for (const user of users) {
+            const publicProfile = await getPublicUser(user);
+            if (!publicProfile) return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR);
+            publicProfiles.push(publicProfile);
+        }
+
+        return publicProfiles;
     }
 }
