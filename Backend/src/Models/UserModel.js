@@ -43,9 +43,10 @@ class UserModel extends Model {
     async getUsersForBrowser(user) {
         const FAME_TOLERANCE = 100;
         const tagIds = user.tags.map(tag => tag.id);
-        const targetGender = user.gender_preference === 'bisexual' ? '*' : user.gender_preference;
+        console.log('TEST: ', user);
+        const genderQuery = user.sexual_preference === 'bisexual' ? 'AND u.gender = \'female\' AND u.gender = \'male\';' : `AND u.gender = '${user.sexual_preference}';`;
 
-        const query = {
+        let query = {
             text: `
                 SELECT DISTINCT u.*
                 FROM users u
@@ -54,10 +55,14 @@ class UserModel extends Model {
                 WHERE u.fame BETWEEN $2 AND $3
                 AND ut.tag_id = ANY($4)
                 AND bu.blocked IS NULL
-                AND u.id != $1;
+                AND u.id != $1
+                AND u.gender = 'male';
             `,
             values: [user.id, user.fame - FAME_TOLERANCE, user.fame + FAME_TOLERANCE, tagIds],
         };
+
+        //query.text += genderQuery;
+        console.log('TEST: ', query.text);
     
         try {
             const result = await this.db.query(query);
