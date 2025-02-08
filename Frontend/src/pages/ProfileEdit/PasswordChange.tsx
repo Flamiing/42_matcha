@@ -155,11 +155,7 @@ const PasswordChange: React.FC = () => {
 								type={viewPassword ? "text" : "password"}
 							/>
 							{/* Submit Button */}
-							<RegularButton
-								type="submit"
-								className="w-full"
-								value="Change password"
-							/>
+							<RegularButton value="Change password" />
 						</form>
 					</div>
 				</Modal>

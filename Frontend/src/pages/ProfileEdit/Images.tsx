@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import FormInput from "../../components/common/FormInput";
 import OauthButton from "../../components/common/Oauth42Button";
 import { useAuth } from "../../context/AuthContext";
-import RegularButton from "../../components/common/RegularButton";
 import { useEditProfile } from "../../hooks/PageData/useEditProfile";
 import Modal from "../../components/common/Modal";
 

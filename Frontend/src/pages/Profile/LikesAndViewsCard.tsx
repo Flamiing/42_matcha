@@ -4,7 +4,10 @@ import { Link } from "react-router-dom";
 
 const LikesAndViewsCard: React.FC = ({ profile }) => {
 	return (
-		<Link to={`/profile/${profile.username}`}>
+		<Link
+			to={`/profile/view/${profile.username}`}
+			className="hover:bg-gray-200 transition-all"
+		>
 			<div className="flex items-center gap-3 p-3 border-b hover:bg-gray-50 transition-colors">
 				<img
 					src={profile.profilePicture}
@@ -16,7 +19,7 @@ const LikesAndViewsCard: React.FC = ({ profile }) => {
 						{profile.username}
 					</p>
 					<p className="text-sm text-gray-500">
-						{timeAgo(profile.actionTime)}
+						{timeAgo(profile.actionTime, true)}
 					</p>
 				</div>
 			</div>

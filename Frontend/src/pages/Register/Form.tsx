@@ -8,6 +8,7 @@ import MsgCard from "../../components/common/MsgCard";
 import RegularButton from "../../components/common/RegularButton";
 
 const Form: React.FC = () => {
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [formData, setFormData] = useState({
 		username: "",
 		first_name: "",
@@ -31,21 +32,27 @@ const Form: React.FC = () => {
 
 	const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const { success, message } = await authApi.register(formData);
-		if (success) {
-			setFormData({
-				username: "",
-				first_name: "",
-				last_name: "",
-				email: "",
-				password: "",
+		setIsSubmitting(true);
+
+		try {
+			const { success, message } = await authApi.register(formData);
+			if (success) {
+				setFormData({
+					username: "",
+					first_name: "",
+					last_name: "",
+					email: "",
+					password: "",
+				});
+			}
+			setMsg({
+				type: success ? "success" : "error",
+				message,
+				key: Date.now(),
 			});
+		} finally {
+			setIsSubmitting(false);
 		}
-		setMsg({
-			type: success ? "success" : "error",
-			message,
-			key: Date.now(),
-		});
 	};
 
 	return (
@@ -62,25 +69,28 @@ const Form: React.FC = () => {
 				onSubmit={submitForm}
 				className="bg-white shadow-md flex flex-col gap-8 p-10 rounded max-w-3xl items-center"
 			>
-				<OauthButton action="Register" />
+				<OauthButton action="Register" disabled={isSubmitting} />
 				<p>Or create your account and start meeting people</p>
 				<FormInput
 					name="username"
 					onChange={handleChange}
 					value={formData.username}
 					placeholder="Username*"
+					disabled={isSubmitting}
 				/>
 				<FormInput
 					name="first_name"
 					onChange={handleChange}
 					value={formData.first_name}
 					placeholder="First Name*"
+					disabled={isSubmitting}
 				/>
 				<FormInput
 					name="last_name"
 					onChange={handleChange}
 					value={formData.last_name}
 					placeholder="Last Name*"
+					disabled={isSubmitting}
 				/>
 				<FormInput
 					name="email"
@@ -88,6 +98,7 @@ const Form: React.FC = () => {
 					value={formData.email}
 					type="email"
 					placeholder="E-mail address*"
+					disabled={isSubmitting}
 				/>
 				<FormInput
 					name="password"
@@ -95,8 +106,9 @@ const Form: React.FC = () => {
 					value={formData.password}
 					type="password"
 					placeholder="Password*"
+					disabled={isSubmitting}
 				/>
-				<RegularButton value="Create Account" />
+				<RegularButton value="Create Account" disabled={isSubmitting} />
 				<dir className="w-full text-start p-0">
 					<p>
 						Already have an account?{" "}

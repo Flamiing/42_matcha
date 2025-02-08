@@ -19,12 +19,12 @@ interface InfoProps {
 
 const Info: React.FC<InfoProps> = ({ user }) => {
 	const preferenceDisplay =
-		user.sexual_preference === "Bisexual"
+		user.sexual_preference === "bisexual"
 			? "Male & Female"
 			: user.sexual_preference;
 
 	return (
-		<section className="container max-w-4xl mx-auto pt-12 px-4">
+		<section className="container max-w-4xl mx-auto pt-12 px-4 flex flex-col gap-6">
 			<div className="flex flex-col items-center space-y-8">
 				{user.gender && user.sexual_preference ? (
 					<div className="bg-gray-50 rounded-lg px-6 py-3 shadow-sm">

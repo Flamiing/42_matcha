@@ -1,4 +1,4 @@
-import Tag from "../../components/common/Tag";
+import Tag from "../common/Tag";
 import capitalizeLetters from "../../utils/capitalizeLetters";
 
 interface TagsSectionProps {

@@ -56,6 +56,7 @@ const Index: React.FC = () => {
 				{error && (
 					<div className="mx-auto mt-7">
 						<RegularButton
+							type="button"
 							callback={() => navigate("/login")}
 							value="Back to login form"
 						/>
