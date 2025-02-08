@@ -20,10 +20,10 @@ export default class BrowserController {
         if (!interestingUsers) return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
         if (interestingUsers.length === 0) return res.status(404).json({ msg: StatusMessage.NO_USERS_FOUND })
 
-        const filteredUsers = await BrowserController.removeBlockedUsers(res, interestingUsers, publicUser.id);
-        if (!filteredUsers) return res;
+        const nonBlockedUsers = await BrowserController.removeBlockedUsers(res, interestingUsers, publicUser.id);
+        if (!nonBlockedUsers) return res;
 
-        const publicProfiles = await BrowserController.getPublicProfiles(res, filteredUsers);
+        const publicProfiles = await BrowserController.getPublicProfiles(res, nonBlockedUsers);
         if (!publicProfiles) return res;
 
         return res.json({ msg: publicProfiles });
