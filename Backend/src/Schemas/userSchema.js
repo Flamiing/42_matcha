@@ -87,8 +87,8 @@ const userSchema = z.object({
         })
         .max(500, 'Biography must be 500 characters or fewer.')
         .optional(),
-    location: z
-        .object({
+    location: z.object(
+        {
             latitude: z
                 .number()
                 .min(-90, { message: 'Latitude must be between -90 and 90' })
@@ -104,9 +104,11 @@ const userSchema = z.object({
             allows_location: z.boolean({
                 invalid_type_error: 'Invalid location.',
             }),
-        }, {
-            required_error: 'Location is required.'
-        }),
+        },
+        {
+            required_error: 'Location is required.',
+        }
+    ),
     last_online: z.string().optional(),
     is_online: z.string().optional(),
     gender: z

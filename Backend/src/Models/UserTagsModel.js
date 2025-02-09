@@ -46,7 +46,10 @@ class UserTagsModel extends Model {
 
         const tagsToDelete = currentTags.filter((item) => !tags.includes(item));
         for (const id of tagsToDelete) {
-            const deleteResult = await this.deleteByReference({ user_id: userId, tag_id: id });
+            const deleteResult = await this.deleteByReference({
+                user_id: userId,
+                tag_id: id,
+            });
             if (!deleteResult) return null;
         }
 

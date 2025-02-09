@@ -42,11 +42,12 @@ class UserModel extends Model {
 
     async getUsersForBrowser(user) {
         const FAME_TOLERANCE = 100;
-        const tagIds = user.tags.map(tag => tag.id);
-        const genderQuery = user.sexual_preference === 'bisexual' 
-            ? "AND (u.gender = 'female' OR u.gender = 'male')" 
-            : `AND u.gender = '${user.sexual_preference}'`;
-    
+        const tagIds = user.tags.map((tag) => tag.id);
+        const genderQuery =
+            user.sexual_preference === 'bisexual'
+                ? "AND (u.gender = 'female' OR u.gender = 'male')"
+                : `AND u.gender = '${user.sexual_preference}'`;
+
         let query = {
             text: `
                 SELECT DISTINCT u.*, 
@@ -63,7 +64,12 @@ class UserModel extends Model {
                 ${genderQuery}
                 GROUP BY u.id
             `,
-            values: [user.id, user.fame - FAME_TOLERANCE, user.fame + FAME_TOLERANCE, tagIds],
+            values: [
+                user.id,
+                user.fame - FAME_TOLERANCE,
+                user.fame + FAME_TOLERANCE,
+                tagIds,
+            ],
         };
 
         try {

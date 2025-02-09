@@ -18,10 +18,16 @@ export default class BrowserController {
         const publicUser = await getPublicUser(user);
 
         const rawUsers = await userModel.getUsersForBrowser(publicUser);
-        if (!rawUsers) return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
-        if (rawUsers.length === 0) return res.status(404).json({ msg: StatusMessage.NO_USERS_FOUND })
+        if (!rawUsers)
+            return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+        if (rawUsers.length === 0)
+            return res.status(404).json({ msg: StatusMessage.NO_USERS_FOUND });
 
-        const users = await BrowserController.filterUsers(res, publicUser.location, rawUsers);
+        const users = await BrowserController.filterUsers(
+            res,
+            publicUser.location,
+            rawUsers
+        );
         if (!users) return res;
 
         return res.json({ msg: users });
@@ -32,7 +38,12 @@ export default class BrowserController {
 
         for (const user of users) {
             const publicProfile = await getPublicUser(user);
-            if (!publicProfile) return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR);
+            if (!publicProfile)
+                return returnErrorStatus(
+                    res,
+                    500,
+                    StatusMessage.INTERNAL_SERVER_ERROR
+                );
             publicProfiles.push(publicProfile);
         }
 
@@ -55,10 +66,9 @@ export default class BrowserController {
 
         for (const user of users) {
             const distance = getDistance(user.location, location);
-            if (distance < 160)
-                filteredUsers.push(user);
+            if (distance < 160) filteredUsers.push(user);
         }
-        
+
         return filteredUsers;
     }
 
@@ -67,8 +77,8 @@ export default class BrowserController {
             return users.sort((a, b) => {
                 const distanceA = getDistance(a.location, location);
                 const distanceB = getDistance(b.location, location);
-                return distanceA - distanceB // Ascending order (closest first)
-            })
+                return distanceA - distanceB; // Ascending order (closest first)
+            });
         } catch {
             return [];
         }
@@ -77,8 +87,8 @@ export default class BrowserController {
     static sortByMaxCommonTags(users) {
         try {
             return users.sort((a, b) => {
-                return b.common_tags_count - a.common_tags_count // Ascending order
-            })
+                return b.common_tags_count - a.common_tags_count; // Ascending order
+            });
         } catch {
             return [];
         }
@@ -87,6 +97,6 @@ export default class BrowserController {
     static sortByMaxFame(users) {
         return users.sort((a, b) => {
             return b.fame - a.fame; // Ascending order
-        })
+        });
     }
 }
