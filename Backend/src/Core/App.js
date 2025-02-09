@@ -78,6 +78,9 @@ export default class App {
             `${this.API_PREFIX}/matches`,
             MatchesRouter.createRouter()
         );
-        this.app.use(`${this.API_PREFIX}/distance`, DistanceRouter.createRouter());
+        this.app.use(
+            `${this.API_PREFIX}/distance`,
+            DistanceRouter.createRouter()
+        );
     }
 }

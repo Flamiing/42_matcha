@@ -10,8 +10,11 @@ export default class DistanceController {
             return res.status(400).json({ msg: errorMessage });
         }
 
-        const distance = getDistance(locations.data.locationOne, locations.data.locationTwo);
-        const formatedDistance = `${distance.toFixed(2)}km`
+        const distance = getDistance(
+            locations.data.locationOne,
+            locations.data.locationTwo
+        );
+        const formatedDistance = `${distance.toFixed(2)}km`;
         return res.json({ msg: formatedDistance });
     }
 }
