@@ -43,8 +43,7 @@ class UserModel extends Model {
     async getUsersForBrowser(user) {
         const FAME_TOLERANCE = 100;
         const tagIds = user.tags.map(tag => tag.id);
-        console.log('TEST: ', user);
-        const genderQuery = user.sexual_preference === 'bisexual' ? 'AND u.gender = \'female\' AND u.gender = \'male\';' : `AND u.gender = '${user.sexual_preference}';`;
+        const genderQuery = user.sexual_preference === 'bisexual' ? 'AND u.gender = \'female\' OR u.gender = \'male\';' : `AND u.gender = '${user.sexual_preference}';`;
 
         let query = {
             text: `
@@ -56,13 +55,11 @@ class UserModel extends Model {
                 AND ut.tag_id = ANY($4)
                 AND bu.blocked IS NULL
                 AND u.id != $1
-                AND u.gender = 'male';
             `,
             values: [user.id, user.fame - FAME_TOLERANCE, user.fame + FAME_TOLERANCE, tagIds],
         };
 
-        //query.text += genderQuery;
-        console.log('TEST: ', query.text);
+        query.text += genderQuery;
     
         try {
             const result = await this.db.query(query);

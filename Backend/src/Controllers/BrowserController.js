@@ -3,6 +3,7 @@ import blockedUsersModel from '../Models/BlockedUsersModel.js';
 import userModel from '../Models/UserModel.js';
 import { returnErrorStatus } from '../Utils/errorUtils.js';
 import getPublicUser from '../Utils/getPublicUser.js';
+import { getDistance } from '../Utils/locationUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 
 export default class BrowserController {
@@ -16,12 +17,15 @@ export default class BrowserController {
             return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
 
         const publicUser = await getPublicUser(user);
+
         const interestingUsers = await userModel.getUsersForBrowser(publicUser);
         if (!interestingUsers) return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
         if (interestingUsers.length === 0) return res.status(404).json({ msg: StatusMessage.NO_USERS_FOUND })
 
-        const publicProfiles = await BrowserController.getPublicProfiles(res, nonBlockedUsers);
+        const publicProfiles = await BrowserController.getPublicProfiles(res, interestingUsers);
         if (!publicProfiles) return res;
+
+        const sortedInterestingUsers = BrowserController.sortUsersByDistance(publicProfiles, publicUser.location);
 
         return res.json({ msg: publicProfiles });
     }
@@ -36,5 +40,13 @@ export default class BrowserController {
         }
 
         return publicProfiles;
+    }
+
+    static async sortUsersByDistance(users, location) {
+        return users.sort((a, b) => {
+            const distanceA = getDistance(a.location, location);
+            const distanceB = getDistance(b.location, location);
+            return distanceA - distanceB // Ascending order (closest first)
+        })
     }
 }
