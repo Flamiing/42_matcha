@@ -18,16 +18,14 @@ export default class BrowserController {
 
         const publicUser = await getPublicUser(user);
 
-        const interestingUsers = await userModel.getUsersForBrowser(publicUser);
-        if (!interestingUsers) return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
-        if (interestingUsers.length === 0) return res.status(404).json({ msg: StatusMessage.NO_USERS_FOUND })
+        const rawUsers = await userModel.getUsersForBrowser(publicUser);
+        if (!rawUsers) return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+        if (rawUsers.length === 0) return res.status(404).json({ msg: StatusMessage.NO_USERS_FOUND })
 
-        const publicProfiles = await BrowserController.getPublicProfiles(res, interestingUsers);
-        if (!publicProfiles) return res;
+        const users = await BrowserController.filterUsers(res, publicUser.location, rawUsers);
+        if (!users) return res;
 
-        const sortedInterestingUsers = BrowserController.sortUsersByDistance(publicProfiles, publicUser.location);
-
-        return res.json({ msg: publicProfiles });
+        return res.json({ msg: users });
     }
 
     static async getPublicProfiles(res, users) {
@@ -42,11 +40,54 @@ export default class BrowserController {
         return publicProfiles;
     }
 
-    static async sortUsersByDistance(users, location) {
+    static async filterUsers(res, userLocation, rawUsers) {
+        let users = await BrowserController.getPublicProfiles(res, rawUsers);
+        if (!users) return res;
+
+        users = BrowserController.filterByGeographicArea(users, userLocation);
+        BrowserController.sortUsersByDistance(users, userLocation);
+        BrowserController.sortByMaxCommonTags(users);
+        BrowserController.sortByMaxFame(users);
+        return users;
+    }
+
+    static filterByGeographicArea(users, location) {
+        let filteredUsers = [];
+
+        for (const user of users) {
+            const distance = getDistance(user.location, location);
+            if (distance < 160)
+                filteredUsers.push(user);
+        }
+        
+        return filteredUsers;
+    }
+
+    static sortUsersByDistance(users, location) {
+        try {
+            return users.sort((a, b) => {
+                const distanceA = getDistance(a.location, location);
+                const distanceB = getDistance(b.location, location);
+                return distanceA - distanceB // Ascending order (closest first)
+            })
+        } catch {
+            return [];
+        }
+    }
+
+    static sortByMaxCommonTags(users) {
+        try {
+            return users.sort((a, b) => {
+                return b.common_tags_count - a.common_tags_count // Ascending order
+            })
+        } catch {
+            return [];
+        }
+    }
+
+    static sortByMaxFame(users) {
         return users.sort((a, b) => {
-            const distanceA = getDistance(a.location, location);
-            const distanceB = getDistance(b.location, location);
-            return distanceA - distanceB // Ascending order (closest first)
+            return b.fame - a.fame; // Ascending order
         })
     }
 }
