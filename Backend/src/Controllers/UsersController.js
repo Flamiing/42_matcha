@@ -15,6 +15,7 @@ import imagesModel from '../Models/ImagesModel.js';
 import viewsHistoryModel from '../Models/ViewsHistoryModel.js';
 import { getCurrentTimestamp } from '../Utils/timeUtils.js';
 import { parseImages } from '../Utils/imagesUtils.js';
+import { getUserLikesAndBlocks } from '../Utils/userUtils.js';
 
 export default class UsersController {
     static MAX_NUM_USER_IMAGES = 4;
@@ -107,6 +108,15 @@ export default class UsersController {
                         .status(500)
                         .json({ msg: StatusMessage.QUERY_ERROR });
             }
+
+            if (
+                !(await getUserLikesAndBlocks(
+                    res,
+                    req.session.user.id,
+                    publicUser
+                ))
+            )
+                return res;
 
             return res.json({ msg: publicUser });
         }

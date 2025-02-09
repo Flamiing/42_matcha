@@ -8,9 +8,10 @@ interface User {
 
 interface ImageGalleryProps {
 	user: User;
+	privateProfile?: boolean;
 }
 
-const ImageGallery = ({ user }: ImageGalleryProps) => {
+const ImageGallery = ({ user, privateProfile = false }: ImageGalleryProps) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	return (
@@ -20,7 +21,9 @@ const ImageGallery = ({ user }: ImageGalleryProps) => {
 				<div className="flex items-center justify-between p-4 border-b">
 					<h3 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
 						<span className="fa fa-image" />
-						Your Images
+						{privateProfile
+							? "Your Images"
+							: user.username + "'s Images"}
 					</h3>
 					<button
 						onClick={() => setIsModalOpen(false)}
@@ -67,7 +70,9 @@ const ImageGallery = ({ user }: ImageGalleryProps) => {
 			>
 				<span className="flex items-center gap-2 rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0">
 					<span className="fa fa-image" />
-					Your Images
+					{privateProfile
+						? "Your Images"
+						: user.username + "'s Images"}
 				</span>
 			</button>
 		</div>

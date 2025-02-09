@@ -33,7 +33,7 @@ const Body = ({ user, onChange, onSelectChange }: BodyProps) => {
 	};
 
 	const handleBirthdayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		let timestamp: number | null = null;
+		let timestamp: number | null = 0;
 		if (e.target.value) {
 			const date = new Date(e.target.value);
 			date.setHours(12, 0, 0, 0);
@@ -78,7 +78,7 @@ const Body = ({ user, onChange, onSelectChange }: BodyProps) => {
 								.split("T")[0]
 						}
 					/>
-					{user.age && (
+					{user.age != 0 && (
 						<p className="text-sm text-gray-600 mt-1">
 							Age: <AgeDisplay birthday={user.age} /> years old
 						</p>

@@ -89,8 +89,6 @@ const PasswordChange: React.FC = () => {
 							/>
 							{/* Submit Button */}
 							<RegularButton
-								type="submit"
-								className="w-full"
 								value="Send Reset Link"
 							/>
 						</form>
