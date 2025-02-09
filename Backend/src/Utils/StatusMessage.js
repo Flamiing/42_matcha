@@ -95,4 +95,5 @@ export default class StatusMessage {
         'There was an error submitting report. Please try again.';
     static NO_USERS_FOUND =
         'There are no interesting profiles for you. We are sorry :(.';
+    static CANNOT_CALCULATE_DISTANCE = 'Cannot calculate distance without both locations.'
 }
