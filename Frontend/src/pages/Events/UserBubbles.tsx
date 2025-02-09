@@ -5,7 +5,7 @@ const UserBubbles = ({ user }) => {
 	const [showTooltip, setShowTooltip] = useState(false);
 
 	return (
-		<div className="relative">
+		<div className="relative w-fit h-fit">
 			<Link
 				to={`/profile/view/${user.username}`}
 				onMouseEnter={() => setShowTooltip(true)}

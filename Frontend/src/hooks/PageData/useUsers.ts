@@ -88,12 +88,28 @@ export const useUsers = () => {
 		}
 	};
 
+	const getMatches = async () => {
+		setLoading(true);
+		setError(null);
+		try {
+			const response = await usersApi.getMatches();
+			return response.msg;
+		} catch (err) {
+			const errorMessage = err.message ? err.message : "Request failed";
+			setError(errorMessage);
+			throw new Error(errorMessage);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	return {
 		getAllUsers,
 		reportUser,
 		blockUser,
 		unblockUser,
 		likeUser,
+		getMatches,
 		loading,
 		error,
 	};
