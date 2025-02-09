@@ -41,5 +41,8 @@ export default async function getPublicUser(user) {
         images: images,
     };
 
+    if (user.common_tags_count)
+        publicUser.common_tags_count = parseInt(user.common_tags_count);
+
     return publicUser;
 }

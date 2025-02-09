@@ -155,7 +155,6 @@ export default class EventsController {
         if (!deleteResult) {
             delete reference.attendee_id_1;
             reference.attendee_id_2 = req.session.user.id;
-            console.log('TEST: ', reference);
             deleteResult = await eventsModel.deleteByReference(reference);
             if (deleteResult === null)
                 return res

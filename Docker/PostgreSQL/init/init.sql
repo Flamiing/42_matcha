@@ -21,7 +21,14 @@ CREATE TABLE users (
     refresh_token VARCHAR(2048) DEFAULT NULL,
     reset_pass_token VARCHAR(2048) DEFAULT NULL,
 	gender gender_enum,
-	sexual_preference gender_preference_enum
+	sexual_preference gender_preference_enum DEFAULT 'bisexual'
+);
+
+CREATE TABLE user_location (
+  id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  latitude DECIMAL(9, 6),
+  longitude DECIMAL(9, 6),
+  allows_location BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE user_location (
