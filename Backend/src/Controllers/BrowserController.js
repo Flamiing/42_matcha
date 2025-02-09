@@ -1,5 +1,4 @@
 // Local Imports:
-import blockedUsersModel from '../Models/BlockedUsersModel.js';
 import userModel from '../Models/UserModel.js';
 import { returnErrorStatus } from '../Utils/errorUtils.js';
 import getPublicUser from '../Utils/getPublicUser.js';
