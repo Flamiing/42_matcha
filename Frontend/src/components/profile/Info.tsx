@@ -45,7 +45,7 @@ const Info: React.FC<InfoProps> = ({ user }) => {
 
 			{user.biography ? (
 				<div className="prose prose-gray max-w-2xl">
-					<h2 className="text-font-main text-xl">Biography</h2>
+					<h2 className="text-font-main text-xl mb-2">Biography</h2>
 					<p className="text-gray-700 leading-relaxed text-pretty text-center md:text-start">
 						{user.biography}
 					</p>

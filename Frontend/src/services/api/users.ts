@@ -37,4 +37,9 @@ export const usersApi = {
 		});
 		return response;
 	},
+
+	getMatches: async () => {
+		const response = await apiRequest(`matches`);
+		return response;
+	},
 };

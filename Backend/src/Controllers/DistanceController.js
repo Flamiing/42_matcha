@@ -14,7 +14,6 @@ export default class DistanceController {
             locations.data.locationOne,
             locations.data.locationTwo
         );
-        const formatedDistance = `${distance.toFixed(2)}km`;
-        return res.json({ msg: formatedDistance });
+        return res.json({ msg: parseFloat(distance.toFixed(2)) });
     }
 }
