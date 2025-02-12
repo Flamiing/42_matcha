@@ -1,8 +1,19 @@
 // Local Imports:
+import userLocationModel from '../Models/UserLocationModel.js';
 import blockedUsersModel from '../Models/BlockedUsersModel.js';
 import likesModel from '../Models/LikesModel.js';
-import { returnErrorStatus } from './errorUtils.js';
 import StatusMessage from './StatusMessage.js';
+import { returnErrorStatus } from './errorUtils.js';
+
+export async function saveUserLocation(res, location, id) {
+    console.log('LOCATION: ', location);
+    const userLocationUpdate = await userLocationModel.update(location, id);
+    if (!userLocationUpdate)
+        return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+    if (userLocationUpdate.length === 0)
+        return returnErrorStatus(res, 404, StatusMessage.USER_NOT_FOUND);
+    return true;
+}
 
 export async function getUserLikesAndBlocks(res, reqUserId, targetUser) {
     const likesReference = {

@@ -39,6 +39,48 @@ class UserModel extends Model {
             return false;
         }
     }
+
+    async getUsersForBrowser(user) {
+        const FAME_TOLERANCE = 100;
+        const tagIds = user.tags.map((tag) => tag.id);
+        const genderQuery =
+            user.sexual_preference === 'bisexual'
+                ? "AND (u.gender = 'female' OR u.gender = 'male')"
+                : `AND u.gender = '${user.sexual_preference}'`;
+
+        let query = {
+            text: `
+                SELECT DISTINCT u.*, 
+                    COUNT(ut_common.tag_id) AS common_tags_count
+                FROM users u
+                JOIN user_tags ut ON u.id = ut.user_id
+                LEFT JOIN blocked_users bu ON u.id = bu.blocked AND bu.blocked_by = $1
+                LEFT JOIN user_tags ut_common ON ut_common.tag_id = ut.tag_id
+                    AND ut_common.user_id = $1  -- Ensure the main user's tags are properly matched here
+                WHERE u.fame BETWEEN $2 AND $3
+                AND ut.tag_id = ANY($4)
+                AND bu.blocked IS NULL
+                AND u.id != $1
+                ${genderQuery}
+                GROUP BY u.id
+            `,
+            values: [
+                user.id,
+                user.fame - FAME_TOLERANCE,
+                user.fame + FAME_TOLERANCE,
+                tagIds,
+            ],
+        };
+
+        try {
+            const result = await this.db.query(query);
+            if (result.rows.length === 0) return [];
+            return result.rows;
+        } catch (error) {
+            console.error('Error making the query: ', error.message);
+            return null;
+        }
+    }
 }
 
 const userModel = new UserModel();

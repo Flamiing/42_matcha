@@ -5,6 +5,7 @@ import fsExtra from 'fs-extra';
 // Local Imports:
 import userModel from '../Models/UserModel.js';
 import likesModel from '../Models/LikesModel.js';
+import userLocationModel from '../Models/UserLocationModel.js';
 import userTagsModel from '../Models/UserTagsModel.js';
 import { validatePartialUser } from '../Schemas/userSchema.js';
 import getPublicUser from '../Utils/getPublicUser.js';
@@ -173,7 +174,6 @@ export default class UsersController {
             profilePicturePath =
                 '/backend/static/images/default-profile-picture.png';
         const imagePath = path.join(profilePicturePath);
-        console.log('TEST: ', imagePath);
         res.sendFile(imagePath, (err) => {
             if (err) {
                 res.status(404).json({ msg: StatusMessage.IMAGE_NOT_FOUND });
@@ -193,6 +193,17 @@ export default class UsersController {
 
         let user = null;
         if (!inputHasNoContent) {
+            const userLocationUpdate = await userLocationModel.update(
+                input.location,
+                id
+            );
+            if (!userLocationUpdate)
+                return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
+            if (userLocationUpdate.length === 0)
+                return res
+                    .status(404)
+                    .json({ msg: StatusMessage.USER_NOT_FOUND });
+            delete input.location;
             user = await userModel.update({ input, id });
         } else {
             user = await userModel.getById({ id });
