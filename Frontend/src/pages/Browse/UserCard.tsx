@@ -4,7 +4,7 @@ import capitalizeLetters from "../../utils/capitalizeLetters";
 import Tag from "../../components/common/Tag";
 import { Link } from "react-router-dom";
 
-const UserCard = ({ user }) => {
+const UserCard = ({ user, distance }) => {
 	const [isHovered, setIsHovered] = useState(false);
 
 	const handleLikeClick = (e) => {
@@ -60,10 +60,10 @@ const UserCard = ({ user }) => {
 				</div>
 				{/* Location & Fame Row */}
 				<div className="flex justify-between items-center">
-					{user.location ? (
+					{distance ? (
 						<div className="flex items-center space-x-1 text-font-main">
 							<i className="fa fa-map-marker font-semibold text-red-500" />
-							<span className="text-sm">{user.location}</span>
+							{distance} km away
 						</div>
 					) : (
 						<div />

@@ -172,28 +172,39 @@ const AddNewEventButton: React.FC = ({ onEventCreated }) => {
 									min={new Date().toISOString().slice(0, 16)}
 								/>
 							</div>
-							<div className="flex flex-col gap-2">
-								<label htmlFor="selectedMatch">
-									Invite a user
-								</label>
-								<FormSelect
-									name="selectedMatch"
-									options={matches.map((match) => ({
-										value: match.userId,
-										label: match.username,
-									}))}
-									value={formData.selectedMatch?.userId || ""}
-									onChange={handleSelectChange}
-									defaultOption="Select a user to invite"
-								/>
-								<div className="mt-2 h-14 w-14">
-									{formData.selectedMatch && (
-										<UserBubbles
-											user={formData.selectedMatch}
-										/>
-									)}
+							{matches.length > 0 ? (
+								<div className="flex flex-col gap-2">
+									<label htmlFor="selectedMatch">
+										Invite a user
+									</label>
+									<FormSelect
+										name="selectedMatch"
+										options={matches.map((match) => ({
+											value: match.userId,
+											label: match.username,
+										}))}
+										value={
+											formData.selectedMatch?.userId || ""
+										}
+										onChange={handleSelectChange}
+										defaultOption="Select a user to invite"
+									/>
+									<div className="mt-2 h-14 w-14">
+										{formData.selectedMatch && (
+											<UserBubbles
+												user={formData.selectedMatch}
+											/>
+										)}
+									</div>
 								</div>
-							</div>
+							) : (
+								<p className="text-red-500 font-bold">
+									{" "}
+									<i className="fa fa-warning mr-2" />
+									Please match with some users before creating
+									events
+								</p>
+							)}
 							<RegularButton
 								value="Create new event"
 								disabled={loading}

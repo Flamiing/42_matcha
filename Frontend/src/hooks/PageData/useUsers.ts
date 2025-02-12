@@ -103,6 +103,24 @@ export const useUsers = () => {
 		}
 	};
 
+	const getUserDistance = async (location1, location2) => {
+		setLoading(true);
+		setError(null);
+		try {
+			const response = await usersApi.getUsersDistance(
+				location1,
+				location2
+			);
+			return response.msg;
+		} catch (err) {
+			const errorMessage = err.message ? err.message : "Request failed";
+			setError(errorMessage);
+			throw new Error(errorMessage);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	return {
 		getAllUsers,
 		reportUser,
@@ -110,6 +128,7 @@ export const useUsers = () => {
 		unblockUser,
 		likeUser,
 		getMatches,
+		getUserDistance,
 		loading,
 		error,
 	};
