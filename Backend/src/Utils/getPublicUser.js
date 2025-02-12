@@ -19,8 +19,8 @@ export default async function getPublicUser(user) {
     const userLocation = await geolocationModel.getById({ id });
     if (!userLocation) return null;
     delete userLocation.id;
-    userLocation.latitude = parseFloat(userLocation.latitude)
-    userLocation.longitude = parseFloat(userLocation.longitude)
+    userLocation.latitude = parseFloat(userLocation.latitude);
+    userLocation.longitude = parseFloat(userLocation.longitude);
 
     const images =
         imagesToParse.length !== 0 ? parseImages(user.id, imagesToParse) : [];
