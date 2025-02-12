@@ -76,7 +76,7 @@ const Index: React.FC = () => {
 				<h1 className="text-4xl font-bold my-10">Events</h1>
 				<AddNewEventButton onEventCreated={handleEventCreated} />
 			</section>
-			<section className="container max-w-7xl my-10 px-4">
+			<section className="container max-w-7xl my-10 px-4 flex-grow">
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
 					{events.map((event) => (
 						<EventCard
