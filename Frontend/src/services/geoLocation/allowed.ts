@@ -12,6 +12,8 @@ const getLocation = async () => {
 			allows_location: true,
 		};
 	} catch (error) {
-		return "There was an error getting your location. Please check your permissions and try again.";
+		return null;
 	}
 };
+
+export default getLocation;
