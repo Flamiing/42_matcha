@@ -120,10 +120,9 @@ const PasswordChange: React.FC = () => {
 								<button
 									className="flex flex-row gap-1 items-center shadow-md p-2"
 									type="button"
-									onClick={(e) => (
-										e.preventDefault(),
+									onClick={(e) =>
 										setViewPassword(!viewPassword)
-									)}
+									}
 								>
 									<span className="fa fa-eye cursor-pointer" />
 									View Passwords

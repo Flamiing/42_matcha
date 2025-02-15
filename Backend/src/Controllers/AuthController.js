@@ -135,9 +135,9 @@ export default class AuthController {
         } catch (error) {
             console.error(
                 'ERROR: ',
-                error.response.data?.error_description ?? error
+                error.response?.data?.error_description ?? error
             );
-            if (error.response.status === 401)
+            if (error.response?.status === 401)
                 return res
                     .status(401)
                     .json({ msg: error.response.data.error_description });

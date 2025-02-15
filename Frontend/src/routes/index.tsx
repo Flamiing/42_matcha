@@ -11,6 +11,7 @@ import Oauth from "../pages/Callbacks/Oauth";
 import ConfirmEmail from "../pages/Callbacks/ConfirmEmail";
 import Browse from "../pages/Browse";
 import PublicProfile from "../pages/PublicProfile";
+import Events from "../pages/Events";
 
 const protectedRoutes = {
 	profileEdit: {
@@ -26,6 +27,14 @@ const protectedRoutes = {
 		element: (
 			<ProtectedRoute>
 				<Browse />
+			</ProtectedRoute>
+		),
+	},
+	events: {
+		path: "events",
+		element: (
+			<ProtectedRoute>
+				<Events />
 			</ProtectedRoute>
 		),
 	},
