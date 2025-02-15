@@ -13,7 +13,7 @@ const MainHeader: React.FC = () => {
 				<p className="text-gray-5 text-lg">
 					Because, love too can be industrialized. ❤️
 				</p>
-				<Link to="/login">
+				<Link to="/profile">
 					<StyledButton value="Start Here" />
 				</Link>
 			</div>

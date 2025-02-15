@@ -61,9 +61,9 @@ const UserCard = ({ user, distance }) => {
 				{/* Location & Fame Row */}
 				<div className="flex justify-between items-center">
 					{distance ? (
-						<div className="flex items-center space-x-1 text-font-main">
+						<div className="flex items-center space-x-1 text-font-main gap-1">
 							<i className="fa fa-map-marker font-semibold text-red-500" />
-							{distance} km away
+							{distance + " km away"}
 						</div>
 					) : (
 						<div />

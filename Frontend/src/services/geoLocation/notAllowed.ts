@@ -9,8 +9,6 @@ const getLocationNotAllowed = async () => {
 			};
 		});
 	} catch (error) {
-		console.log("Error getting WiFi networks:", error);
-
 		try {
 			const response = await fetch("https://ipapi.co/json/");
 			const data = await response.json();
