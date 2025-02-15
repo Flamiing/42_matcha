@@ -9,11 +9,15 @@ interface MainInformationProps {
 		age: number;
 		first_name: string;
 		last_name: string;
-		location?: string;
+		distance?: string;
 	};
+	distance?: number;
 }
 
-const MainInformation: React.FC<MainInformationProps> = ({ user }) => {
+const MainInformation: React.FC<MainInformationProps> = ({
+	user,
+	distance,
+}) => {
 	return (
 		<div className="flex flex-col items-center gap-3">
 			<div className="relative">
@@ -39,6 +43,17 @@ const MainInformation: React.FC<MainInformationProps> = ({ user }) => {
 							capitalizeLetters(user.last_name)}
 					</p>
 				</div>
+
+				{distance != null ? (
+					<div className="flex items-center justify-center">
+						<div className="flex items-center gap-1 text-font-main">
+							<i className="fa fa-map-marker font-semibold text-red-500" />
+							{distance <= 0
+								? "<1 km away"
+								: Math.round(distance) + " km away"}
+						</div>
+					</div>
+				) : null}
 			</div>
 		</div>
 	);
