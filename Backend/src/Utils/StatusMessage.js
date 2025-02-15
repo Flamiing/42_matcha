@@ -97,4 +97,5 @@ export default class StatusMessage {
         'There are no interesting profiles for you. We are sorry :(.';
     static CANNOT_CALCULATE_DISTANCE =
         'Cannot calculate distance without both locations.';
+    static NO_LOCATION = 'Please provide a location.'
 }

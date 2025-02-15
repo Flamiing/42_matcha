@@ -7,6 +7,8 @@ export default class LocationController {
         const { id } = req.session.user;
         const { location } = req.body;
 
+        if (!location) return res.status(400).json({ msg: StatusMessage.NO_LOCATION })
+
         const userLocationUpdate = await userLocationModel.update(location, id);
         if (!userLocationUpdate)
             return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
