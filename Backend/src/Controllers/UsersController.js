@@ -192,17 +192,6 @@ export default class UsersController {
 
         let user = null;
         if (!inputHasNoContent) {
-            /* const userLocationUpdate = await userLocationModel.update(
-                input.location,
-                id
-            );
-            if (!userLocationUpdate)
-                return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
-            if (userLocationUpdate.length === 0)
-                return res
-                    .status(404)
-                    .json({ msg: StatusMessage.USER_NOT_FOUND });
-            delete input.location; */
             user = await userModel.update({ input, id });
         } else {
             user = await userModel.getById({ id });
