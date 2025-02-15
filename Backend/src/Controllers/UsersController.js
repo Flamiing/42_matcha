@@ -5,7 +5,6 @@ import fsExtra from 'fs-extra';
 // Local Imports:
 import userModel from '../Models/UserModel.js';
 import likesModel from '../Models/LikesModel.js';
-import userLocationModel from '../Models/UserLocationModel.js';
 import userTagsModel from '../Models/UserTagsModel.js';
 import { validatePartialUser } from '../Schemas/userSchema.js';
 import getPublicUser from '../Utils/getPublicUser.js';
@@ -193,7 +192,7 @@ export default class UsersController {
 
         let user = null;
         if (!inputHasNoContent) {
-            const userLocationUpdate = await userLocationModel.update(
+            /* const userLocationUpdate = await userLocationModel.update(
                 input.location,
                 id
             );
@@ -203,7 +202,7 @@ export default class UsersController {
                 return res
                     .status(404)
                     .json({ msg: StatusMessage.USER_NOT_FOUND });
-            delete input.location;
+            delete input.location; */
             user = await userModel.update({ input, id });
         } else {
             user = await userModel.getById({ id });
