@@ -2,7 +2,7 @@ import { useState } from "react";
 import { usersApi } from "../../services/api/users";
 
 export const useUsers = () => {
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 
 	const getAllUsers = async () => {
@@ -10,7 +10,7 @@ export const useUsers = () => {
 		setError(null);
 		try {
 			const response = await usersApi.getAllUsers();
-			return response;
+			return response.msg;
 		} catch (err) {
 			const errorMessage = err.message ? err.message : "Request failed";
 			setError(errorMessage);
@@ -88,12 +88,47 @@ export const useUsers = () => {
 		}
 	};
 
+	const getMatches = async () => {
+		setLoading(true);
+		setError(null);
+		try {
+			const response = await usersApi.getMatches();
+			return response.msg;
+		} catch (err) {
+			const errorMessage = err.message ? err.message : "Request failed";
+			setError(errorMessage);
+			throw new Error(errorMessage);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const getUserDistance = async (location1, location2) => {
+		setLoading(true);
+		setError(null);
+		try {
+			const response = await usersApi.getUsersDistance(
+				location1,
+				location2
+			);
+			return response.msg;
+		} catch (err) {
+			const errorMessage = err.message ? err.message : "Request failed";
+			setError(errorMessage);
+			throw new Error(errorMessage);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	return {
 		getAllUsers,
 		reportUser,
 		blockUser,
 		unblockUser,
 		likeUser,
+		getMatches,
+		getUserDistance,
 		loading,
 		error,
 	};

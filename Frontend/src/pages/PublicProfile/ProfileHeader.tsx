@@ -4,7 +4,7 @@ import OptionsMenu from "./OptionsMenu";
 import { useUsers } from "../../hooks/PageData/useUsers";
 import MsgCard from "../../components/common/MsgCard";
 
-const ProfileHeader = ({ user: initialUser, onProfileUpdate }) => {
+const ProfileHeader = ({ user: initialUser, onProfileUpdate, distance }) => {
 	const { blockUser, unblockUser, reportUser } = useUsers();
 	const [msg, setMsg] = useState<{
 		type: "error" | "success";
@@ -81,7 +81,7 @@ const ProfileHeader = ({ user: initialUser, onProfileUpdate }) => {
 					onBlock={onBlock}
 					onReport={onReport}
 				/>
-				<MainInformation user={initialUser} />
+				<MainInformation user={initialUser} distance={distance} />
 			</section>
 		</>
 	);
