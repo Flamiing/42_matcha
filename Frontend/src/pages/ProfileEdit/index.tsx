@@ -9,6 +9,7 @@ import MsgCard from "../../components/common/MsgCard";
 import { useEditProfile } from "../../hooks/PageData/useEditProfile";
 import { EditProfileData } from "../../services/api/profile";
 import PasswordChange from "./PasswordChange";
+import EditLocation from "./EditLocation";
 
 const index = () => {
 	const { user } = useAuth();
@@ -186,14 +187,11 @@ const index = () => {
 					</div>
 				</section>
 			</form>
-			{!user.oauth && (
-				<section className="container max-w-4xl px-3 relative text-font-main mb-10 flex flex-col gap-5">
-					<h2 className="text-font-main text-xl">
-						Additional settings
-					</h2>
-					<PasswordChange />
-				</section>
-			)}
+			<section className="container max-w-4xl px-3 relative text-font-main mb-10 flex flex-col gap-5">
+				<h2 className="text-font-main text-xl">Additional settings</h2>
+				<EditLocation user={formData} />
+				{!user.oauth && <PasswordChange />}
+			</section>
 		</main>
 	);
 };

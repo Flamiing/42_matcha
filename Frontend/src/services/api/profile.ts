@@ -58,6 +58,13 @@ export const profileApi = {
 		return response;
 	},
 
+	editLocation: async (location): Promise => {
+		const response = await apiRequest(`users/location/update`, {
+			method: "PATCH",
+			body: JSON.stringify({ location }),
+		});
+	},
+
 	uploadProfilePicture: async (
 		userId: string,
 		file: File

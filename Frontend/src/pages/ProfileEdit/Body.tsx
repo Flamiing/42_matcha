@@ -8,7 +8,6 @@ import Spinner from "../../components/common/Spinner";
 import Tag from "../../components/common/Tag";
 import TagSection from "./TagSection";
 import RegularButton from "../../components/common/RegularButton";
-import getLocation from "../../services/geoLocation/allowed";
 
 interface BodyProps {
 	user: EditProfileData;
@@ -87,50 +86,6 @@ const Body = ({ user, onChange, onSelectChange }: BodyProps) => {
 					)}
 				</div>
 				<div>
-					<label htmlFor="location">Location</label>
-					<div className="flex gap-5 items-baseline mt-3">
-						<RegularButton
-							value="Share current location"
-							type="button"
-							icon="fa fa-map-marker"
-							callback={() => {
-								const resp = getLocation();
-								if (resp) {
-									resp.then((location) => {
-										const syntheticEvent = {
-											target: {
-												name: "location",
-												value: location,
-											},
-										} as React.ChangeEvent<HTMLInputElement>;
-										onChange(syntheticEvent);
-									});
-								}
-							}}
-						/>
-						<p
-							className={`text-sm mt-2 ${
-								user.location?.allows_location
-									? "text-green-600"
-									: "text-gray-500"
-							}`}
-						>
-							{user.location?.allows_location ? (
-								<>
-									<i className="fa fa-check" /> Location
-									shared
-								</>
-							) : (
-								<>
-									<i className="fa fa-times" /> Location not
-									shared
-								</>
-							)}
-						</p>
-					</div>
-				</div>
-
-				<div>
 					<label htmlFor="gender">Your Gender</label>
 					<FormSelect
 						name="gender"
@@ -142,7 +97,6 @@ const Body = ({ user, onChange, onSelectChange }: BodyProps) => {
 						onChange={onSelectChange}
 					/>
 				</div>
-
 				<div>
 					<label htmlFor="sexual_preference">
 						Your Sexual Preference
