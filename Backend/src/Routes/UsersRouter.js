@@ -50,7 +50,7 @@ export default class UsersRouter {
             checkValidUserIdMiddleware(),
             UsersController.updateUser
         );
-        router.patch('/location/update', LocationController.updateUserLocation)
+        router.patch('/location/update', LocationController.updateUserLocation);
 
         // PUT:
         router.put(
