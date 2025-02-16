@@ -5,7 +5,8 @@
     "scripts": {
         "start": "node ./src/app.js",
         "dev": "node --watch ./src/app.js",
-        "format": "prettier --write ."
+        "format": "prettier --write .",
+        "fixtures": "node /backend/src/fixtures/loadFixtures.js"
     },
     "keywords": [],
     "author": "",
