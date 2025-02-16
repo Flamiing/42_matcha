@@ -1,6 +1,6 @@
 // Local Imports:
-import loadUsers from './scripts/loadUsers.js'
+import loadUsers from './scripts/loadUsers.js';
 
 await loadUsers();
 
-process.exit()
+process.exit();
