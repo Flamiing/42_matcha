@@ -1,5 +1,6 @@
 // Third-Party Imports:
 import fsExtra from 'fs-extra';
+import path from 'path';
 
 // Local Imports:
 import userModel from '../../Models/UserModel.js';
@@ -18,6 +19,20 @@ async function getUsersFromJson() {
     } catch (error) {
         console.error('ERROR: ', error);
         return null;
+    }
+}
+
+async function setupProfilePicture(userId, filePath) {
+    console.info('Copying user profile picture...')
+
+    const fileName = filePath.split('/').pop();
+
+    try {
+        await fsExtra.copy(`/backend/src/Fixtures/data/users/images/${fileName}`, filePath);
+        console.info('Profile picture copyed successfully!')
+    } catch (error) {
+        console.error('ERROR: ', error);
+        process.exit();
     }
 }
 
@@ -42,7 +57,9 @@ export default async function loadUsers() {
             return;
         }
         await userTagsModel.updateUserTags(createdUser.id, tags);
-        await userLocationModel.update(location, createdUser.id);
+        await userLocationModel.update(location, createdUser.id)
+
+        await setupProfilePicture(createdUser.id, createdUser.profile_picture);
     }
 
     console.info('Users added to the database successfully!');
