@@ -1,5 +1,4 @@
 // Third-Party Imports:
-import dotenv from 'dotenv';
 import pg from 'pg';
 
 const { Client } = pg;
