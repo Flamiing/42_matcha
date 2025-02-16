@@ -177,7 +177,7 @@ export default class UsersController {
         console.log('IMAGE PATH: ', imagePath);
         res.sendFile(imagePath, (err) => {
             if (err) {
-                console.log('TEST: ', err)
+                console.log('TEST: ', err);
                 res.status(404).json({ msg: StatusMessage.IMAGE_NOT_FOUND });
             }
         });
