@@ -69,6 +69,7 @@ const index = () => {
 		return changes;
 	};
 
+	/****  Updating the formData for the different types of inputs ****/
 	const handleInputChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 	) => {
@@ -107,6 +108,7 @@ const index = () => {
 				: null
 		);
 	};
+	/*********/
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();

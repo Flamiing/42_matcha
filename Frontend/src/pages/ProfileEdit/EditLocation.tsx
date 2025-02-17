@@ -9,7 +9,7 @@ const EditLocation: React.FC = ({ user }) => {
 	const [allowedLocation, setAllowedLocation] = useState(
 		user.location?.allows_location
 	);
-	const { updateProfile, loading } = useEditProfile();
+	const { updateLocation, loading } = useEditProfile();
 
 	const [msg, setMsg] = useState<{
 		type: "error" | "success";
@@ -19,8 +19,11 @@ const EditLocation: React.FC = ({ user }) => {
 
 	const onSubmit = async () => {
 		try {
-			const response = await updateProfile({
-				location: { location, allows_location: true },
+			const location = await getLocation();
+			const response = await updateLocation({
+				latitude: location.latitude,
+				longitude: location.longitude,
+				allows_location: true,
 			});
 			if (response) {
 				setAllowedLocation(true);
@@ -50,7 +53,7 @@ const EditLocation: React.FC = ({ user }) => {
 				/>
 			)}
 			<RegularButton
-				value="Share current location"
+				value={allowedLocation ? "Update location" : "Share location"}
 				type="button"
 				icon="fa fa-map-marker"
 				callback={onSubmit}

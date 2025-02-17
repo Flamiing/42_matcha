@@ -26,7 +26,7 @@ export const useEditProfile = () => {
 		setLoading(true);
 		setError(null);
 		try {
-			const response = await profileApi.editLocation(userId, location);
+			const response = await profileApi.editLocation(location);
 			return response;
 		} catch (err) {
 			const errorMessage = err.message
