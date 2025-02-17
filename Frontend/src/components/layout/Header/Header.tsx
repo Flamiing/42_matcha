@@ -95,6 +95,11 @@ const Header: React.FC = () => {
 											Browse
 										</button>
 									</Link>
+									<Link to="/events">
+										<button className="text-font-main font-medium btn whitespace-nowrap text-base px-6 py-2 rounded-full hover:bg-secondary-light transition-colors duration-300">
+											Events
+										</button>
+									</Link>
 									<Link to="/profile">
 										<button className="text-font-main font-medium btn whitespace-nowrap text-base px-6 py-2 rounded-full hover:bg-secondary-light transition-colors duration-300">
 											Profile
@@ -155,7 +160,14 @@ const Header: React.FC = () => {
 									{isAuthenticated && user && (
 										<div className="flex items-center gap-2 mb-4 pb-4 border-b border-white/20">
 											<span className="text-white font-medium">
-												{user.username}
+												{"Hello "}
+												<Link
+													to="/profile"
+													onClick={handleLinkClick}
+													className="font-bold underline"
+												>
+													{user.username}
+												</Link>
 											</span>
 										</div>
 									)}
@@ -170,6 +182,14 @@ const Header: React.FC = () => {
 									>
 										<button className="w-full text-left px-4 py-3 rounded-lg hover:bg-primary-monochromatic transition-colors duration-300">
 											Browse
+										</button>
+									</Link>
+									<Link
+										to="/events"
+										onClick={handleLinkClick}
+									>
+										<button className="w-full text-left px-4 py-3 rounded-lg hover:bg-primary-monochromatic transition-colors duration-300">
+											Events
 										</button>
 									</Link>
 									<Link

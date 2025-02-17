@@ -4,6 +4,7 @@ import { Router } from 'express';
 // Local Imports:
 import UsersController from '../Controllers/UsersController.js';
 import BlockedUsersController from '../Controllers/BlockedUsersController.js';
+import LocationController from '../Controllers/LocationController.js';
 import { checkValidUserIdMiddleware } from '../Middlewares/checkValidUserIdMiddleware.js';
 import { imageUploadMiddleware } from '../Middlewares/imageUploadMiddleware.js';
 import { imagesValidationMiddleware } from '../Middlewares/imagesValidationMiddleware.js';
@@ -49,6 +50,7 @@ export default class UsersRouter {
             checkValidUserIdMiddleware(),
             UsersController.updateUser
         );
+        router.patch('/location/update', LocationController.updateUserLocation);
 
         // PUT:
         router.put(
