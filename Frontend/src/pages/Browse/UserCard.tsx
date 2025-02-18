@@ -63,7 +63,9 @@ const UserCard = ({ user, distance }) => {
 					{distance ? (
 						<div className="flex items-center space-x-1 text-font-main gap-1">
 							<i className="fa fa-map-marker font-semibold text-red-500" />
-							{distance + " km away"}
+							{distance < 1
+								? "<1 km away"
+								: Math.round(distance) + " km away"}
 						</div>
 					) : (
 						<div />

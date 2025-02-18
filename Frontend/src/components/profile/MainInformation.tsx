@@ -48,7 +48,7 @@ const MainInformation: React.FC<MainInformationProps> = ({
 					<div className="flex items-center justify-center">
 						<div className="flex items-center gap-1 text-font-main">
 							<i className="fa fa-map-marker font-semibold text-red-500" />
-							{distance <= 0
+							{distance < 1 
 								? "<1 km away"
 								: Math.round(distance) + " km away"}
 						</div>
