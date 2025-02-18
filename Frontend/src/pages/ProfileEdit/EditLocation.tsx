@@ -7,7 +7,7 @@ import Spinner from "../../components/common/Spinner";
 
 const EditLocation: React.FC = ({ user }) => {
 	const [allowedLocation, setAllowedLocation] = useState(
-		user.location?.allows_location
+		user.location?.allows_location ?? false
 	);
 	const { updateLocation, loading } = useEditProfile();
 
@@ -20,21 +20,16 @@ const EditLocation: React.FC = ({ user }) => {
 	const onSubmit = async () => {
 		try {
 			const location = await getLocation();
-			const response = await updateLocation({
+			await updateLocation({
 				latitude: location.latitude,
 				longitude: location.longitude,
 				allows_location: true,
 			});
-			if (response) {
-				setAllowedLocation(true);
-			}
+			setAllowedLocation(true);
 		} catch (error) {
 			setMsg({
 				type: "error",
-				message:
-					error instanceof Error
-						? error.message
-						: "Failed to update location",
+				message: error.message,
 				key: Date.now(),
 			});
 		}

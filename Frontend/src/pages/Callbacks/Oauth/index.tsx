@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import RegularButton from "../../../components/common/RegularButton";
+import getLocation from "../../../services/geoLocation/allowed";
 
 const Index: React.FC = () => {
 	const { oauth } = useAuth();
@@ -25,7 +26,12 @@ const Index: React.FC = () => {
 			}
 
 			try {
-				const response = await oauth(code);
+				const location = await getLocation();
+				const response = await oauth(code, {
+					latitude: location.latitude,
+					longitude: location.longitude,
+					allows_location: false,
+				});
 				if (response.success) {
 					setPageMsg("Authentication successful! Redirecting...");
 					setTimeout(() => {
