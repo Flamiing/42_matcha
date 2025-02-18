@@ -5,8 +5,9 @@ import { useAuth } from "../../context/AuthContext";
 import Spinner from "../../components/common/Spinner";
 import SortSection from "./SortSection";
 import UserCard from "./UserCard";
+import FilterSection from "./FilterSection";
 
-const DesktopBrowse = () => {
+const index = () => {
 	const { user } = useAuth();
 	const { profile } = useProfile(user?.id || "");
 	const { getUserDistance, getAllUsers, loading, error } = useUsers();
@@ -115,7 +116,9 @@ const DesktopBrowse = () => {
 
 	return (
 		<main className="flex flex-1 justify-center items-center flex-col w-full my-10">
-			<section className="container max-w-7xl px-4 flex flex-row justify-between w-full items-center">
+			<section className="container max-w-7xl px-4 flex flex-col w-full items-center xl:items-start gap-6">
+				<h1 className="text-4xl font-bold">Browse</h1>
+				<FilterSection />
 				<SortSection
 					sortUsers={sortUsers}
 					sortBy={sortBy}
@@ -138,4 +141,4 @@ const DesktopBrowse = () => {
 	);
 };
 
-export default DesktopBrowse;
+export default index;
