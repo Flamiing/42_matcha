@@ -24,7 +24,7 @@ const UserCard = ({ user, distance }) => {
 			{/* Profile Image Section */}
 			<div className="relative h-80">
 				<img
-					src={user.profile_picture}
+					src={`${user.profile_picture}?v=${Date.now()}`}
 					alt={`${user.first_name}'s profile`}
 					className="w-full h-full object-cover"
 				/>

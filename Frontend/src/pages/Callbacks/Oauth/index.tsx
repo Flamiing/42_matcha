@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import RegularButton from "../../../components/common/RegularButton";
-import getLocation from "../../../services/geoLocation/allowed";
+import getLocationNotAllowed from "../../../services/geoLocation/notAllowed";
 
 const Index: React.FC = () => {
 	const { oauth } = useAuth();
@@ -26,7 +26,7 @@ const Index: React.FC = () => {
 			}
 
 			try {
-				const location = await getLocation();
+				const location = await getLocationNotAllowed();
 				const response = await oauth(code, {
 					latitude: location.latitude,
 					longitude: location.longitude,
