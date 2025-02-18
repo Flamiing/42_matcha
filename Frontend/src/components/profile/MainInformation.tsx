@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import capitalizeLetters from "../../utils/capitalizeLetters";
 import AgeDisplay from "../common/AgeDisplay";
 
@@ -18,11 +18,13 @@ const MainInformation: React.FC<MainInformationProps> = ({
 	user,
 	distance,
 }) => {
+	const [imageKey, setImageKey] = useState(Date.now()); // Add state for cache busting
+
 	return (
 		<div className="flex flex-col items-center gap-3">
 			<div className="relative">
 				<img
-					src={`${user.profile_picture}?v=${Date.now()}`}
+					src={`${user.profile_picture}?v=${imageKey}`}
 					alt="UserProfile"
 					className="w-36 rounded-full border shadow-lg h-36 object-cover"
 				/>
