@@ -32,9 +32,9 @@ const FilterSection = ({}) => {
 	return (
 		<div className="w-full">
 			<details className="group w-full">
-				<summary className="flex items-center justify-between w-full px-4 py-3 cursor-pointer list-none bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
+				<summary className="flex items-center justify-between w-full px-4 py-3 cursor-pointer list-none bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100">
 					<div className="flex items-center gap-2">
-						<i className="fa fa-filter text-gray-600" />
+						<i className="fa fa-filter text-tertiary" />
 						<span className="font-medium text-gray-700">
 							Filters
 						</span>
@@ -42,81 +42,68 @@ const FilterSection = ({}) => {
 					<i className="fa fa-chevron-down w-5 h-5 text-gray-500 transition-transform duration-300 group-open:rotate-180" />
 				</summary>
 
-				<div className="mt-4 bg-white rounded-lg shadow-md p-6">
+				<div className="mt-4 bg-white rounded-lg shadow-md p-6 border border-gray-100">
 					<form onSubmit={handleSubmit} className="space-y-6">
-						{/* Grid layout for form fields */}
 						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 							<div className="space-y-2">
-								<label
-									htmlFor="max-age"
-									className="block text-sm font-medium text-gray-700"
-								>
+								<label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+									<i className="fa fa-calendar w-4 h-4 text-tertiary" />
 									Maximum age
 								</label>
 								<FormInput
-									type="text"
 									name="max-age"
 									value={formData["max-age"]}
 									onChange={handleChange}
-									className="w-full"
+									placeholder="Max age"
 								/>
 							</div>
 
 							<div className="space-y-2">
-								<label
-									htmlFor="min-age"
-									className="block text-sm font-medium text-gray-700"
-								>
+								<label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+									<i className="fa fa-calendar w-4 h-4 text-tertiary" />
 									Minimum Age
 								</label>
 								<FormInput
-									type="text"
 									name="min-age"
 									value={formData["min-age"]}
 									onChange={handleChange}
-									className="w-full"
+									placeholder="Min age"
 								/>
 							</div>
 
 							<div className="space-y-2">
-								<label
-									htmlFor="max-distance"
-									className="block text-sm font-medium text-gray-700"
-								>
-									Max distance (km)
+								<label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+									<i className="fa fa-map-pin w-4 h-4 text-tertiary" />
+									Max distance
 								</label>
 								<FormInput
-									type="text"
 									name="max-distance"
 									value={formData["max-distance"]}
 									onChange={handleChange}
-									className="w-full"
+									placeholder="Max distance in km"
 								/>
 							</div>
 
 							<div className="space-y-2">
-								<label
-									htmlFor="min-fame"
-									className="block text-sm font-medium text-gray-700"
-								>
+								<label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+									<i className="fa fa-fire w-4 h-4 text-tertiary" />
 									Minimum Fame
 								</label>
 								<FormInput
-									type="text"
 									name="min-fame"
 									value={formData["min-fame"]}
 									onChange={handleChange}
-									className="w-full"
+									placeholder="Min fame rating"
 								/>
 							</div>
 						</div>
 
 						{/* Filter button */}
-						<div className="flex justify-end pt-4">
+						<div className="flex justify-center md:justify-end pt-4">
 							<RegularButton
 								value="Apply Filters"
 								icon="fa fa-search"
-								className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-2 rounded-lg hover:from-pink-600 hover:to-rose-600 transition-colors duration-300"
+								className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-8 py-3 rounded-lg hover:from-pink-600 hover:to-rose-600 transition-colors duration-300 shadow-sm hover:shadow-md"
 							/>
 						</div>
 					</form>
