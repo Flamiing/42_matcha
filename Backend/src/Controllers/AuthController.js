@@ -126,7 +126,7 @@ export default class AuthController {
                 username: userOAuth.data.login,
                 first_name: userOAuth.data.first_name,
                 last_name: userOAuth.data.last_name,
-                location: location
+                location: location,
             };
 
             const validatedUser = validatePartialUser(data);
