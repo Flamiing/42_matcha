@@ -83,8 +83,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		return response;
 	};
 
-	const oauth = async (code: string): Promise<AuthResponse> => {
-		const response = await authApi.oauth(code);
+	const oauth = async (code: string, location): Promise<AuthResponse> => {
+		const response = await authApi.oauth(code, location);
 		if (response.success && response.user) {
 			setUser(response.user);
 			setIsAuthenticated(true);

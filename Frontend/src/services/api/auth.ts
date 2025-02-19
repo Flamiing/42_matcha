@@ -101,11 +101,11 @@ export const authApi = {
 		}
 	},
 
-	oauth: async (code: string): Promise<AuthResponse> => {
+	oauth: async (code: string, location): Promise<AuthResponse> => {
 		try {
 			await apiRequest("auth/oauth", {
 				method: "POST",
-				body: JSON.stringify({ code }),
+				body: JSON.stringify({ code, location }),
 			});
 			const status = await authApi.checkAuth();
 			return {

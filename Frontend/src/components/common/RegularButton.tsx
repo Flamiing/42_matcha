@@ -3,6 +3,7 @@ interface RegularButtonProps {
 	callback?: () => void;
 	disabled?: boolean;
 	type?: "button" | "submit";
+	icon?: string;
 }
 
 const RegularButton = ({
@@ -10,6 +11,7 @@ const RegularButton = ({
 	callback,
 	disabled = false,
 	type = "submit",
+	icon,
 }: RegularButtonProps) => {
 	return (
 		<button
@@ -23,6 +25,7 @@ const RegularButton = ({
 			}`}
 			onClick={callback}
 		>
+			{icon && <i className={`pr-2 ${icon}`} />}
 			{value}
 		</button>
 	);

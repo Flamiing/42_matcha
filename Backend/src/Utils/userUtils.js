@@ -6,7 +6,6 @@ import StatusMessage from './StatusMessage.js';
 import { returnErrorStatus } from './errorUtils.js';
 
 export async function saveUserLocation(res, location, id) {
-    console.log('LOCATION: ', location);
     const userLocationUpdate = await userLocationModel.update(location, id);
     if (!userLocationUpdate)
         return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);

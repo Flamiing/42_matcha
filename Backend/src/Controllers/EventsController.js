@@ -72,12 +72,13 @@ export default class EventsController {
             const profilePictureTwoURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${attendeeTwo.id}/profile-picture`;
 
             const newEvent = {
-                attendeeIdOne: {
+                eventId: event.id,
+                attendeeOneInfo: {
                     userId: attendeeOne.id,
                     username: attendeeOne.username,
                     profilePicture: profilePictureOneURL,
                 },
-                attendeeIdTwo: {
+                attendeeTwoInfo: {
                     userId: attendeeTwo.id,
                     username: attendeeTwo.username,
                     profilePicture: profilePictureTwoURL,

@@ -98,7 +98,7 @@ export default class AuthController {
                 .status(400)
                 .json({ msg: StatusMessage.ALREADY_LOGGED_IN });
 
-        const { code } = req.body;
+        const { code, location } = req.body;
 
         const { OAUTH_CLIENT_ID, OAUTH_SECRET_KEY } = process.env;
 
@@ -126,6 +126,7 @@ export default class AuthController {
                 username: userOAuth.data.login,
                 first_name: userOAuth.data.first_name,
                 last_name: userOAuth.data.last_name,
+                location: location
             };
 
             const validatedUser = validatePartialUser(data);
@@ -135,9 +136,9 @@ export default class AuthController {
         } catch (error) {
             console.error(
                 'ERROR: ',
-                error.response.data?.error_description ?? error
+                error.response?.data?.error_description ?? error
             );
-            if (error.response.status === 401)
+            if (error.response?.status === 401)
                 return res
                     .status(401)
                     .json({ msg: error.response.data.error_description });

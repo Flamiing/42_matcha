@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import capitalizeLetters from "../../utils/capitalizeLetters";
 import AgeDisplay from "../common/AgeDisplay";
 
@@ -9,16 +9,22 @@ interface MainInformationProps {
 		age: number;
 		first_name: string;
 		last_name: string;
-		location?: string;
+		distance?: string;
 	};
+	distance?: number;
 }
 
-const MainInformation: React.FC<MainInformationProps> = ({ user }) => {
+const MainInformation: React.FC<MainInformationProps> = ({
+	user,
+	distance,
+}) => {
+	const [imageKey, setImageKey] = useState(Date.now()); // Add state for cache busting
+
 	return (
 		<div className="flex flex-col items-center gap-3">
 			<div className="relative">
 				<img
-					src={user.profile_picture}
+					src={`${user.profile_picture}?v=${imageKey}`}
 					alt="UserProfile"
 					className="w-36 rounded-full border shadow-lg h-36 object-cover"
 				/>
@@ -40,14 +46,14 @@ const MainInformation: React.FC<MainInformationProps> = ({ user }) => {
 					</p>
 				</div>
 
-				{user.location ? (
+				{distance != null ? (
 					<div className="flex items-center justify-center">
-						<p className="text-gray-700 leading-relaxed text-pretty text-start flex flex-row items-center gap-1">
-							<span className="fa fa-map-marker font-semibold text-red-500" />
-							<span className="truncate max-w-[200px]">
-								{user.location}
-							</span>
-						</p>
+						<div className="flex items-center gap-1 text-font-main">
+							<i className="fa fa-map-marker font-semibold text-red-500" />
+							{distance < 1
+								? "<1 km away"
+								: Math.round(distance) + " km away"}
+						</div>
 					</div>
 				) : null}
 			</div>
