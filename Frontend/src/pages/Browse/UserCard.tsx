@@ -5,20 +5,9 @@ import Tag from "../../components/common/Tag";
 import { Link } from "react-router-dom";
 
 const UserCard = ({ user, distance }) => {
-	const [isHovered, setIsHovered] = useState(false);
-
-	const handleLikeClick = (e) => {
-		e.preventDefault();
-		e.stopPropagation();
-
-		// TODO - Add like functionality here
-	};
-
 	return (
 		<Link
 			to={`/profile/view/${user.username}`}
-			onMouseEnter={() => setIsHovered(true)}
-			onMouseLeave={() => setIsHovered(false)}
 			className="w-72 bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105 flex flex-col"
 		>
 			{/* Profile Image Section */}
@@ -85,17 +74,6 @@ const UserCard = ({ user, distance }) => {
 						))}
 					</div>
 				) : null}
-			</div>
-
-			{/* Action Button */}
-			<div className="p-4 border-t border-gray-100 mt-auto">
-				<button
-					onClick={handleLikeClick}
-					className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white py-2 rounded-lg hover:from-pink-600 hover:to-rose-600 transition-colors duration-300 h-12"
-				>
-					<i className="fa fa-heart" />
-					<span>Like Profile</span>
-				</button>
 			</div>
 		</Link>
 	);
