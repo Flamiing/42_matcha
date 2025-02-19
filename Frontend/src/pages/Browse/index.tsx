@@ -11,12 +11,13 @@ import calculateAge from "../../utils/calculateAge";
 const index = () => {
 	const { user } = useAuth();
 	const { profile } = useProfile(user?.id || "");
-	const { getUserDistance, getAllUsers, loading, error } = useUsers();
+	const { getUserDistance, getBrowseUsers, loading, error } = useUsers();
 	const [users, setUsers] = useState([]);
 	const [filteredUsers, setFilteredUsers] = useState([]);
 	const [sortBy, setSortBy] = useState("fame");
 	const [sortOrder, setSortOrder] = useState("asc");
 	const [userDistances, setUserDistances] = useState({});
+	const [noUsersFound, setNoUsersFound] = useState(false);
 	const [activeFilters, setActiveFilters] = useState({
 		maxAge: null,
 		minAge: null,
@@ -145,7 +146,13 @@ const index = () => {
 
 	useEffect(() => {
 		const fetchUsersAndCalculateDistances = async () => {
-			const response = await getAllUsers();
+			const response = await getBrowseUsers();
+			if (response.length === 0) {
+				setNoUsersFound(true);
+				setUsers([]);
+				setFilteredUsers([]);
+				return;
+			}
 			if (response && profile?.location) {
 				const distances = await calculateDistances(
 					response,
@@ -183,10 +190,17 @@ const index = () => {
 			{/* Users Grid */}
 			<section className="container max-w-7xl px-4 flex flex-row justify-between w-full items-center flex-grow">
 				<div className="flex flex-wrap md:justify-start justify-center gap-x-8 gap-y-10 w-full">
-					{filteredUsers.length === 0 && (
+					{noUsersFound ? (
 						<h2 className="col-span-full text-center text-xl font-bold w-full">
-							No users fit the criteria
+							There are no interesting profiles for you. We are
+							sorry :(
 						</h2>
+					) : (
+						filteredUsers.length === 0 && (
+							<h2 className="col-span-full text-center text-xl font-bold w-full">
+								No users fit the criteria
+							</h2>
+						)
 					)}
 					{filteredUsers.map((user) => (
 						<UserCard

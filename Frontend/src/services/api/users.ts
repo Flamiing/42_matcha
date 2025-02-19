@@ -53,4 +53,9 @@ export const usersApi = {
 		});
 		return response;
 	},
+
+	getBrowseUsers: async () => {
+		const response = await apiRequest(`browser`);
+		return response;
+	},
 };

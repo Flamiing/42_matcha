@@ -121,6 +121,23 @@ export const useUsers = () => {
 		}
 	};
 
+	const getBrowseUsers = async () => {
+		setLoading(true);
+		setError(null);
+		try {
+			const response = await usersApi.getBrowseUsers();
+			return response.msg;
+		} catch (err) {
+			const errorMessage = err.message
+				? err.message
+				: "Could not get users to browse";
+			setError(errorMessage);
+			throw new Error(errorMessage);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	return {
 		getAllUsers,
 		reportUser,
@@ -129,6 +146,7 @@ export const useUsers = () => {
 		likeUser,
 		getMatches,
 		getUserDistance,
+		getBrowseUsers,
 		loading,
 		error,
 	};
