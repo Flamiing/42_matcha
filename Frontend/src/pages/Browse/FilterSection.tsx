@@ -3,7 +3,7 @@ import FormInput from "../../components/common/FormInput";
 import RegularButton from "../../components/common/RegularButton";
 import { ChevronDown } from "lucide-react";
 
-const FilterSection = ({}) => {
+const FilterSection = ({ onFilterChange }) => {
 	const [formData, setFormData] = useState({
 		"max-age": "",
 		"min-age": "",
@@ -26,7 +26,28 @@ const FilterSection = ({}) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log("Filter values:", formData);
+
+		// Convert string values to numbers where appropriate, empty strings become null
+		const processedData = {
+			maxAge:
+				formData["max-age"] !== ""
+					? parseInt(formData["max-age"])
+					: null,
+			minAge:
+				formData["min-age"] !== ""
+					? parseInt(formData["min-age"])
+					: null,
+			maxDistance:
+				formData["max-distance"] !== ""
+					? parseInt(formData["max-distance"])
+					: null,
+			minFame:
+				formData["min-fame"] !== ""
+					? parseInt(formData["min-fame"])
+					: null,
+		};
+
+		onFilterChange(processedData);
 	};
 
 	return (

@@ -6,28 +6,73 @@ import Spinner from "../../components/common/Spinner";
 import SortSection from "./SortSection";
 import UserCard from "./UserCard";
 import FilterSection from "./FilterSection";
+import calculateAge from "../../utils/calculateAge";
 
 const index = () => {
 	const { user } = useAuth();
 	const { profile } = useProfile(user?.id || "");
 	const { getUserDistance, getAllUsers, loading, error } = useUsers();
 	const [users, setUsers] = useState([]);
+	const [filteredUsers, setFilteredUsers] = useState([]);
 	const [sortBy, setSortBy] = useState("fame");
 	const [sortOrder, setSortOrder] = useState("asc");
 	const [userDistances, setUserDistances] = useState({});
+	const [activeFilters, setActiveFilters] = useState({
+		maxAge: null,
+		minAge: null,
+		maxDistance: null,
+		minFame: null,
+	});
 
-	const sortUsers = (criteria) => {
-		const newSortOrder =
-			sortBy === criteria && sortOrder === "asc" ? "desc" : "asc";
+	const applyFilters = (users, filters) => {
+		// If all filters are null or empty, return all users
+		const hasActiveFilters = Object.values(filters).some(
+			(value) => value !== null && value !== "" && value !== 0
+		);
 
-		setSortBy(criteria);
-		setSortOrder(newSortOrder);
+		if (!hasActiveFilters) {
+			return users;
+		}
 
-		const sortedUsers = [...users].sort((a, b) => {
+		return users.filter((user) => {
+			const userAge = calculateAge(user.age);
+
+			// Age filters
+			if (filters.maxAge && userAge && userAge > filters.maxAge)
+				return false;
+			if (filters.minAge && userAge && userAge < filters.minAge)
+				return false;
+
+			// Distance filter
+			if (filters.maxDistance) {
+				const userDistance = userDistances[user.id];
+				if (userDistance && userDistance > filters.maxDistance)
+					return false;
+			}
+
+			// Fame filter
+			if (filters.minFame && user.fame && user.fame < filters.minFame)
+				return false;
+
+			return true;
+		});
+	};
+
+	const handleFilterChange = (newFilters) => {
+		setActiveFilters(newFilters);
+		// Apply filters first
+		const filtered = applyFilters(users, newFilters);
+		// Then sort the filtered results
+		const sorted = sortUsers(filtered, sortBy, sortOrder);
+		setFilteredUsers(sorted);
+	};
+
+	const sortUsers = (usersToSort, criteria, order) => {
+		return [...usersToSort].sort((a, b) => {
 			if (criteria === "location") {
 				const distanceA = userDistances[a.id] || Infinity;
 				const distanceB = userDistances[b.id] || Infinity;
-				return newSortOrder === "asc"
+				return order === "asc"
 					? distanceB - distanceA
 					: distanceA - distanceB;
 			}
@@ -41,12 +86,12 @@ const index = () => {
 			}
 
 			if (criteria === "fame") {
-				return newSortOrder === "asc"
+				return order === "asc"
 					? compareB - compareA
 					: compareA - compareB;
 			}
 
-			return newSortOrder === "asc"
+			return order === "asc"
 				? compareA > compareB
 					? 1
 					: -1
@@ -54,8 +99,6 @@ const index = () => {
 				? 1
 				: -1;
 		});
-
-		setUsers(sortedUsers);
 	};
 
 	const calculateDistances = async (users, profileLocation) => {
@@ -89,6 +132,17 @@ const index = () => {
 		return distances;
 	};
 
+	const handleSort = (criteria) => {
+		const newSortOrder =
+			sortBy === criteria && sortOrder === "asc" ? "desc" : "asc";
+		setSortBy(criteria);
+		setSortOrder(newSortOrder);
+
+		// Sort the filtered users
+		const sorted = sortUsers(filteredUsers, criteria, newSortOrder);
+		setFilteredUsers(sorted);
+	};
+
 	useEffect(() => {
 		const fetchUsersAndCalculateDistances = async () => {
 			const response = await getAllUsers();
@@ -104,6 +158,7 @@ const index = () => {
 					(a, b) => b.fame - a.fame
 				);
 				setUsers(sortedUsers);
+				setFilteredUsers(sortedUsers);
 			}
 		};
 
@@ -118,17 +173,22 @@ const index = () => {
 		<main className="flex flex-1 justify-center items-center flex-col w-full my-10">
 			<section className="container max-w-7xl px-4 flex flex-col w-full items-center xl:items-start gap-6">
 				<h1 className="text-4xl font-bold">Browse</h1>
-				<FilterSection />
+				<FilterSection onFilterChange={handleFilterChange} />
 				<SortSection
-					sortUsers={sortUsers}
+					sortUsers={handleSort}
 					sortBy={sortBy}
 					sortOrder={sortOrder}
 				/>
 			</section>
 			{/* Users Grid */}
-			<section className="container max-w-7xl px-4 flex flex-row justify-between w-full items-center">
+			<section className="container max-w-7xl px-4 flex flex-row justify-between w-full items-center flex-grow">
 				<div className="flex flex-wrap md:justify-start justify-center gap-x-8 gap-y-10 w-full">
-					{users.map((user) => (
+					{filteredUsers.length === 0 && (
+						<h2 className="col-span-full text-center text-xl font-bold w-full">
+							No users fit the criteria
+						</h2>
+					)}
+					{filteredUsers.map((user) => (
 						<UserCard
 							key={user.id}
 							user={user}

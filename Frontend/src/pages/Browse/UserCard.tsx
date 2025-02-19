@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import AgeDisplay from "../../components/common/AgeDisplay";
+import calculateAge from "../../utils/calculateAge";
 import capitalizeLetters from "../../utils/capitalizeLetters";
 import Tag from "../../components/common/Tag";
 import { Link } from "react-router-dom";
@@ -20,12 +20,7 @@ const UserCard = ({ user, distance }) => {
 				<div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
 					<h3 className="text-white text-xl font-semibold">
 						{user.username}
-						{user.age != 0 && (
-							<>
-								{", "}
-								<AgeDisplay birthday={user.age} />
-							</>
-						)}
+						{user.age != 0 && <>{", " + calculateAge(user.age)}</>}
 					</h3>
 				</div>
 			</div>

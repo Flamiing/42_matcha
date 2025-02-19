@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import capitalizeLetters from "../../utils/capitalizeLetters";
-import AgeDisplay from "../common/AgeDisplay";
+import calculateAge from "../../utils/calculateAge";
 
 interface MainInformationProps {
 	user: {
@@ -34,7 +34,7 @@ const MainInformation: React.FC<MainInformationProps> = ({
 				<p className="text-2xl font-semibold">
 					{user.username}{" "}
 					<span className="text-gray-500">
-						{user.age != 0 && <AgeDisplay birthday={user.age} />}
+						{user.age != 0 && calculateAge(user.age)}
 					</span>
 				</p>
 

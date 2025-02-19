@@ -1,12 +1,6 @@
-interface AgeDisplayProps {
-	birthday: string;
-}
-
-const AgeDisplay = ({ birthday }: AgeDisplayProps) => {
-	birthday = Number(birthday);
-
+const calculateAgeFromTimestamp = (timestamp: number): number => {
 	const today = new Date();
-	const birth = new Date(birthday);
+	const birth = new Date(timestamp);
 	let age = today.getFullYear() - birth.getFullYear();
 	const monthDiff = today.getMonth() - birth.getMonth();
 
@@ -20,4 +14,4 @@ const AgeDisplay = ({ birthday }: AgeDisplayProps) => {
 	return age;
 };
 
-export default AgeDisplay;
+export default calculateAgeFromTimestamp;
