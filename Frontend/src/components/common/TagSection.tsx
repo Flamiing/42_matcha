@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useRef, useEffect } from "react";
 import { TagData } from "../../services/api/tags";
-import Tag from "../../components/common/Tag";
+import Tag from "./Tag";
 import capitalizeLetters from "../../utils/capitalizeLetters";
 
 interface TagSectionProps {

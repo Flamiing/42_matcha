@@ -6,7 +6,7 @@ import { useTags } from "../../hooks/PageData/useTags";
 import calculateAge from "../../utils/calculateAge";
 import Spinner from "../../components/common/Spinner";
 import Tag from "../../components/common/Tag";
-import TagSection from "./TagSection";
+import TagSection from "../../components/common/TagSection";
 import RegularButton from "../../components/common/RegularButton";
 
 interface BodyProps {

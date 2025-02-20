@@ -27,9 +27,12 @@ const index = () => {
 
 	const applyFilters = (users, filters) => {
 		// If all filters are null or empty, return all users
-		const hasActiveFilters = Object.values(filters).some(
-			(value) => value !== null && value !== "" && value !== 0
-		);
+		const hasActiveFilters = Object.values(filters).some((value) => {
+			if (Array.isArray(value)) {
+				return value.length > 0;
+			}
+			return value !== null && value !== "" && value !== 0;
+		});
 
 		if (!hasActiveFilters) {
 			return users;
@@ -54,6 +57,17 @@ const index = () => {
 			// Fame filter
 			if (filters.minFame && user.fame && user.fame < filters.minFame)
 				return false;
+
+			// Tags filter
+			if (filters.tags && filters.tags.length > 0) {
+				// Get array of user's tag IDs
+				const userTagIds = user.tags.map((tag) => tag.id);
+				// Check if user has ALL selected filter tags
+				const hasAllTags = filters.tags.every((tagId) =>
+					userTagIds.includes(tagId)
+				);
+				if (!hasAllTags) return false;
+			}
 
 			return true;
 		});
