@@ -21,7 +21,7 @@ export default class BrowserController {
         if (!rawUsers)
             return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
         if (rawUsers.length === 0)
-            return res.status(404).json({ msg: StatusMessage.NO_USERS_FOUND });
+            return res.status(404).json({});
 
         const users = await BrowserController.filterUsers(
             res,
