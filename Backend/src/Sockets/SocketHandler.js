@@ -9,10 +9,10 @@ export default class SocketHandler {
             },
         });
 
-        this.#setupSocketHandler();
+        this.#handleSocket();
     }
 
-    #setupSocketHandler() {
+    #handleSocket() {
         this.io.on('connection', (socket) => {
             console.log(`New socket connected: ${socket.id}`);
 
