@@ -3,10 +3,9 @@ import express, { json } from 'express';
 import 'dotenv/config';
 import cookieParser from 'cookie-parser';
 import { createServer } from 'http';
-import { Server } from 'socket.io';
 
 // Local Imports:
-import socketHandler from '../Sockets/socketHandler.js';
+import SocketHandler from '../Sockets/SocketHandler.js';
 
 // Middleware Imports:
 import { corsMiddleware } from '../Middlewares/corsMiddleware.js';
@@ -31,11 +30,7 @@ export default class App {
     constructor() {
         this.app = express();
         this.server = createServer(this.app);
-        this.io = new Server(this.server, {
-            cors: {
-                origin: '*',
-            },
-        });
+        this.socketHandler = new SocketHandler(this.server);
         this.HOST = process.env.API_HOST ?? 'localhost';
         this.PORT = process.env.API_PORT ?? 3001;
         this.API_VERSION = process.env.API_VERSION;
@@ -53,7 +48,6 @@ export default class App {
 
         this.#setupMiddleware();
         this.#setupRoutes();
-        socketHandler(this.io);
     }
 
     startApp() {
