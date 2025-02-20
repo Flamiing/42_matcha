@@ -16,12 +16,11 @@ export default class BrowserController {
             return res.status(404).json({ msg: StatusMessage.USER_NOT_FOUND });
 
         const publicUser = await getPublicUser(user);
-
+        
         const rawUsers = await userModel.getUsersForBrowser(publicUser);
         if (!rawUsers)
             return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
-        if (rawUsers.length === 0)
-            return res.status(404).json({ msg: StatusMessage.NO_USERS_FOUND });
+        if (rawUsers.length === 0) return res.status(404).json({});
 
         const users = await BrowserController.filterUsers(
             res,
@@ -53,7 +52,7 @@ export default class BrowserController {
     static async filterUsers(res, userLocation, rawUsers) {
         let users = await BrowserController.getPublicProfiles(res, rawUsers);
         if (!users) return res;
-
+        
         users = BrowserController.filterByGeographicArea(users, userLocation);
         BrowserController.sortUsersByDistance(users, userLocation);
         BrowserController.sortByMaxCommonTags(users);
