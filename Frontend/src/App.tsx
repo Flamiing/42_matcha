@@ -5,11 +5,9 @@ import { StrictMode } from "react";
 
 function App() {
 	return (
-		<StrictMode>
-			<AuthProvider>
-				<RouterProvider router={router} />
-			</AuthProvider>
-		</StrictMode>
+		<AuthProvider>
+			<RouterProvider router={router} />
+		</AuthProvider>
 	);
 }
 
