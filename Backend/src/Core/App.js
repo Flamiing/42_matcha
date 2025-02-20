@@ -2,6 +2,11 @@
 import express, { json } from 'express';
 import 'dotenv/config';
 import cookieParser from 'cookie-parser';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+
+// Local Imports:
+import socketHandler from '../Sockets/socketHandler.js';
 
 // Middleware Imports:
 import { corsMiddleware } from '../Middlewares/corsMiddleware.js';
@@ -20,10 +25,17 @@ import MatchesRouter from '../Routes/MatchesRouter.js';
 import EventsRouter from '../Routes/EventsRouter.js';
 import BrowserRouter from '../Routes/BrowserRouter.js';
 import DistanceRouter from '../Routes/DistanceRouter.js';
+import ChatRouter from '../Routes/ChatRouter.js';
 
 export default class App {
     constructor() {
         this.app = express();
+        this.server = createServer(this.app);
+        this.io = new Server(this.server, {
+            cors: {
+                origin: '*'
+            },
+        });
         this.HOST = process.env.API_HOST ?? 'localhost';
         this.PORT = process.env.API_PORT ?? 3001;
         this.API_VERSION = process.env.API_VERSION;
@@ -41,10 +53,11 @@ export default class App {
 
         this.#setupMiddleware();
         this.#setupRoutes();
+        socketHandler(this.io);
     }
 
     startApp() {
-        this.app.listen(this.PORT, () => {
+        this.server.listen(this.PORT, () => {
             console.info(
                 `Server listening on http://${this.HOST}:${this.PORT}`
             );
@@ -70,6 +83,7 @@ export default class App {
         this.app.use(`${this.API_PREFIX}/tags`, TagsRouter.createRouter());
         this.app.use(`${this.API_PREFIX}/likes`, LikesRouter.createRouter());
         this.app.use(`${this.API_PREFIX}/events`, EventsRouter.createRouter());
+        this.app.use(`${this.API_PREFIX}/chat`, ChatRouter.createRouter());
         this.app.use(
             `${this.API_PREFIX}/browser`,
             BrowserRouter.createRouter()
