@@ -3,7 +3,7 @@ export default function socketHandler(io) {
         console.log(`New socket connected: ${socket.id}`);
 
         socket.on('disconnect', () => {
-            console.log(`Socket disconnected: ${socket.id}`)
-        })
-    })
+            console.log(`Socket disconnected: ${socket.id}`);
+        });
+    });
 }

@@ -33,7 +33,7 @@ export default class App {
         this.server = createServer(this.app);
         this.io = new Server(this.server, {
             cors: {
-                origin: '*'
+                origin: '*',
             },
         });
         this.HOST = process.env.API_HOST ?? 'localhost';
