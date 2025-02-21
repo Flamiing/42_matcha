@@ -18,7 +18,7 @@ export default class SocketHandler {
     }
 
     #setupSocketMiddleware() {
-        this.io.use(socketSessionMiddleware())
+        this.io.use(socketSessionMiddleware());
     }
 
     #handleSocket() {
