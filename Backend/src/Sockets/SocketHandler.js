@@ -1,6 +1,8 @@
 // Third-Party Imports:
 import { Server } from 'socket.io';
-import cookieParser from 'cookie-parser';
+
+// Local Imports:
+import { socketSessionMiddleware } from '../Middlewares/socketSessionMiddleware.js';
 
 export default class SocketHandler {
     constructor(server) {
@@ -11,21 +13,20 @@ export default class SocketHandler {
             },
         });
 
+        this.#setupSocketMiddleware();
         this.#handleSocket();
+    }
+
+    #setupSocketMiddleware() {
+        this.io.use(socketSessionMiddleware())
     }
 
     #handleSocket() {
         this.io.on('connection', (socket) => {
-            console.log(`New socket connected: ${socket.id}`);
-
-            const cookies = socket.request.headers.cookie;
-
-            //const parsedCookies = cookieParser.JSONCookies(cookieParser.signedCookies(socket.request.cookies, 'tu_secreto'));
-
-            console.log('Cookies recibidas:', cookies);
+            console.info(`New socket connected: ${socket.id}`);
 
             socket.on('disconnect', () => {
-                console.log(`Socket disconnected: ${socket.id}`);
+                console.info(`Socket disconnected: ${socket.id}`);
             });
         });
     }
