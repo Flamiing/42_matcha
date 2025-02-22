@@ -102,4 +102,5 @@ export default class StatusMessage {
     static ERROR_CHANGING_USER_STATUS =
         'An error occurred while updating the user status. Please try again.';
     static USER_STATUS_CHANGED = 'User status changed successfully!';
+    static FORBIDDEN_ACCESS_EVENT = 'Access Denied: User authentication required.'
 }

@@ -5,8 +5,10 @@ import { getCurrentTimestamp } from '../Utils/timeUtils.js';
 
 export default class SocketController {
     static async sendMessage(socket, data) {
-        //console.log('SOCKET: ', socket)
-        //console.log('DATA RECEIVED: ', data)
+        // Guardar el mensaje
+        // Mirar si el user al que se le manda el mensaje esta activo
+        // 
+        console.log('MESSAGE SENT!')
     }
 
     static async changeUserStatus(socket, status) {

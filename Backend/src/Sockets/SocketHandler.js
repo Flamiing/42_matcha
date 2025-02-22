@@ -5,6 +5,7 @@ import { Server, Socket } from 'socket.io';
 import { socketSessionMiddleware } from '../Middlewares/socketSessionMiddleware.js';
 import SocketController from './SocketController.js';
 import StatusMessage from '../Utils/StatusMessage.js';
+import { authStatusSocketMiddleware } from '../Middlewares/authStatusSocketMiddleware.js';
 
 export default class SocketHandler {
     constructor(server) {
@@ -14,13 +15,20 @@ export default class SocketHandler {
                 credentials: true,
             },
         });
+        this.PROTECTED_EVENTS = [
+            'send-message'
+        ]
 
-        this.#setupSocketMiddleware();
+        this.#setupConnectionMiddleware();
         this.#handleSocket();
     }
 
-    #setupSocketMiddleware() {
+    #setupConnectionMiddleware() {
         this.io.use(socketSessionMiddleware());
+    }
+
+    #setupSocketMiddleware(socket) {
+        socket.use(authStatusSocketMiddleware(socket, this.PROTECTED_EVENTS))
     }
 
     #handleSocket() {
@@ -36,6 +44,15 @@ export default class SocketHandler {
                         StatusMessage.ERROR_CHANGING_USER_STATUS
                     );
             }
+
+            this.#setupSocketMiddleware(socket);
+            /* socket.use((packet, next) => {
+                if (packet[0] === 'send-message') {
+                    // Example middleware logic:
+                    console.log('TEST')
+                }
+                next();
+            }); */
 
             socket.on(
                 'send-message',
