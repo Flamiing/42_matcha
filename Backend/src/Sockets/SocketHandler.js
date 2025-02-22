@@ -44,9 +44,16 @@ export default class SocketHandler {
 
             socket.on('disconnect', async () => {
                 if (socket.request.session.user) {
-                    const userStatusResult = await SocketController.changeUserStatus(socket, 'offline');
+                    const userStatusResult =
+                        await SocketController.changeUserStatus(
+                            socket,
+                            'offline'
+                        );
                     if (!userStatusResult)
-                        return SocketController.handleError(socket, StatusMessage.ERROR_CHANGING_USER_STATUS);
+                        return SocketController.handleError(
+                            socket,
+                            StatusMessage.ERROR_CHANGING_USER_STATUS
+                        );
                 }
                 console.info(`Socket disconnected: ${socket.id}`);
             });
