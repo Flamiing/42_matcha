@@ -7,8 +7,8 @@ export default class SocketController {
     static async sendMessage(socket, data) {
         // Guardar el mensaje
         // Mirar si el user al que se le manda el mensaje esta activo
-        // 
-        console.log('MESSAGE SENT!')
+        //
+        console.log('MESSAGE SENT!');
     }
 
     static async changeUserStatus(socket, status) {

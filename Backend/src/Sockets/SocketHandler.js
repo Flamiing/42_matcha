@@ -15,9 +15,7 @@ export default class SocketHandler {
                 credentials: true,
             },
         });
-        this.PROTECTED_EVENTS = [
-            'send-message'
-        ]
+        this.PROTECTED_EVENTS = ['send-message'];
 
         this.#setupConnectionMiddleware();
         this.#handleSocket();
@@ -28,7 +26,7 @@ export default class SocketHandler {
     }
 
     #setupSocketMiddleware(socket) {
-        socket.use(authStatusSocketMiddleware(socket, this.PROTECTED_EVENTS))
+        socket.use(authStatusSocketMiddleware(socket, this.PROTECTED_EVENTS));
     }
 
     #handleSocket() {
