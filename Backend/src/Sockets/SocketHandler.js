@@ -42,7 +42,12 @@ export default class SocketHandler {
                 async (data) => await SocketController.sendMessage(socket, data)
             );
 
-            socket.on('disconnect', () => {
+            socket.on('disconnect', async () => {
+                if (socket.request.session.user) {
+                    const userStatusResult = await SocketController.changeUserStatus(socket, 'offline');
+                    if (!userStatusResult)
+                        return SocketController.handleError(socket, StatusMessage.ERROR_CHANGING_USER_STATUS);
+                }
                 console.info(`Socket disconnected: ${socket.id}`);
             });
         });
