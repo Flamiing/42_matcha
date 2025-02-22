@@ -21,12 +21,7 @@ export default class SocketController {
             last_online: getCurrentTimestamp(),
         };
 
-        console.log('TEST: ', input);
-
-        const userStatus = await userStatusModel.createOrUpdate({
-            input,
-            keyName: 'user_id',
-        });
+        const userStatus = await userStatusModel.createOrUpdate({ input, keyName: 'user_id' })
         if (!userStatus || userStatus.length === 0) return false;
 
         console.info('INFO:', StatusMessage.USER_STATUS_CHANGED);
