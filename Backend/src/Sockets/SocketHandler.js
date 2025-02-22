@@ -28,12 +28,19 @@ export default class SocketHandler {
             console.info(`New socket connected: ${socket.id}`);
 
             if (socket.request.session.user) {
-                const userStatusResult = await SocketController.changeUserStatus(socket, 'online');
+                const userStatusResult =
+                    await SocketController.changeUserStatus(socket, 'online');
                 if (!userStatusResult)
-                    return SocketController.handleError(socket, StatusMessage.ERROR_CHANGING_USER_STATUS);
+                    return SocketController.handleError(
+                        socket,
+                        StatusMessage.ERROR_CHANGING_USER_STATUS
+                    );
             }
 
-            socket.on('send-message', async (data) => await SocketController.sendMessage(socket, data));
+            socket.on(
+                'send-message',
+                async (data) => await SocketController.sendMessage(socket, data)
+            );
 
             socket.on('disconnect', () => {
                 console.info(`Socket disconnected: ${socket.id}`);

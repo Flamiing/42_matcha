@@ -99,6 +99,7 @@ export default class StatusMessage {
         'Cannot calculate distance without both locations.';
     static NO_LOCATION = 'Please provide a location.';
     static INVALID_AUTH_HEADER = 'Invalid authorization header format.';
-    static ERROR_CHANGING_USER_STATUS = 'An error occurred while updating the user status. Please try again.'
-    static USER_STATUS_CHANGED = 'User status changed successfully!'
+    static ERROR_CHANGING_USER_STATUS =
+        'An error occurred while updating the user status. Please try again.';
+    static USER_STATUS_CHANGED = 'User status changed successfully!';
 }
