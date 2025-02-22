@@ -24,10 +24,10 @@ CREATE TABLE users (
 );
 
 CREATE TABLE user_status (
-    user_id VARCHAR(255) PRIMARY KEY,
+    user_id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
     socket_id VARCHAR(255),
     status status_enum DEFAULT 'online',
-    last_online TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    last_online TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE user_location (

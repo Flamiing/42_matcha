@@ -1,11 +1,19 @@
 // Third-Party Imports:
 import jwt from 'jsonwebtoken';
 
+// Local Imports:
+import StatusMessage from '../Utils/StatusMessage.js';
+
+
 export const socketSessionMiddleware = () => (socket, next) => {
-    const accessToken = socket.request.headers.auth;
+    const [scheme, accessToken] = socket.request.headers.authorization.split(' ');
+    if (scheme !== 'Bearer' || !accessToken) {
+        console.error('ERROR:', StatusMessage.INVALID_AUTH_HEADER);
+        console.info(`INFO: User connected to socket '${socket.id}' got INVALID_AUTH_HEADER error.`)
+        return next(new Error(StatusMessage.INVALID_AUTH_HEADER));
+    }
 
     socket.request.session = { user: null };
-    console.log('TEST:-', socket.request.headers.auth);
     try {
         const { JWT_SECRET_KEY } = process.env;
         const data = jwt.verify(accessToken, JWT_SECRET_KEY);

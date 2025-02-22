@@ -1,8 +1,10 @@
 // Third-Party Imports:
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 
 // Local Imports:
 import { socketSessionMiddleware } from '../Middlewares/socketSessionMiddleware.js';
+import SocketController from './SocketController.js';
+import StatusMessage from '../Utils/StatusMessage.js';
 
 export default class SocketHandler {
     constructor(server) {
@@ -22,8 +24,16 @@ export default class SocketHandler {
     }
 
     #handleSocket() {
-        this.io.on('connection', (socket) => {
+        this.io.on('connection', async (socket) => {
             console.info(`New socket connected: ${socket.id}`);
+
+            if (socket.request.session.user) {
+                const userStatusResult = await SocketController.changeUserStatus(socket, 'online');
+                if (!userStatusResult)
+                    return SocketController.handleError(socket, StatusMessage.ERROR_CHANGING_USER_STATUS);
+            }
+
+            socket.on('send-message', async (data) => await SocketController.sendMessage(socket, data));
 
             socket.on('disconnect', () => {
                 console.info(`Socket disconnected: ${socket.id}`);
