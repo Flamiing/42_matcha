@@ -2,6 +2,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TYPE gender_enum AS ENUM('male', 'female');
 CREATE TYPE gender_preference_enum AS ENUM('male', 'female', 'bisexual');
+CREATE TYPE status_enum AS ENUM('online', 'offline');
 
 CREATE TABLE users (
 	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -14,14 +15,19 @@ CREATE TABLE users (
 	biography VARCHAR(500),
 	profile_picture VARCHAR(255) DEFAULT NULL,
 	fame INTEGER DEFAULT 0,
-	last_online TIMESTAMP,
-	is_online BOOLEAN DEFAULT FALSE,
 	active_account BOOLEAN DEFAULT FALSE,
 	oauth BOOLEAN DEFAULT FALSE,
     refresh_token VARCHAR(2048) DEFAULT NULL,
     reset_pass_token VARCHAR(2048) DEFAULT NULL,
 	gender gender_enum,
 	sexual_preference gender_preference_enum DEFAULT 'bisexual'
+);
+
+CREATE TABLE user_status (
+    user_id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    socket_id VARCHAR(255),
+    status status_enum DEFAULT 'online',
+    last_online TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE user_location (
