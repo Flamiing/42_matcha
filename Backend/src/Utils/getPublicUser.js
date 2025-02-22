@@ -26,7 +26,10 @@ export default async function getPublicUser(user) {
     const images =
         imagesToParse.length !== 0 ? parseImages(user.id, imagesToParse) : [];
 
-    const userStatus = await userStatusModel.getByReference({ user_id: id }, true);
+    const userStatus = await userStatusModel.getByReference(
+        { user_id: id },
+        true
+    );
     if (!userStatus) return null;
 
     const publicUser = {

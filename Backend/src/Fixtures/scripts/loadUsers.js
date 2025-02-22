@@ -63,12 +63,14 @@ export default async function loadUsers() {
         }
         await userTagsModel.updateUserTags(createdUser.id, tags);
         await userLocationModel.update(location, createdUser.id);
-        await userStatusModel.create({ input: {
-            user_id: createdUser.id,
-            socket_id: null,
-            status: 'offline',
-            last_online: getCurrentTimestamp(),
-        } });
+        await userStatusModel.create({
+            input: {
+                user_id: createdUser.id,
+                socket_id: null,
+                status: 'offline',
+                last_online: getCurrentTimestamp(),
+            },
+        });
 
         await setupProfilePicture(createdUser.id, createdUser.profile_picture);
     }
