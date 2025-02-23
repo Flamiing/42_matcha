@@ -16,12 +16,10 @@ export async function validateMessagePayload(socket, payload) {
         return emitErrorAndReturnNull(socket, errorMessage);
     }
 
-    if (!(await validateUserId(receiverId))) {
-        return emitErrorAndReturnNull(
-            socket,
-            StatusMessage.INVALID_RECEIVER_ID
-        );
-    }
+    if (!await validateUserId(receiverId))
+        return emitErrorAndReturnNull(socket, StatusMessage.INVALID_RECEIVER_ID)
+
+    
 
     const validPayload = {
         receiverId: receiverId,

@@ -7,7 +7,7 @@ import { validateMessagePayload } from '../Validations/messagePayloadValidations
 export default class SocketController {
     static async sendMessage(socket, data) {
         // Validate payload
-        const validPayload = validateMessagePayload(socket, data);
+        const validPayload = await validateMessagePayload(socket, data);
         if (!validPayload) return;
 
         // Check if user has a match with receiver
