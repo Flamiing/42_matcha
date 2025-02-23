@@ -10,7 +10,11 @@ import audioChatMessagesModel from '../Models/AudioChatMessagesModel.js';
 
 export async function processAudioMessage(socket, senderId, payload) {
     const audioPath = saveAudioToFileSystem(senderId, payload.message);
-    if (!audioPath) return emitErrorAndReturnNull(socket, StatusMessage.FAILED_SENDING_CHAT_MESSAGE)
+    if (!audioPath)
+        return emitErrorAndReturnNull(
+            socket,
+            StatusMessage.FAILED_SENDING_CHAT_MESSAGE
+        );
 
     const chatMessage = {
         sender_id: senderId,
