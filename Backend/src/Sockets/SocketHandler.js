@@ -47,7 +47,7 @@ export default class SocketHandler {
 
             socket.on(
                 'send-message',
-                async (data) => await SocketController.sendMessage(socket, data)
+                async (data) => await SocketController.sendMessage(this.io, socket, data)
             );
 
             socket.on('disconnect', async () => {

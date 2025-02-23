@@ -7,7 +7,7 @@ import { getCurrentTimestamp } from '../Utils/timeUtils.js';
 import { validateMessagePayload } from '../Validations/messagePayloadValidations.js';
 
 export default class SocketController {
-    static async sendMessage(socket, data) {
+    static async sendMessage(io, socket, data) {
         const validPayload = await validateMessagePayload(socket, data);
         if (!validPayload) return;
 
@@ -16,19 +16,19 @@ export default class SocketController {
             sender_id: senderId,
             receiver_id: validPayload.receiverId,
             message: validPayload.message,
-        };
-        const savedChatMessage = await chatMessagesModel.create({
-            input: chatMessage,
-        });
-        if (!savedChatMessage || savedChatMessage.length === 0)
-            return emitErrorAndReturnNull(
-                socket,
-                StatusMessage.FAILED_SENDING_CHAT_MESSAGE
-            );
+        }
+        const savedChatMessage = await chatMessagesModel.create({ input: chatMessage })
+        if (!savedChatMessage || savedChatMessage.length === 0) return emitErrorAndReturnNull(socket, StatusMessage.FAILED_SENDING_CHAT_MESSAGE)
+        
+        const receiverUser = await userStatusModel.getByReference({ user_id: validPayload.receiverId }, true);
+        if (!receiverUser) return emitErrorAndReturnNull(socket, StatusMessage.FAILED_SENDING_CHAT_MESSAGE);
 
-        // If user has active socket, send to user in real time
-
-        console.log('MESSAGE SENT!');
+        const payload = {
+            senderId: senderId,
+            senderUsername: socket.request.session.user.username,
+            message: validPayload.message
+        }
+        io.to(receiverUser.socket_id).emit('message', payload);
     }
 
     static async changeUserStatus(socket, status) {
