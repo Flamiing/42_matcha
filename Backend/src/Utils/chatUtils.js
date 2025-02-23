@@ -31,8 +31,8 @@ export async function processAudioMessage(socket, senderId, payload) {
             socket,
             StatusMessage.FAILED_SENDING_CHAT_MESSAGE
         );
-    
-    const audioURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/media/audio/${savedChatMessage.id}`
+
+    const audioURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/media/audio/${savedChatMessage.id}`;
 
     return audioURL;
 }
