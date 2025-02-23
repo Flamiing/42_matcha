@@ -19,7 +19,7 @@ const eventSchema = z.object({
             invalid_type_error: 'Invalid title.',
             required_error: 'Title is required.',
         })
-        .nonempty('Title cannot be empty.')
+        .min(1, 'Title cannot be empty.')
         .max(60, 'Title must be 60 characters or fewer.'),
     description: z
         .string({

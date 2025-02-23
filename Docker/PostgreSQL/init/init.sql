@@ -105,16 +105,12 @@ CREATE TABLE reports (
 
 CREATE TABLE chats (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    user1 UUID REFERENCES users(id) ON DELETE CASCADE,
-    user2 UUID REFERENCES users(id) ON DELETE CASCADE,
-    UNIQUE(user1, user2)
-);
-
-CREATE TABLE message (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    chat_id UUID REFERENCES chats(id) ON DELETE CASCADE,
-    time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    content TEXT NOT NULL
+    sender_id UUID NOT NULL,
+    receiver_id UUID NOT NULL,
+    message VARCHAR(2000) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 ALTER TABLE users

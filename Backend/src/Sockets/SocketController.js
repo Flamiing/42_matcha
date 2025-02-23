@@ -2,12 +2,17 @@
 import userStatusModel from '../Models/UserStatusModel.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { getCurrentTimestamp } from '../Utils/timeUtils.js';
+import { validateMessagePayload } from '../Validations/messagePayloadValidations.js';
 
 export default class SocketController {
     static async sendMessage(socket, data) {
-        // Guardar el mensaje
-        // Mirar si el user al que se le manda el mensaje esta activo
-        //
+        // Validate payload
+        const validPayload = validateMessagePayload(socket, data);
+        if (!validPayload) return;
+
+        // Check if user has a match with receiver
+        // Save message to db
+        // If user has active socket, send to user in real time
         console.log('MESSAGE SENT!');
     }
 
