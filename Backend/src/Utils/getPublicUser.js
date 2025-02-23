@@ -3,6 +3,7 @@ import userTagsModel from '../Models/UserTagsModel.js';
 import imagesModel from '../Models/ImagesModel.js';
 import { parseImages } from './imagesUtils.js';
 import geolocationModel from '../Models/UserLocationModel.js';
+import userStatusModel from '../Models/UserStatusModel.js';
 
 export default async function getPublicUser(user) {
     const { API_HOST, API_PORT, API_VERSION } = process.env;
@@ -25,6 +26,12 @@ export default async function getPublicUser(user) {
     const images =
         imagesToParse.length !== 0 ? parseImages(user.id, imagesToParse) : [];
 
+    const userStatus = await userStatusModel.getByReference(
+        { user_id: id },
+        true
+    );
+    if (!userStatus) return null;
+
     const publicUser = {
         id: user.id,
         username: user.username,
@@ -35,8 +42,8 @@ export default async function getPublicUser(user) {
         profile_picture: profilePicture,
         location: userLocation.length === 0 ? {} : userLocation,
         fame: parseInt(user.fame),
-        last_online: user.last_online,
-        is_online: user.is_online,
+        is_online: userStatus.status === 'online' ? true : false,
+        last_online: userStatus.last_online,
         gender: user.gender,
         sexual_preference: user.sexual_preference,
         tags: userTags,
