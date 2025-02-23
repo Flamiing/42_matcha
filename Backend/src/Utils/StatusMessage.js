@@ -104,6 +104,8 @@ export default class StatusMessage {
     static USER_STATUS_CHANGED = 'User status changed successfully!';
     static FORBIDDEN_ACCESS_EVENT =
         'Access Denied: User authentication required.';
-    static INVALID_MESSAGE_PAYLOAD = 'The message payload is malformed or missing required fields.'
-    static INVALID_RECEIVER_ID = 'The user you are trying to message does not exist.'
+    static INVALID_MESSAGE_PAYLOAD =
+        'The message payload is malformed or missing required fields.';
+    static INVALID_RECEIVER_ID =
+        'The user you are trying to message does not exist.';
 }

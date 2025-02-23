@@ -8,7 +8,7 @@ const messageSchema = z.object({
             required_error: 'Message is required.',
         })
         .min(1, 'Message cannot be empty.')
-        .max(2000, 'Message must be 2000 characters or fewer.')
+        .max(2000, 'Message must be 2000 characters or fewer.'),
 });
 
 export function validateMessage(input) {
