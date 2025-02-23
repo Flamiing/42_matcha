@@ -52,12 +52,13 @@ export default class SocketController {
 
         const senderId = socket.request.session.user.id;
 
-        const processedAudio = await processAudioMessage(
+        const audioPath = await processAudioMessage(
             socket,
             senderId,
             validPayload
         );
-        if (!processedAudio) return null;
+        if (!audioPath) return null;
+        console.log('TEST:', audioPath);
 
         const receiverUser = await userStatusModel.getByReference(
             { user_id: validPayload.receiverId },
@@ -72,7 +73,7 @@ export default class SocketController {
         const payload = {
             senderId: senderId,
             senderUsername: socket.request.session.user.username,
-            message: validPayload.message,
+            message: audioPath,
             type: 'audio',
         };
         io.to(receiverUser.socket_id).emit('message', payload);
