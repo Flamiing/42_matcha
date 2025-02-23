@@ -44,13 +44,6 @@ export default class SocketHandler {
             }
 
             this.#setupSocketMiddleware(socket);
-            /* socket.use((packet, next) => {
-                if (packet[0] === 'send-message') {
-                    // Example middleware logic:
-                    console.log('TEST')
-                }
-                next();
-            }); */
 
             socket.on(
                 'send-message',
