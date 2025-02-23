@@ -112,4 +112,5 @@ export default class StatusMessage {
         'An error occurred while checking the match. Please try again later.';
     static CANNOT_SEND_MESSAGE_WITHOUT_MATCH =
         "You can only send messages to users you've matched with.";
+    static FAILED_SENDING_CHAT_MESSAGE = 'Failed to send message. Please try again.';
 }

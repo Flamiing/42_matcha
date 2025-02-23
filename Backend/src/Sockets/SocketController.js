@@ -1,18 +1,27 @@
 // Local Imports:
+import chatMessagesModel from '../Models/chatMessagesModel.js';
 import userStatusModel from '../Models/UserStatusModel.js';
+import { emitErrorAndReturnNull } from '../Utils/errorUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { getCurrentTimestamp } from '../Utils/timeUtils.js';
 import { validateMessagePayload } from '../Validations/messagePayloadValidations.js';
 
 export default class SocketController {
     static async sendMessage(socket, data) {
-        // Validate payload
         const validPayload = await validateMessagePayload(socket, data);
         if (!validPayload) return;
-
-        // Check if user has a match with receiver
-        // Save message to db
+        
+        const senderId = socket.request.session.user.id;
+        const chatMessage = {
+            sender_id: senderId,
+            receiver_id: validPayload.receiverId,
+            message: validPayload.message,
+        }
+        const savedChatMessage = await chatMessagesModel.create({ input: chatMessage })
+        if (!savedChatMessage || savedChatMessage.length === 0) return emitErrorAndReturnNull(socket, StatusMessage.FAILED_SENDING_CHAT_MESSAGE)
+        
         // If user has active socket, send to user in real time
+        
         console.log('MESSAGE SENT!');
     }
 

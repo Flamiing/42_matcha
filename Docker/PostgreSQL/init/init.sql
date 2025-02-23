@@ -103,7 +103,7 @@ CREATE TABLE reports (
 	UNIQUE(reported_by, reported)
 );
 
-CREATE TABLE chats (
+CREATE TABLE chat_messages (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     sender_id UUID NOT NULL,
     receiver_id UUID NOT NULL,
