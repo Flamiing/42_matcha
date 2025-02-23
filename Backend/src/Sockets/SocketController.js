@@ -10,18 +10,24 @@ export default class SocketController {
     static async sendMessage(socket, data) {
         const validPayload = await validateMessagePayload(socket, data);
         if (!validPayload) return;
-        
+
         const senderId = socket.request.session.user.id;
         const chatMessage = {
             sender_id: senderId,
             receiver_id: validPayload.receiverId,
             message: validPayload.message,
-        }
-        const savedChatMessage = await chatMessagesModel.create({ input: chatMessage })
-        if (!savedChatMessage || savedChatMessage.length === 0) return emitErrorAndReturnNull(socket, StatusMessage.FAILED_SENDING_CHAT_MESSAGE)
-        
+        };
+        const savedChatMessage = await chatMessagesModel.create({
+            input: chatMessage,
+        });
+        if (!savedChatMessage || savedChatMessage.length === 0)
+            return emitErrorAndReturnNull(
+                socket,
+                StatusMessage.FAILED_SENDING_CHAT_MESSAGE
+            );
+
         // If user has active socket, send to user in real time
-        
+
         console.log('MESSAGE SENT!');
     }
 

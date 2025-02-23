@@ -2,8 +2,8 @@
 import likesModel from '../Models/LikesModel.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { emitErrorAndReturnNull } from '../Utils/errorUtils.js';
-import { validateMessage } from '../Schemas/messageSchema.js'
-import { validateUserId } from '../Validations/blockedUsersValidations.js'
+import { validateMessage } from '../Schemas/messageSchema.js';
+import { validateUserId } from '../Validations/blockedUsersValidations.js';
 
 export async function validateMessagePayload(socket, payload) {
     const senderId = socket.request.session.user.id;
