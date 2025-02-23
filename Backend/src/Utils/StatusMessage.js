@@ -108,6 +108,8 @@ export default class StatusMessage {
         'The message payload is malformed or missing required fields.';
     static INVALID_RECEIVER_ID =
         'The user you are trying to message does not exist.';
-    static ERROR_CHECKING_MATCH = 'An error occurred while checking the match. Please try again later.';
-    static CANNOT_SEND_MESSAGE_WITHOUT_MATCH = "You can only send messages to users you've matched with."
+    static ERROR_CHECKING_MATCH =
+        'An error occurred while checking the match. Please try again later.';
+    static CANNOT_SEND_MESSAGE_WITHOUT_MATCH =
+        "You can only send messages to users you've matched with.";
 }

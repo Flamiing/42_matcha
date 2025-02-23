@@ -19,14 +19,23 @@ export async function validateMessagePayload(socket, payload) {
         return emitErrorAndReturnNull(socket, errorMessage);
     }
 
-    if (!await validateUserId(receiverId))
-        return emitErrorAndReturnNull(socket, StatusMessage.INVALID_RECEIVER_ID)
+    if (!(await validateUserId(receiverId)))
+        return emitErrorAndReturnNull(
+            socket,
+            StatusMessage.INVALID_RECEIVER_ID
+        );
 
     const isMatch = await likesModel.checkIfMatch(senderId, receiverId);
     if (isMatch === null)
-        return emitErrorAndReturnNull(socket, StatusMessage.ERROR_CHECKING_MATCH);
+        return emitErrorAndReturnNull(
+            socket,
+            StatusMessage.ERROR_CHECKING_MATCH
+        );
     else if (!isMatch)
-        return emitErrorAndReturnNull(socket, StatusMessage.CANNOT_SEND_MESSAGE_WITHOUT_MATCH)
+        return emitErrorAndReturnNull(
+            socket,
+            StatusMessage.CANNOT_SEND_MESSAGE_WITHOUT_MATCH
+        );
 
     const validPayload = {
         receiverId: receiverId,
