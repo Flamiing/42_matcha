@@ -82,6 +82,34 @@ export default class Model {
         }
     }
 
+    async createOrUpdate({ input, keyName }) {
+        const createFields = Object.keys(input).join(', ');
+        const updateFields = Object.keys(input)
+            .map((key, index) => `${key} = $${index + 1}`)
+            .join(', ');
+        const values = Object.values(input);
+        const createPlaceholders = values
+            .map((_, index) => `$${index + 1}`)
+            .join(', ');
+
+        const query = {
+            text: `INSERT INTO ${this.table} (${createFields}) VALUES (${createPlaceholders})
+                ON CONFLICT (${keyName})
+                DO UPDATE SET ${updateFields}
+                RETURNING *;`,
+            values: values,
+        };
+
+        try {
+            const result = await this.db.query(query);
+            if (result.rows.length === 0) return [];
+            return result.rows[0];
+        } catch (error) {
+            console.error('Error making the query: ', error.message);
+            return null;
+        }
+    }
+
     async updateByReference(input, reference) {
         const fields = Object.keys(input)
             .map((key, index) => `${key} = $${index + 1}`)
