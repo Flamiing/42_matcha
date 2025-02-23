@@ -58,7 +58,6 @@ export default class SocketController {
             validPayload
         );
         if (!audioPath) return null;
-        console.log('TEST:', audioPath);
 
         const receiverUser = await userStatusModel.getByReference(
             { user_id: validPayload.receiverId },
