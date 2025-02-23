@@ -1,13 +1,14 @@
 // Local Imports:
-import chatMessagesModel from '../Models/chatMessagesModel.js';
+import textChatMessagesModel from '../Models/TextChatMessagesModel.js';
 import userStatusModel from '../Models/UserStatusModel.js';
+import { processAudioMessage } from '../Utils/chatUtils.js';
 import { emitErrorAndReturnNull } from '../Utils/errorUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { getCurrentTimestamp } from '../Utils/timeUtils.js';
 import { validateMessagePayload } from '../Validations/messagePayloadValidations.js';
 
 export default class SocketController {
-    static async sendMessage(io, socket, data) {
+    static async sendTextMessage(io, socket, data) {
         const validPayload = await validateMessagePayload(socket, data);
         if (!validPayload) return;
 
@@ -17,7 +18,7 @@ export default class SocketController {
             receiver_id: validPayload.receiverId,
             message: validPayload.message,
         };
-        const savedChatMessage = await chatMessagesModel.create({
+        const savedChatMessage = await textChatMessagesModel.create({
             input: chatMessage,
         });
         if (!savedChatMessage || savedChatMessage.length === 0)
@@ -40,6 +41,35 @@ export default class SocketController {
             senderId: senderId,
             senderUsername: socket.request.session.user.username,
             message: validPayload.message,
+            type: 'text'
+        };
+        io.to(receiverUser.socket_id).emit('message', payload);
+    }
+
+    static async sendAudioMessage(io, socket, data) {
+        const validPayload = await validateMessagePayload(socket, data);
+        if (!validPayload) return;
+
+        const senderId = socket.request.session.user.id;
+        
+        const processedAudio = await processAudioMessage(socket, senderId, validPayload); 
+        if (!processedAudio) return null;
+
+        const receiverUser = await userStatusModel.getByReference(
+            { user_id: validPayload.receiverId },
+            true
+        );
+        if (!receiverUser)
+            return emitErrorAndReturnNull(
+                socket,
+                StatusMessage.FAILED_SENDING_CHAT_MESSAGE
+            );
+
+        const payload = {
+            senderId: senderId,
+            senderUsername: socket.request.session.user.username,
+            message: validPayload.message,
+            type: 'audio'
         };
         io.to(receiverUser.socket_id).emit('message', payload);
     }

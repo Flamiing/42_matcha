@@ -2,10 +2,11 @@
 import likesModel from '../Models/LikesModel.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { emitErrorAndReturnNull } from '../Utils/errorUtils.js';
-import { validateMessage } from '../Schemas/messageSchema.js';
+import { validateTextMessage } from '../Schemas/textMessageSchema.js';
 import { validateUserId } from '../Validations/blockedUsersValidations.js';
+import { validateAudioMessage } from '../Schemas/audioMessageSchema.js';
 
-export async function validateMessagePayload(socket, payload) {
+export async function validateMessagePayload(socket, payload, msgType) {
     const senderId = socket.request.session.user.id;
 
     const { receiverId } = payload;
@@ -15,11 +16,8 @@ export async function validateMessagePayload(socket, payload) {
             StatusMessage.INVALID_MESSAGE_PAYLOAD
         );
 
-    const validatedMessage = validateMessage(payload);
-    if (!validatedMessage.success) {
-        const errorMessage = validatedMessage.error.errors[0].message;
-        return emitErrorAndReturnNull(socket, errorMessage);
-    }
+    const validatedMessage = validateMessage(socket, payload, msgType);
+    if (!validatedMessage) return null;
 
     if (!(await validateUserId(receiverId)))
         return emitErrorAndReturnNull(
@@ -41,8 +39,27 @@ export async function validateMessagePayload(socket, payload) {
 
     const validPayload = {
         receiverId: receiverId,
-        message: validatedMessage.data.message,
+        message: validatedMessage.message,
     };
 
     return validPayload;
+}
+
+function validateMessage(socket, payload, msgType) {
+    if (msgType === 'text') {
+        const validatedMessage = validateTextMessage(payload);
+        if (!validatedMessage.success) {
+            const errorMessage = validatedMessage.error.errors[0].message;
+            return emitErrorAndReturnNull(socket, errorMessage);
+        }
+        return validateMessage;
+    }
+
+    const validatedMessage = validateAudioMessage(payload);
+    if (!validatedMessage.success) {
+        const errorMessage = validatedMessage.error.errors[0].message;
+        return emitErrorAndReturnNull(socket, errorMessage);
+    }
+    
+    return validatedMessage.data;
 }

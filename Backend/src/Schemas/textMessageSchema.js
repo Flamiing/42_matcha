@@ -1,7 +1,7 @@
 // Third-Party Imports:
 import z from 'zod';
 
-const messageSchema = z.object({
+const textMessageSchema = z.object({
     message: z
         .string({
             invalid_type_error: 'Invalid message.',
@@ -11,10 +11,10 @@ const messageSchema = z.object({
         .max(2000, 'Message must be 2000 characters or fewer.'),
 });
 
-export function validateMessage(input) {
-    return messageSchema.safeParse(input);
+export function validateTextMessage(input) {
+    return textMessageSchema.safeParse(input);
 }
 
-export function validatePartialMessage(input) {
-    return messageSchema.partial().safeParse(input);
+export function validatePartialTextMessage(input) {
+    return textMessageSchema.partial().safeParse(input);
 }
