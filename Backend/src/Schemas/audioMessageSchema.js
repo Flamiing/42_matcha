@@ -11,10 +11,9 @@ const audioMessageSchema = z.object({
             required_error: 'Message is required.',
         })
         .min(1, 'Message cannot be empty.')
-        .refine(value => isValidBase64(value), {
-            message: "Invalid Base64 audio format."
-        })
-
+        .refine((value) => isValidBase64(value), {
+            message: 'Invalid Base64 audio format.',
+        }),
 });
 
 export function validateAudioMessage(input) {

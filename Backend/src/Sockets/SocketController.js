@@ -41,7 +41,7 @@ export default class SocketController {
             senderId: senderId,
             senderUsername: socket.request.session.user.username,
             message: validPayload.message,
-            type: 'text'
+            type: 'text',
         };
         io.to(receiverUser.socket_id).emit('message', payload);
     }
@@ -51,8 +51,12 @@ export default class SocketController {
         if (!validPayload) return;
 
         const senderId = socket.request.session.user.id;
-        
-        const processedAudio = await processAudioMessage(socket, senderId, validPayload); 
+
+        const processedAudio = await processAudioMessage(
+            socket,
+            senderId,
+            validPayload
+        );
         if (!processedAudio) return null;
 
         const receiverUser = await userStatusModel.getByReference(
@@ -69,7 +73,7 @@ export default class SocketController {
             senderId: senderId,
             senderUsername: socket.request.session.user.username,
             message: validPayload.message,
-            type: 'audio'
+            type: 'audio',
         };
         io.to(receiverUser.socket_id).emit('message', payload);
     }

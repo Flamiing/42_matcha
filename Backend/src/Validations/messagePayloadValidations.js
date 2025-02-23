@@ -60,6 +60,6 @@ function validateMessage(socket, payload, msgType) {
         const errorMessage = validatedMessage.error.errors[0].message;
         return emitErrorAndReturnNull(socket, errorMessage);
     }
-    
+
     return validatedMessage.data;
 }

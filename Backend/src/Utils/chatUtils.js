@@ -1,17 +1,21 @@
 // Third-Party Imports:
-import { randomUUID } from "crypto";
+import { randomUUID } from 'crypto';
 import fsExtra from 'fs-extra';
 import path from 'path';
 
 // Local Imports:
-import StatusMessage from "./StatusMessage.js";
-import { emitErrorAndReturnNull } from "./errorUtils.js";
-import audioChatMessagesModel from "../Models/AudioChatMessagesModel.js";
+import StatusMessage from './StatusMessage.js';
+import { emitErrorAndReturnNull } from './errorUtils.js';
+import audioChatMessagesModel from '../Models/AudioChatMessagesModel.js';
 
 export async function processAudioMessage(socket, senderId, payload) {
     const audioPath = saveAudioToFileSystem(senderId, payload.message);
-    console.log('TEST:', audioPath)
-    if (!audioPath) return emitErrorAndReturnNull(socket, StatusMessage.FAILED_SENDING_CHAT_MESSAGE)
+    console.log('TEST:', audioPath);
+    if (!audioPath)
+        return emitErrorAndReturnNull(
+            socket,
+            StatusMessage.FAILED_SENDING_CHAT_MESSAGE
+        );
 
     const chatMessage = {
         sender_id: senderId,
@@ -26,7 +30,7 @@ export async function processAudioMessage(socket, senderId, payload) {
             socket,
             StatusMessage.FAILED_SENDING_CHAT_MESSAGE
         );
-    
+
     console.log('AUDIO SAVED!');
 }
 

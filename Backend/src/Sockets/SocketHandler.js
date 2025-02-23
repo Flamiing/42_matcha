@@ -15,10 +15,7 @@ export default class SocketHandler {
                 credentials: true,
             },
         });
-        this.PROTECTED_EVENTS = [
-            'send-text-message',
-            'send-audio-message'
-        ];
+        this.PROTECTED_EVENTS = ['send-text-message', 'send-audio-message'];
 
         this.#setupConnectionMiddleware();
         this.#handleSocket();
@@ -51,10 +48,22 @@ export default class SocketHandler {
             socket.on(
                 'send-text-message',
                 async (data) =>
-                    await SocketController.sendTextMessage(this.io, socket, data)
+                    await SocketController.sendTextMessage(
+                        this.io,
+                        socket,
+                        data
+                    )
             );
 
-            socket.on('send-audio-message', async (data) => await SocketController.sendAudioMessage(this.io, socket, data));
+            socket.on(
+                'send-audio-message',
+                async (data) =>
+                    await SocketController.sendAudioMessage(
+                        this.io,
+                        socket,
+                        data
+                    )
+            );
 
             socket.on('disconnect', async () => {
                 if (socket.request.session.user) {
