@@ -16,18 +16,31 @@ export default class SocketController {
             sender_id: senderId,
             receiver_id: validPayload.receiverId,
             message: validPayload.message,
-        }
-        const savedChatMessage = await chatMessagesModel.create({ input: chatMessage })
-        if (!savedChatMessage || savedChatMessage.length === 0) return emitErrorAndReturnNull(socket, StatusMessage.FAILED_SENDING_CHAT_MESSAGE)
-        
-        const receiverUser = await userStatusModel.getByReference({ user_id: validPayload.receiverId }, true);
-        if (!receiverUser) return emitErrorAndReturnNull(socket, StatusMessage.FAILED_SENDING_CHAT_MESSAGE);
+        };
+        const savedChatMessage = await chatMessagesModel.create({
+            input: chatMessage,
+        });
+        if (!savedChatMessage || savedChatMessage.length === 0)
+            return emitErrorAndReturnNull(
+                socket,
+                StatusMessage.FAILED_SENDING_CHAT_MESSAGE
+            );
+
+        const receiverUser = await userStatusModel.getByReference(
+            { user_id: validPayload.receiverId },
+            true
+        );
+        if (!receiverUser)
+            return emitErrorAndReturnNull(
+                socket,
+                StatusMessage.FAILED_SENDING_CHAT_MESSAGE
+            );
 
         const payload = {
             senderId: senderId,
             senderUsername: socket.request.session.user.username,
-            message: validPayload.message
-        }
+            message: validPayload.message,
+        };
         io.to(receiverUser.socket_id).emit('message', payload);
     }
 
