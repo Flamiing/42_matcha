@@ -6,6 +6,7 @@ import matchesModel from '../Models/MatchesModel.js';
 import { returnErrorStatus } from '../Utils/errorUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { isValidUUID } from '../Validations/generalValidations.js';
+import MatchesController from './MatchesController.js';
 
 export default class LikesController {
     static async handleLike(req, res) {
@@ -105,7 +106,7 @@ export default class LikesController {
                 StatusMessage.CANNOT_LIKE_BLOCKED_USER
             );
 
-        let input = {
+        const input = {
             liked_by: likedById,
             liked: likedId,
         };
@@ -117,19 +118,8 @@ export default class LikesController {
         if (isMatch === null)
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
 
-        if (isMatch) {
-            input = {
-                user_id_1: likedById,
-                user_id_2: likedId,
-            };
-
-            const matchResult = await matchesModel.create({ input });
-            if (!matchResult || matchResult.length === 0)
-                return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
-            console.info(`Match created with ID: ${matchResult.id}`);
-
-            // TODO: Send notification
-        }
+        if (isMatch)
+            if (!(await MatchesController.createMatch(res, likedById, likedId))) return res;
 
         return true;
     }
