@@ -116,4 +116,5 @@ export default class StatusMessage {
     static FAILED_SENDING_CHAT_MESSAGE =
         'Failed to send message. Please try again.';
     static CHAT_NOT_FOUND = 'Chat not found.';
+    static ERROR_GETTING_CHATS_INFO = 'An error occurred while retrieving chat information. Please try again later.'
 }

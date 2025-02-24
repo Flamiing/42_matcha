@@ -12,7 +12,7 @@ import { validateMessagePayload } from '../Validations/messagePayloadValidations
 
 export default class SocketController {
     static async sendTextMessage(io, socket, data) {
-        const validPayload = await validateMessagePayload(socket, data);
+        const validPayload = await validateMessagePayload(socket, data, 'text');
         if (!validPayload) return;
 
         const senderId = socket.request.session.user.id;

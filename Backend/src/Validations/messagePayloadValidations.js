@@ -57,7 +57,7 @@ function validateMessage(socket, payload, msgType) {
             const errorMessage = validatedMessage.error.errors[0].message;
             return emitErrorAndReturnNull(socket, errorMessage);
         }
-        return validateMessage;
+        return validateMessage.data;
     }
 
     const validatedMessage = validateAudioMessage(payload);
