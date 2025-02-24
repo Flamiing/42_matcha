@@ -119,7 +119,8 @@ export default class LikesController {
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
 
         if (isMatch)
-            if (!(await MatchesController.createMatch(res, likedById, likedId))) return res;
+            if (!(await MatchesController.createMatch(res, likedById, likedId)))
+                return res;
 
         return true;
     }

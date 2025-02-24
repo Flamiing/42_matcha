@@ -82,13 +82,13 @@ export default class MatchesController {
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
         console.info(`Match created with ID: ${matchResult.id}`);
 
-        
-
-        const chatResult = chatsModel.create({ input: {
-            match_id: matchResult.id,
-            user_id_1: userIdOne, 
-            user_id_2: userIdTwo,
-        } });
+        const chatResult = chatsModel.create({
+            input: {
+                match_id: matchResult.id,
+                user_id_1: userIdOne,
+                user_id_2: userIdTwo,
+            },
+        });
         if (!chatResult || chatResult.length === 0)
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
 
