@@ -2,6 +2,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TYPE gender_enum AS ENUM('male', 'female');
 CREATE TYPE gender_preference_enum AS ENUM('male', 'female', 'bisexual');
+CREATE TYPE status_enum AS ENUM('online', 'offline');
 
 CREATE TABLE users (
 	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -14,8 +15,6 @@ CREATE TABLE users (
 	biography VARCHAR(500),
 	profile_picture VARCHAR(255) DEFAULT NULL,
 	fame INTEGER DEFAULT 0,
-	last_online TIMESTAMP,
-	is_online BOOLEAN DEFAULT FALSE,
 	active_account BOOLEAN DEFAULT FALSE,
 	oauth BOOLEAN DEFAULT FALSE,
     refresh_token VARCHAR(2048) DEFAULT NULL,
@@ -24,11 +23,11 @@ CREATE TABLE users (
 	sexual_preference gender_preference_enum DEFAULT 'bisexual'
 );
 
-CREATE TABLE user_location (
-  id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-  latitude DECIMAL(9, 6),
-  longitude DECIMAL(9, 6),
-  allows_location BOOLEAN DEFAULT FALSE
+CREATE TABLE user_status (
+    user_id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    socket_id VARCHAR(255),
+    status status_enum DEFAULT 'online',
+    last_online TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE user_location (
@@ -106,16 +105,36 @@ CREATE TABLE reports (
 
 CREATE TABLE chats (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    user1 UUID REFERENCES users(id) ON DELETE CASCADE,
-    user2 UUID REFERENCES users(id) ON DELETE CASCADE,
-    UNIQUE(user1, user2)
+    user_id_1 UUID NOT NULL,
+    user_id_2 UUID NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(user_id_1, user_id_2)
+    FOREIGN KEY (user_id_1) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id_2) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE message (
+CREATE TABLE text_chat_messages (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    chat_id UUID REFERENCES chats(id) ON DELETE CASCADE,
-    time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    content TEXT NOT NULL
+    chat_id UUID NOT NULL,
+    sender_id UUID NOT NULL,
+    receiver_id UUID NOT NULL,
+    message VARCHAR(2000) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE
+);
+
+CREATE TABLE audio_chat_messages (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    chat_id UUID NOT NULL,
+    sender_id UUID NOT NULL,
+    receiver_id UUID NOT NULL,
+    audio_path VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE
 );
 
 ALTER TABLE users

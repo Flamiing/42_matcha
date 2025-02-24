@@ -37,7 +37,6 @@ export default class LikesController {
                 likedById,
                 likedId
             );
-            console.log('HERE!  - ', removeLikeResult);
             if (!removeLikeResult) return res;
             return res.json({ msg: StatusMessage.USER_LIKED_REMOVED });
         }
@@ -106,64 +105,6 @@ export default class LikesController {
                 StatusMessage.CANNOT_LIKE_BLOCKED_USER
             );
 
-        let input = {
-            liked_by: likedById,
-            liked: likedId,
-        };
-        const saveLikeResult = await likesModel.create({ input });
-        if (!saveLikeResult)
-            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
-
-        const isMatch = await likesModel.checkIfMatch(likedById, likedId);
-        if (isMatch === null)
-            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
-
-        if (isMatch) {
-            input = {
-                user_id_1: likedById,
-                user_id_2: likedId,
-            };
-
-            const matchResult = await matchesModel.create({ input });
-            if (!matchResult || matchResult.length === 0)
-                return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
-            console.info(`Match created with ID: ${matchResult.id}`);
-
-            // TODO: Send notification
-        }
-
-        return true;
-    }
-
-    /* static async removeLike(res, id, likedById, likedId) {
-        const removeLike = await likesModel.delete({ id });
-        if (!removeLike) {
-            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
-        }
-        const deleteMatch = await matchesModel.deleteMatch(
-            res,
-            likedById,
-            likedId
-        );
-        if (!deleteMatch) {
-            return false;
-        }
-        return true;
-    } */
-
-    static async checkIfCanLike(res, id) {
-        const user = await userModel.getById({ id });
-        if (!user)
-            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
-        if (user.length === 0)
-            return returnErrorStatus(res, 404, StatusMessage.USER_NOT_FOUND);
-
-        if (!user.profile_picture)
-            return returnErrorStatus(res, 403, StatusMessage.USER_CANNOT_LIKE);
-        return true;
-    }
-
-    static async saveLike(res, likedById, likedId) {
         let input = {
             liked_by: likedById,
             liked: likedId,

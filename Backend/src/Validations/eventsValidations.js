@@ -17,7 +17,6 @@ export async function validateMatch(
     if (match.length === 0)
         return returnErrorStatus(res, 400, StatusMessage.BAD_REQUEST);
 
-    // TODO: Fix this logic
     if (match.user_id_1 !== attendeeOneId && match.user_id_2 !== attendeeTwoId)
         if (
             match.user_id_1 !== attendeeTwoId &&
