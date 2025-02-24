@@ -30,7 +30,10 @@ export default class ChatController {
         const rawChats = [...chatsOne, ...chatsTwo];
 
         const chats = await ChatController.getChatsInfo(id, rawChats);
-        if (!chats) return res.status(500).json({ msg: StatusMessage.ERROR_GETTING_CHATS_INFO });
+        if (!chats)
+            return res
+                .status(500)
+                .json({ msg: StatusMessage.ERROR_GETTING_CHATS_INFO });
 
         return res.json({ msg: chats });
     }
@@ -55,10 +58,13 @@ export default class ChatController {
         const chat = {
             chatId: chatId,
             senderId: req.session.user.id,
-            receiverId: userId !== rawChat.user_id_1 ? rawChat.user_id_1 : rawChat.user_id_2,
-            chatMessages: chatMessages.length === 0 ? [] : chatMessages
-        }
-        
+            receiverId:
+                userId !== rawChat.user_id_1
+                    ? rawChat.user_id_1
+                    : rawChat.user_id_2,
+            chatMessages: chatMessages.length === 0 ? [] : chatMessages,
+        };
+
         // TODO: Mensajes de mas antiguos a mas nuevos
         //{
         //    senderId: 'ID',
@@ -76,7 +82,10 @@ export default class ChatController {
         let chats = [];
 
         for (const rawChat of rawChats) {
-            const receiverId = userId !== rawChat.user_id_1 ? rawChat.user_id_1 : rawChat.user_id_2;
+            const receiverId =
+                userId !== rawChat.user_id_1
+                    ? rawChat.user_id_1
+                    : rawChat.user_id_2;
             const profilePicture = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${receiverId}/profile-picture`;
             const receiverUser = await userModel.getById({ id: receiverId });
             if (!receiverUser || receiverUser.length === 0) return null;
@@ -86,8 +95,8 @@ export default class ChatController {
                 receiverId: receiverId,
                 receiverUsername: receiverUser.username,
                 receiverProfilePicture: profilePicture,
-                createdAt: rawChat.created_at
-            }
+                createdAt: rawChat.created_at,
+            };
 
             chats.push(chat);
         }
