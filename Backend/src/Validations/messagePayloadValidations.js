@@ -5,12 +5,13 @@ import { emitErrorAndReturnNull } from '../Utils/errorUtils.js';
 import { validateTextMessage } from '../Schemas/textMessageSchema.js';
 import { validateUserId } from '../Validations/blockedUsersValidations.js';
 import { validateAudioMessage } from '../Schemas/audioMessageSchema.js';
+import chatsModel from '../Models/ChatsModel.js';
 
 export async function validateMessagePayload(socket, payload, msgType) {
     const senderId = socket.request.session.user.id;
 
-    const { receiverId } = payload;
-    if (!receiverId)
+    const { receiverId, chatId } = payload;
+    if (!receiverId || !chatId)
         return emitErrorAndReturnNull(
             socket,
             StatusMessage.INVALID_MESSAGE_PAYLOAD
@@ -24,6 +25,8 @@ export async function validateMessagePayload(socket, payload, msgType) {
             socket,
             StatusMessage.INVALID_RECEIVER_ID
         );
+    
+    if (!(await isValidChatId(chatId))) return emitErrorAndReturnNull(socket, StatusMessage.CHAT_NOT_FOUND)
 
     const isMatch = await likesModel.checkIfMatch(senderId, receiverId);
     if (isMatch === null)
@@ -38,6 +41,7 @@ export async function validateMessagePayload(socket, payload, msgType) {
         );
 
     const validPayload = {
+        chatId: chatId,
         receiverId: receiverId,
         message: validatedMessage.message,
     };
@@ -62,4 +66,10 @@ function validateMessage(socket, payload, msgType) {
     }
 
     return validatedMessage.data;
+}
+
+async function isValidChatId(chatId) {
+    const chat = await chatsModel.getById({ id: chatId });
+    if (!chat || chat.length === 0) return false
+    return true;
 }

@@ -115,4 +115,5 @@ export default class StatusMessage {
         "You can only send messages to users you've matched with.";
     static FAILED_SENDING_CHAT_MESSAGE =
         'Failed to send message. Please try again.';
+    static CHAT_NOT_FOUND = 'Chat not found.';
 }

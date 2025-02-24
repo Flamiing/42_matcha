@@ -9,7 +9,8 @@ export default class ChatRouter {
         const router = Router();
 
         // GET:
-        //router.get('/', ChatController.handleChat);
+        router.get('/', ChatController.getAllChats);
+        router.get('/:id', ChatController.getChatById);
 
         return router;
     }

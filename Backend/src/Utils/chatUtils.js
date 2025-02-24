@@ -7,6 +7,8 @@ import path from 'path';
 import StatusMessage from './StatusMessage.js';
 import { emitErrorAndReturnNull } from './errorUtils.js';
 import audioChatMessagesModel from '../Models/AudioChatMessagesModel.js';
+import { getCurrentTimestamp } from './timeUtils.js';
+import chatsModel from '../Models/ChatsModel.js';
 
 export async function processAudioMessage(socket, senderId, payload) {
     const { API_HOST, API_PORT, API_VERSION } = process.env;
@@ -19,10 +21,12 @@ export async function processAudioMessage(socket, senderId, payload) {
         );
 
     const chatMessage = {
+        chat_id: payload.chatId,
         sender_id: senderId,
         receiver_id: payload.receiverId,
         audio_path: audioPath,
     };
+
     const savedChatMessage = await audioChatMessagesModel.create({
         input: chatMessage,
     });
@@ -32,9 +36,22 @@ export async function processAudioMessage(socket, senderId, payload) {
             StatusMessage.FAILED_SENDING_CHAT_MESSAGE
         );
 
+    const chatUpdateResult = await changeChatUpdatedAtTimestamp(payload.chatId);
+    if (!chatUpdateResult) return emitErrorAndReturnNull(socket, StatusMessage.FAILED_SENDING_CHAT_MESSAGE);
+
     const audioURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/media/audio/${savedChatMessage.id}`;
 
     return audioURL;
+}
+
+export async function changeChatUpdatedAtTimestamp(chatId) {
+    const input = {
+        updated_at: getCurrentTimestamp()
+    }
+    const updatedChat = await chatsModel.update({ input, id: chatId });
+    if (!updatedChat || updatedChat.length === 0) return null;
+
+    return updatedChat;
 }
 
 function saveAudioToFileSystem(userId, base64String) {

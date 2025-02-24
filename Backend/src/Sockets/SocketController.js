@@ -1,7 +1,7 @@
 // Local Imports:
 import textChatMessagesModel from '../Models/TextChatMessagesModel.js';
 import userStatusModel from '../Models/UserStatusModel.js';
-import { processAudioMessage } from '../Utils/chatUtils.js';
+import { changeChatUpdatedAtTimestamp, processAudioMessage } from '../Utils/chatUtils.js';
 import { emitErrorAndReturnNull } from '../Utils/errorUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { getCurrentTimestamp } from '../Utils/timeUtils.js';
@@ -14,6 +14,7 @@ export default class SocketController {
 
         const senderId = socket.request.session.user.id;
         const chatMessage = {
+            chat_id: validPayload.chatId,
             sender_id: senderId,
             receiver_id: validPayload.receiverId,
             message: validPayload.message,
@@ -36,6 +37,9 @@ export default class SocketController {
                 socket,
                 StatusMessage.FAILED_SENDING_CHAT_MESSAGE
             );
+        
+        const chatUpdateResult = await changeChatUpdatedAtTimestamp(validPayload.chatId);
+        if (!chatUpdateResult) return emitErrorAndReturnNull(socket, StatusMessage.FAILED_SENDING_CHAT_MESSAGE);
 
         const payload = {
             senderId: senderId,
