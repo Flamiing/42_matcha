@@ -63,7 +63,10 @@ export default class ChatController {
         const chat = {
             chatId: chatId,
             senderId: senderId,
-            receiverId: senderId !== rawChat.user_id_1 ? rawChat.user_id_1 : rawChat.user_id_2,
+            receiverId:
+                senderId !== rawChat.user_id_1
+                    ? rawChat.user_id_1
+                    : rawChat.user_id_2,
             chatMessages: chatMessages.length === 0 ? [] : chatMessages,
         };
 
@@ -73,19 +76,38 @@ export default class ChatController {
     static async getAllChatMessages(res, chatId, senderId) {
         const { API_HOST, API_PORT, API_VERSION } = process.env;
 
-        const textMessages = await textChatMessagesModel.getByReference({ chat_id: chatId }, false)
-        if (!textMessages) return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR);
+        const textMessages = await textChatMessagesModel.getByReference(
+            { chat_id: chatId },
+            false
+        );
+        if (!textMessages)
+            return returnErrorStatus(
+                res,
+                500,
+                StatusMessage.INTERNAL_SERVER_ERROR
+            );
 
-        const audioMessages = await audioChatMessagesModel.getByReference({ chat_id: chatId }, false)
-        if (!audioMessages) return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR);
+        const audioMessages = await audioChatMessagesModel.getByReference(
+            { chat_id: chatId },
+            false
+        );
+        if (!audioMessages)
+            return returnErrorStatus(
+                res,
+                500,
+                StatusMessage.INTERNAL_SERVER_ERROR
+            );
 
         const rawMessages = [...textMessages, ...audioMessages];
         let messages = [];
         for (const rawMessage of rawMessages) {
-            const type = !rawMessage.message ? 'audio' : 'text'
+            const type = !rawMessage.message ? 'audio' : 'text';
             let audioURL = null;
             if (type === 'audio') {
-                const audioId = rawMessage.audio_path.split('/').pop().replace(/\.mp3$/i, '');
+                const audioId = rawMessage.audio_path
+                    .split('/')
+                    .pop()
+                    .replace(/\.mp3$/i, '');
                 audioURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/media/audio/${audioId}`;
             }
 
@@ -93,8 +115,8 @@ export default class ChatController {
                 senderId: senderId,
                 message: audioURL ? audioURL : rawMessage.message,
                 createdAt: rawMessage.created_at,
-                type: type
-            }
+                type: type,
+            };
 
             messages.push(message);
         }
