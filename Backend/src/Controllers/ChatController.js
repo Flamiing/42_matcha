@@ -97,7 +97,7 @@ export default class ChatController {
                 receiverProfilePicture: profilePicture,
                 createdAt: rawChat.created_at,
                 updatedAt: rawChat.updated_at,
-            }
+            };
 
             chats.push(chat);
         }
@@ -109,7 +109,10 @@ export default class ChatController {
     static sortChatsByNewest(chats) {
         try {
             return chats.sort((a, b) => {
-                return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+                return (
+                    new Date(b.updatedAt).getTime() -
+                    new Date(a.updatedAt).getTime()
+                );
             });
         } catch (error) {
             return null;
