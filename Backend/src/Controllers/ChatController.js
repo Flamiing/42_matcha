@@ -1,7 +1,10 @@
 // Local Imports:
 import chatsModel from '../Models/ChatsModel.js';
+import audioChatMessagesModel from '../Models/AudioChatMessagesModel.js';
+import textChatMessagesModel from '../Models/TextChatMessagesModel.js';
 import userModel from '../Models/UserModel.js';
 import StatusMessage from '../Utils/StatusMessage.js';
+import { returnErrorStatus } from '../Utils/errorUtils.js';
 
 export default class ChatController {
     static async getAllChats(req, res) {
@@ -40,6 +43,7 @@ export default class ChatController {
 
     static async getChatById(req, res) {
         const chatId = req.params.id;
+        const senderId = req.session.user.id;
 
         const rawChat = await chatsModel.getById({ id: chatId });
         if (!rawChat)
@@ -51,19 +55,52 @@ export default class ChatController {
 
         const chatMessages = await ChatController.getAllChatMessages(
             res,
-            chatId
+            chatId,
+            senderId
         );
         if (!chatMessages) return res;
 
         const chat = {
             chatId: chatId,
-            senderId: req.session.user.id,
-            receiverId:
-                userId !== rawChat.user_id_1
-                    ? rawChat.user_id_1
-                    : rawChat.user_id_2,
+            senderId: senderId,
+            receiverId: senderId !== rawChat.user_id_1 ? rawChat.user_id_1 : rawChat.user_id_2,
             chatMessages: chatMessages.length === 0 ? [] : chatMessages,
         };
+
+        return res.json({ msg: chat });
+    }
+
+    static async getAllChatMessages(res, chatId, senderId) {
+        const { API_HOST, API_PORT, API_VERSION } = process.env;
+
+        const textMessages = await textChatMessagesModel.getByReference({ chat_id: chatId }, false)
+        if (!textMessages) return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR);
+
+        const audioMessages = await audioChatMessagesModel.getByReference({ chat_id: chatId }, false)
+        if (!audioMessages) return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR);
+
+        const rawMessages = [...textMessages, ...audioMessages];
+        let messages = [];
+        for (const rawMessage of rawMessages) {
+            const type = !rawMessage.message ? 'audio' : 'text'
+            let audioURL = null;
+            if (type === 'audio') {
+                const audioId = rawMessage.audio_path.split('/').pop().replace(/\.mp3$/i, '');
+                audioURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/media/audio/${audioId}`;
+            }
+
+            const message = {
+                senderId: senderId,
+                message: audioURL ? audioURL : rawMessage.message,
+                createdAt: rawMessage.created_at,
+                type: type
+            }
+
+            messages.push(message);
+        }
+
+        const sortedMessages = this.sortMessagesByOldest(messages);
+        return messages;
 
         // TODO: Mensajes de mas antiguos a mas nuevos
         //{
@@ -72,8 +109,6 @@ export default class ChatController {
         //    createdAt: 'DATE',
         //    type: 'text/audio'
         //}
-
-        return res.json({ msg: chat });
     }
 
     static async getChatsInfo(userId, rawChats) {
@@ -112,6 +147,19 @@ export default class ChatController {
                 return (
                     new Date(b.updatedAt).getTime() -
                     new Date(a.updatedAt).getTime()
+                );
+            });
+        } catch (error) {
+            return null;
+        }
+    }
+
+    static sortMessagesByOldest(messages) {
+        try {
+            return messages.sort((a, b) => {
+                return (
+                    new Date(a.updatedAt).getTime() -
+                    new Date(b.updatedAt).getTime()
                 );
             });
         } catch (error) {

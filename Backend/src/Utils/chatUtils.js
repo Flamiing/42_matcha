@@ -20,7 +20,9 @@ export async function processAudioMessage(socket, senderId, payload) {
             StatusMessage.FAILED_SENDING_CHAT_MESSAGE
         );
 
+    const audioId = audioPath.split('/').pop().replace(/\.mp3$/i, '');
     const chatMessage = {
+        id: audioId,
         chat_id: payload.chatId,
         sender_id: senderId,
         receiver_id: payload.receiverId,
