@@ -83,20 +83,11 @@ export default class ChatController {
 
             const chat = {
                 chatId: rawChat.id,
-<<<<<<< HEAD
-                receiverId:
-                    userId !== rawChat.user_id_1
-                        ? rawChat.user_id_1
-                        : rawChat.user_id_2,
-                createdAt: rawChat.created_at,
-            };
-=======
                 receiverId: receiverId,
                 receiverUsername: receiverUser.username,
                 receiverProfilePicture: profilePicture,
                 createdAt: rawChat.created_at
             }
->>>>>>> fe89e19 (username and profile picture returned with chats endpoint)
 
             chats.push(chat);
         }
