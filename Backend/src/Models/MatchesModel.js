@@ -33,7 +33,7 @@ class MatchesModel extends Model {
             user_id_1: userIdOne,
             user_id_2: userIdTwo,
         };
-        let removeMatch = await matchesModel.deleteByReference(reference);
+        let removeMatch = await this.deleteByReference(reference);
         if (removeMatch === null)
             return returnErrorStatus(
                 res,
@@ -46,7 +46,7 @@ class MatchesModel extends Model {
                 user_id_2: userIdOne,
             };
 
-            removeMatch = await matchesModel.deleteByReference(reference);
+            removeMatch = await this.deleteByReference(reference);
             if (removeMatch.length === 0)
                 return returnErrorStatus(
                     res,

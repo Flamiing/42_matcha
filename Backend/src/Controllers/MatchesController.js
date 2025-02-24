@@ -1,8 +1,10 @@
 // Local Imports:
 import matchesModel from '../Models/MatchesModel.js';
+import chatsModel from '../Models/ChatsModel.js';
 import userModel from '../Models/UserModel.js';
 import { returnErrorStatus } from '../Utils/errorUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
+import { getCurrentTimestamp } from '../Utils/timeUtils.js';
 
 export default class MatchesController {
     static async getAllUserMatches(req, res) {
@@ -68,5 +70,32 @@ export default class MatchesController {
         }
 
         return matches;
+    }
+
+    static async createMatch(res, userIdOne, userIdTwo) {
+        const input = {
+            user_id_1: userIdOne,
+            user_id_2: userIdTwo,
+        };
+
+        const matchResult = await matchesModel.create({ input });
+        if (!matchResult || matchResult.length === 0)
+            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+        console.info(`Match created with ID: ${matchResult.id}`);
+
+        const chatCreationTimestamp = getCurrentTimestamp();
+        const chatResult = chatsModel.create({ input: {
+            match_id: matchResult.id,
+            user_id_1: userIdOne, 
+            user_id_2: userIdTwo,
+            created_at: chatCreationTimestamp,
+            updated_at: chatCreationTimestamp
+        } });
+        if (!chatResult || chatResult.length === 0)
+            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+
+        // TODO: Send notification
+
+        return matchResult;
     }
 }
