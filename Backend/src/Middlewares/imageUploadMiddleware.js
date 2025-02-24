@@ -5,9 +5,9 @@ import { v4 as uuidv4 } from 'uuid';
 import fsExtra from 'fs-extra';
 
 const ensureUserFolderExists = (userId) => {
-    const { IMAGES_PATH } = process.env;
+    const { USER_UPLOADS_PATH } = process.env;
 
-    const userFolderPath = path.join(IMAGES_PATH, userId);
+    const userFolderPath = path.join(USER_UPLOADS_PATH, userId, 'images');
 
     fsExtra.ensureDirSync(userFolderPath);
     return userFolderPath;

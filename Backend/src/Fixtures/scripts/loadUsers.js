@@ -7,6 +7,8 @@ import userModel from '../../Models/UserModel.js';
 import userLocationModel from '../../Models/UserLocationModel.js';
 import userTagsModel from '../../Models/UserTagsModel.js';
 import { hashPassword } from '../../Utils/authUtils.js';
+import userStatusModel from '../../Models/UserStatusModel.js';
+import { getCurrentTimestamp } from '../../Utils/timeUtils.js';
 
 async function getUsersFromJson() {
     try {
@@ -61,6 +63,14 @@ export default async function loadUsers() {
         }
         await userTagsModel.updateUserTags(createdUser.id, tags);
         await userLocationModel.update(location, createdUser.id);
+        await userStatusModel.create({
+            input: {
+                user_id: createdUser.id,
+                socket_id: null,
+                status: 'offline',
+                last_online: getCurrentTimestamp(),
+            },
+        });
 
         await setupProfilePicture(createdUser.id, createdUser.profile_picture);
     }
