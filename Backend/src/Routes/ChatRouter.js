@@ -9,7 +9,7 @@ export default class ChatRouter {
         const router = Router();
 
         // GET:
-        router.get('/', ChatController.handleChat);
+        //router.get('/', ChatController.handleChat);
 
         return router;
     }

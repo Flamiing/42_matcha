@@ -103,24 +103,38 @@ CREATE TABLE reports (
 	UNIQUE(reported_by, reported)
 );
 
+CREATE TABLE chats (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id_1 UUID NOT NULL,
+    user_id_2 UUID NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(user_id_1, user_id_2)
+    FOREIGN KEY (user_id_1) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id_2) REFERENCES users(id) ON DELETE CASCADE
+);
+
 CREATE TABLE text_chat_messages (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    chat_id UUID NOT NULL,
     sender_id UUID NOT NULL,
     receiver_id UUID NOT NULL,
     message VARCHAR(2000) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE
 );
 
 CREATE TABLE audio_chat_messages (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    chat_id UUID NOT NULL,
     sender_id UUID NOT NULL,
     receiver_id UUID NOT NULL,
     audio_path VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE
 );
 
 ALTER TABLE users
