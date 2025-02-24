@@ -37,7 +37,11 @@ export async function processAudioMessage(socket, senderId, payload) {
         );
 
     const chatUpdateResult = await changeChatUpdatedAtTimestamp(payload.chatId);
-    if (!chatUpdateResult) return emitErrorAndReturnNull(socket, StatusMessage.FAILED_SENDING_CHAT_MESSAGE);
+    if (!chatUpdateResult)
+        return emitErrorAndReturnNull(
+            socket,
+            StatusMessage.FAILED_SENDING_CHAT_MESSAGE
+        );
 
     const audioURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/media/audio/${savedChatMessage.id}`;
 
@@ -46,8 +50,8 @@ export async function processAudioMessage(socket, senderId, payload) {
 
 export async function changeChatUpdatedAtTimestamp(chatId) {
     const input = {
-        updated_at: getCurrentTimestamp()
-    }
+        updated_at: getCurrentTimestamp(),
+    };
     const updatedChat = await chatsModel.update({ input, id: chatId });
     if (!updatedChat || updatedChat.length === 0) return null;
 

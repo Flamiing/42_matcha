@@ -37,18 +37,28 @@ export default class ChatController {
         const chatId = req.params.id;
 
         const rawChat = await chatsModel.getById({ id: chatId });
-        if (!rawChat) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR })
-        if (rawChat.length === 0) res.status(404).json({ msg: StatusMessage.CHAT_NOT_FOUND })
+        if (!rawChat)
+            return res
+                .status(500)
+                .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+        if (rawChat.length === 0)
+            res.status(404).json({ msg: StatusMessage.CHAT_NOT_FOUND });
 
-        const chatMessages = await ChatController.getAllChatMessages(res, chatId);
+        const chatMessages = await ChatController.getAllChatMessages(
+            res,
+            chatId
+        );
         if (!chatMessages) return res;
 
         const chat = {
             chatId: chatId,
             senderId: req.session.user.id,
-            receiverId: userId !== rawChat.user_id_1 ? rawChat.user_id_1 : rawChat.user_id_2,
-            chatMessages: chatMessages.length === 0 ? [] : chatMessages
-        }
+            receiverId:
+                userId !== rawChat.user_id_1
+                    ? rawChat.user_id_1
+                    : rawChat.user_id_2,
+            chatMessages: chatMessages.length === 0 ? [] : chatMessages,
+        };
 
         return res.json({ msg: chat });
     }
@@ -59,9 +69,12 @@ export default class ChatController {
         for (const rawChat of rawChats) {
             const chat = {
                 chatId: rawChat.id,
-                receiverId: userId !== rawChat.user_id_1 ? rawChat.user_id_1 : rawChat.user_id_2,
-                createdAt: rawChat.created_at
-            }
+                receiverId:
+                    userId !== rawChat.user_id_1
+                        ? rawChat.user_id_1
+                        : rawChat.user_id_2,
+                createdAt: rawChat.created_at,
+            };
 
             chats.push(chat);
         }

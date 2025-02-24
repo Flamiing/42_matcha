@@ -84,13 +84,15 @@ export default class MatchesController {
         console.info(`Match created with ID: ${matchResult.id}`);
 
         const chatCreationTimestamp = getCurrentTimestamp();
-        const chatResult = chatsModel.create({ input: {
-            match_id: matchResult.id,
-            user_id_1: userIdOne, 
-            user_id_2: userIdTwo,
-            created_at: chatCreationTimestamp,
-            updated_at: chatCreationTimestamp
-        } });
+        const chatResult = chatsModel.create({
+            input: {
+                match_id: matchResult.id,
+                user_id_1: userIdOne,
+                user_id_2: userIdTwo,
+                created_at: chatCreationTimestamp,
+                updated_at: chatCreationTimestamp,
+            },
+        });
         if (!chatResult || chatResult.length === 0)
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
 

@@ -25,8 +25,9 @@ export async function validateMessagePayload(socket, payload, msgType) {
             socket,
             StatusMessage.INVALID_RECEIVER_ID
         );
-    
-    if (!(await isValidChatId(chatId))) return emitErrorAndReturnNull(socket, StatusMessage.CHAT_NOT_FOUND)
+
+    if (!(await isValidChatId(chatId)))
+        return emitErrorAndReturnNull(socket, StatusMessage.CHAT_NOT_FOUND);
 
     const isMatch = await likesModel.checkIfMatch(senderId, receiverId);
     if (isMatch === null)
@@ -70,6 +71,6 @@ function validateMessage(socket, payload, msgType) {
 
 async function isValidChatId(chatId) {
     const chat = await chatsModel.getById({ id: chatId });
-    if (!chat || chat.length === 0) return false
+    if (!chat || chat.length === 0) return false;
     return true;
 }
