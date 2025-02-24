@@ -153,8 +153,8 @@ export default class UsersController {
 
         const image = result.image_path;
         const imagePath = path.join(image);
-        res.sendFile(imagePath, (err) => {
-            if (err) {
+        res.sendFile(imagePath, (error) => {
+            if (error) {
                 res.status(404).json({ msg: StatusMessage.IMAGE_NOT_FOUND });
             }
         });
