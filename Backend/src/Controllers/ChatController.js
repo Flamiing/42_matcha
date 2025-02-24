@@ -96,11 +96,23 @@ export default class ChatController {
                 receiverUsername: receiverUser.username,
                 receiverProfilePicture: profilePicture,
                 createdAt: rawChat.created_at,
-            };
+                updatedAt: rawChat.updated_at,
+            }
 
             chats.push(chat);
         }
 
-        return chats;
+        const sortedChats = ChatController.sortChatsByNewest(chats);
+        return sortedChats;
+    }
+
+    static sortChatsByNewest(chats) {
+        try {
+            return chats.sort((a, b) => {
+                return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+            });
+        } catch (error) {
+            return null;
+        }
     }
 }
