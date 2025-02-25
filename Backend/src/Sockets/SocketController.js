@@ -114,7 +114,8 @@ export default class SocketController {
     }
 
     static handleError(socket, errorMessage) {
-        socket.emit('error', errorMessage);
+        console.log('INFO:', errorMessage);
+        socket.emit('error-info', { msg: errorMessage });
         socket.disconnect();
         return;
     }
