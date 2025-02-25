@@ -54,7 +54,6 @@ export default class LikesController {
             likedId
         );
         if (!saveLikeResult) return res;
-        await Notifications.sendNotification('like', likedId, likedById);
         return res.json({ msg: StatusMessage.USER_LIKED });
     }
 
@@ -119,6 +118,7 @@ export default class LikesController {
         const saveLikeResult = await likesModel.create({ input });
         if (!saveLikeResult)
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+        await Notifications.sendNotification('like', likedId, likedById);
 
         const isMatch = await likesModel.checkIfMatch(likedById, likedId);
         if (isMatch === null)
@@ -128,7 +128,6 @@ export default class LikesController {
             if (!(await MatchesController.createMatch(res, likedById, likedId)))
                 return res;
 
-        await Notifications.sendNotification('match', likedId, likedById);
         return true;
     }
 
