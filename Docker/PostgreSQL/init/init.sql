@@ -140,6 +140,14 @@ CREATE TABLE audio_chat_messages (
     FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE
 );
 
+CREATE TABLE notifications (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID NOT NULL,
+    message VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 ALTER TABLE users
 ADD CONSTRAINT fk_profile_picture
 FOREIGN KEY (profile_picture) REFERENCES images(id) ON DELETE SET NULL;
