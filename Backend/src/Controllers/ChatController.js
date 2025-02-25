@@ -31,6 +31,7 @@ export default class ChatController {
                 .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
 
         const rawChats = [...chatsOne, ...chatsTwo];
+        if (rawChats.length === 0) return res.status(404).json({});
 
         const chats = await ChatController.getChatsInfo(id, rawChats);
         if (!chats)
