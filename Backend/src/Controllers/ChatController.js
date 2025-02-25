@@ -31,6 +31,7 @@ export default class ChatController {
                 .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
 
         const rawChats = [...chatsOne, ...chatsTwo];
+        if (rawChats.length === 0) return res.status(404).json({ msg: [] });
 
         const chats = await ChatController.getChatsInfo(id, rawChats);
         if (!chats)
@@ -51,7 +52,7 @@ export default class ChatController {
                 .status(500)
                 .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
         if (rawChat.length === 0)
-            res.status(404).json({ msg: StatusMessage.CHAT_NOT_FOUND });
+            return res.status(404).json({ msg: StatusMessage.CHAT_NOT_FOUND });
 
         const chatMessages = await ChatController.getAllChatMessages(
             res,
@@ -122,7 +123,7 @@ export default class ChatController {
         }
 
         const sortedMessages = this.sortMessagesByOldest(messages);
-        return messages;
+        return sortedMessages;
     }
 
     static async getChatsInfo(userId, rawChats) {
