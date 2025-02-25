@@ -9,6 +9,7 @@ import { emitErrorAndReturnNull } from '../Utils/errorUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { getCurrentTimestamp } from '../Utils/timeUtils.js';
 import { validateMessagePayload } from '../Validations/messagePayloadValidations.js';
+import Notifications from './Notifications.js';
 
 export default class SocketController {
     static async sendTextMessage(io, socket, data) {
@@ -49,6 +50,8 @@ export default class SocketController {
                 socket,
                 StatusMessage.FAILED_SENDING_CHAT_MESSAGE
             );
+
+        await Notifications.sendNotification(io, 'message-notification', validPayload.receiverId, senderId);
 
         const payload = {
             senderId: senderId,

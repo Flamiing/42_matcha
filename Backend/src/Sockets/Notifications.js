@@ -1,8 +1,8 @@
 // Local Imports:
-import notificationsModel from '../Models/NotificationsModel';
-import userModel from '../Models/UserModel';
-import userStatusModel from '../Models/UserStatusModel';
-import StatusMessage from '../Utils/StatusMessage';
+import notificationsModel from '../Models/NotificationsModel.js';
+import userModel from '../Models/UserModel.js';
+import userStatusModel from '../Models/UserStatusModel.js';
+import StatusMessage from '../Utils/StatusMessage.js';
 
 export default class Notifications {
     static NOTIFICATIONS = {
@@ -13,16 +13,16 @@ export default class Notifications {
         'like-removed-notification': this.#likeRemovedNotification,
     };
 
-    static async sendNotification(io, notification, recipientId, notifierId) {
+    static async sendNotification(io, notificationType, recipientId, notifierId) {
         const recipientInfo = await this.#getUserInfo(recipientId, 'status');
         if (!recipientInfo) return null;
         const notifierInfo = await this.#getUserInfo(notifierId, 'full');
         if (!notifierInfo) return null;
 
-        const notificationMessage = this.NOTIFICATIONS[notification](
+        const notificationMessage = this.NOTIFICATIONS[notificationType](
             notifierInfo.username
         );
-        const notification = notificationsModel.create({
+        const notification = await notificationsModel.create({
             input: {
                 user_id: recipientId,
                 message: notificationMessage,
@@ -40,6 +40,8 @@ export default class Notifications {
             message: notification.message,
             createdAt: notification.created_at,
         };
+        console.log('TEST 1: ', payload)
+        console.log('TEST 2: ', notification)
 
         io.to(recipientInfo.socketId).emit('notification', payload);
     }
@@ -65,19 +67,23 @@ export default class Notifications {
     }
 
     static async #getUserInfo(userId, infoType) {
+        let userData = null;
+        let userStatus = null;
+
+
         if (infoType === 'data' || infoType === 'full') {
-            const userData = await userModel.getById({ id: userId });
-            if (!user) {
+            userData = await userModel.getById({ id: userId });
+            if (!userData) {
                 console.error('ERROR:', StatusMessage.COULD_NOT_GET_USER);
                 return null;
-            } else if (user.length === 0) {
+            } else if (userData.length === 0) {
                 console.info('INFO:', StatusMessage.USER_NOT_FOUND);
                 return null;
             }
         }
 
         if (infoType === 'status' || infoType === 'full') {
-            const userStatus = await userStatusModel.getByReference(
+            userStatus = await userStatusModel.getByReference(
                 {
                     user_id: userId,
                 },
