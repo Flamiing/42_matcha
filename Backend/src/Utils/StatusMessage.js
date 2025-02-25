@@ -124,5 +124,6 @@ export default class StatusMessage {
     static USER_STATUS_NOT_FOUND = 'User status not found.';
     static ERROR_SAVING_NOTIFICATION_TO_DB =
         'There was an error creating notification in the database.';
-    static ERROR_FETCHING_NOTIFICATIONS = 'There was an error fetching notifications. Please try again later.';
+    static ERROR_FETCHING_NOTIFICATIONS =
+        'There was an error fetching notifications. Please try again later.';
 }

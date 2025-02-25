@@ -6,13 +6,23 @@ export default class NotificationsController {
     static async getAllNotifications(req, res) {
         const userId = req.session.user.id;
 
-        const rawNotifications = await notificationsModel.getByReference({
-            user_id: userId
-        }, false)
-        if (!rawNotifications) return res.status(500).json({ msg: StatusMessage.ERROR_FETCHING_NOTIFICATIONS })
-        
-        const notifications = NotificationsController.getNotificationsInfo(rawNotifications);
-        if (!notifications) return res.status(500).json({ msg: StatusMessage.ERROR_FETCHING_NOTIFICATIONS })
+        const rawNotifications = await notificationsModel.getByReference(
+            {
+                user_id: userId,
+            },
+            false
+        );
+        if (!rawNotifications)
+            return res
+                .status(500)
+                .json({ msg: StatusMessage.ERROR_FETCHING_NOTIFICATIONS });
+
+        const notifications =
+            NotificationsController.getNotificationsInfo(rawNotifications);
+        if (!notifications)
+            return res
+                .status(500)
+                .json({ msg: StatusMessage.ERROR_FETCHING_NOTIFICATIONS });
 
         return res.json({ msg: notifications });
     }
@@ -22,13 +32,14 @@ export default class NotificationsController {
         for (const rawNotification of rawNotifications) {
             const notification = {
                 message: rawNotification.message,
-                createdAt: rawNotification.created_at
+                createdAt: rawNotification.created_at,
             };
 
             notifications.push(notification);
         }
 
-        const sortedNotifications = NotificationsController.sortNotificationsByNewest(notifications);
+        const sortedNotifications =
+            NotificationsController.sortNotificationsByNewest(notifications);
         return sortedNotifications;
     }
 

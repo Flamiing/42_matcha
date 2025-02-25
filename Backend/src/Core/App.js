@@ -81,7 +81,10 @@ export default class App {
         this.app.use(`${this.API_PREFIX}/events`, EventsRouter.createRouter());
         this.app.use(`${this.API_PREFIX}/chat`, ChatRouter.createRouter());
         this.app.use(`${this.API_PREFIX}/media`, MediaRouter.createRouter());
-        this.app.use(`${this.API_PREFIX}/notifications`, NotificationsRouter.createRouter());
+        this.app.use(
+            `${this.API_PREFIX}/notifications`,
+            NotificationsRouter.createRouter()
+        );
         this.app.use(
             `${this.API_PREFIX}/browser`,
             BrowserRouter.createRouter()
