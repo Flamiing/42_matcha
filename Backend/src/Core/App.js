@@ -26,12 +26,13 @@ import BrowserRouter from '../Routes/BrowserRouter.js';
 import DistanceRouter from '../Routes/DistanceRouter.js';
 import ChatRouter from '../Routes/ChatRouter.js';
 import MediaRouter from '../Routes/MediaRouter.js';
+import NotificationsRouter from '../Routes/NotificationsRouter.js';
 
 export default class App {
     constructor() {
         this.app = express();
         this.server = createServer(this.app);
-        this.socketHandler = new SocketHandler(this.server);
+        this.socketHandler = SocketHandler.getInstance(this.server);
         this.HOST = process.env.API_HOST ?? 'localhost';
         this.PORT = process.env.API_PORT ?? 3001;
         this.API_VERSION = process.env.API_VERSION;
@@ -80,6 +81,10 @@ export default class App {
         this.app.use(`${this.API_PREFIX}/events`, EventsRouter.createRouter());
         this.app.use(`${this.API_PREFIX}/chat`, ChatRouter.createRouter());
         this.app.use(`${this.API_PREFIX}/media`, MediaRouter.createRouter());
+        this.app.use(
+            `${this.API_PREFIX}/notifications`,
+            NotificationsRouter.createRouter()
+        );
         this.app.use(
             `${this.API_PREFIX}/browser`,
             BrowserRouter.createRouter()

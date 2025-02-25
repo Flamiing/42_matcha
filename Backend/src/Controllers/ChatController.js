@@ -123,14 +123,6 @@ export default class ChatController {
 
         const sortedMessages = this.sortMessagesByOldest(messages);
         return messages;
-
-        // TODO: Mensajes de mas antiguos a mas nuevos
-        //{
-        //    senderId: 'ID',
-        //    message: 'Mensaje',
-        //    createdAt: 'DATE',
-        //    type: 'text/audio'
-        //}
     }
 
     static async getChatsInfo(userId, rawChats) {
@@ -172,6 +164,7 @@ export default class ChatController {
                 );
             });
         } catch (error) {
+            console.error('ERROR:', error);
             return null;
         }
     }
@@ -185,6 +178,7 @@ export default class ChatController {
                 );
             });
         } catch (error) {
+            console.error('ERROR:', error);
             return null;
         }
     }

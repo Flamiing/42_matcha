@@ -5,6 +5,7 @@ import userModel from '../Models/UserModel.js';
 import { returnErrorStatus } from '../Utils/errorUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { getCurrentTimestamp } from '../Utils/timeUtils.js';
+import Notifications from '../Sockets/Notifications.js';
 
 export default class MatchesController {
     static async getAllUserMatches(req, res) {
@@ -96,7 +97,7 @@ export default class MatchesController {
         if (!chatResult || chatResult.length === 0)
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
 
-        // TODO: Send notification
+        await Notifications.sendNotification('match', userIdTwo, userIdOne);
 
         return matchResult;
     }
