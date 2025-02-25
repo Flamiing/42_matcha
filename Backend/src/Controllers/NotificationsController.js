@@ -47,8 +47,8 @@ export default class NotificationsController {
         try {
             return notifications.sort((a, b) => {
                 return (
-                    new Date(b.createdAt).getTime() -
-                    new Date(a.createdAt).getTime()
+                    new Date(a.createdAt).getTime() -
+                    new Date(b.createdAt).getTime()
                 );
             });
         } catch (error) {
