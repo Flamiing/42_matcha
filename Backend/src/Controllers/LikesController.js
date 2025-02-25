@@ -40,7 +40,11 @@ export default class LikesController {
                 likedId
             );
             if (!removeLikeResult) return res;
-            await Notifications.sendNotification('like-removed', likedId, likedById);
+            await Notifications.sendNotification(
+                'like-removed',
+                likedId,
+                likedById
+            );
             return res.json({ msg: StatusMessage.USER_LIKED_REMOVED });
         }
 

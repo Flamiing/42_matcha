@@ -7,18 +7,14 @@ import SocketHandler from './SocketHandler.js';
 
 export default class Notifications {
     static NOTIFICATIONS = {
-        'message': this.#messageNotification,
-        'like': this.#likeNotification,
-        'view': this.#viewNotification,
-        'match': this.#matchNotification,
+        message: this.#messageNotification,
+        like: this.#likeNotification,
+        view: this.#viewNotification,
+        match: this.#matchNotification,
         'like-removed': this.#likeRemovedNotification,
     };
 
-    static async sendNotification(
-        notificationType,
-        recipientId,
-        notifierId
-    ) {
+    static async sendNotification(notificationType, recipientId, notifierId) {
         const recipientInfo = await this.#getUserInfo(recipientId, 'status');
         if (!recipientInfo) return null;
         const notifierInfo = await this.#getUserInfo(notifierId, 'full');

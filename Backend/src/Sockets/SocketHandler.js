@@ -9,8 +9,7 @@ import { authStatusSocketMiddleware } from '../Middlewares/authStatusSocketMiddl
 
 class SocketHandler {
     constructor(server) {
-        if (SocketHandler.instance)
-            return SocketHandler.instance;
+        if (SocketHandler.instance) return SocketHandler.instance;
 
         this.io = new Server(server, {
             cors: {
