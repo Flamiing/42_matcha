@@ -51,7 +51,12 @@ export default class SocketController {
                 StatusMessage.FAILED_SENDING_CHAT_MESSAGE
             );
 
-        await Notifications.sendNotification(io, 'message-notification', validPayload.receiverId, senderId);
+        await Notifications.sendNotification(
+            io,
+            'message-notification',
+            validPayload.receiverId,
+            senderId
+        );
 
         const payload = {
             senderId: senderId,

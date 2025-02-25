@@ -13,7 +13,12 @@ export default class Notifications {
         'like-removed-notification': this.#likeRemovedNotification,
     };
 
-    static async sendNotification(io, notificationType, recipientId, notifierId) {
+    static async sendNotification(
+        io,
+        notificationType,
+        recipientId,
+        notifierId
+    ) {
         const recipientInfo = await this.#getUserInfo(recipientId, 'status');
         if (!recipientInfo) return null;
         const notifierInfo = await this.#getUserInfo(notifierId, 'full');
@@ -40,8 +45,8 @@ export default class Notifications {
             message: notification.message,
             createdAt: notification.created_at,
         };
-        console.log('TEST 1: ', payload)
-        console.log('TEST 2: ', notification)
+        console.log('TEST 1: ', payload);
+        console.log('TEST 2: ', notification);
 
         io.to(recipientInfo.socketId).emit('notification', payload);
     }
@@ -69,7 +74,6 @@ export default class Notifications {
     static async #getUserInfo(userId, infoType) {
         let userData = null;
         let userStatus = null;
-
 
         if (infoType === 'data' || infoType === 'full') {
             userData = await userModel.getById({ id: userId });
