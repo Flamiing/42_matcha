@@ -52,8 +52,7 @@ export default class SocketController {
             );
 
         await Notifications.sendNotification(
-            io,
-            'message-notification',
+            'message',
             validPayload.receiverId,
             senderId
         );
@@ -91,8 +90,7 @@ export default class SocketController {
             );
 
         await Notifications.sendNotification(
-            io,
-            'message-notification',
+            'message',
             validPayload.receiverId,
             senderId
         );

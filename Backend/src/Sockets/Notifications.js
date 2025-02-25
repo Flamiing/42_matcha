@@ -3,18 +3,18 @@ import notificationsModel from '../Models/NotificationsModel.js';
 import userModel from '../Models/UserModel.js';
 import userStatusModel from '../Models/UserStatusModel.js';
 import StatusMessage from '../Utils/StatusMessage.js';
+import SocketHandler from './SocketHandler.js';
 
 export default class Notifications {
     static NOTIFICATIONS = {
-        'message-notification': this.#messageNotification,
-        'like-notification': this.#likeNotification,
-        'view-notification': this.#viewNotification,
-        'match-notification': this.#matchNotification,
-        'like-removed-notification': this.#likeRemovedNotification,
+        'message': this.#messageNotification,
+        'like': this.#likeNotification,
+        'view': this.#viewNotification,
+        'match': this.#matchNotification,
+        'like-removed': this.#likeRemovedNotification,
     };
 
     static async sendNotification(
-        io,
         notificationType,
         recipientId,
         notifierId
@@ -45,9 +45,9 @@ export default class Notifications {
             message: notification.message,
             createdAt: notification.created_at,
         };
-        console.log('TEST 1: ', payload);
-        console.log('TEST 2: ', notification);
 
+        const socketHandler = SocketHandler.getInstance();
+        const io = socketHandler.getIo();
         io.to(recipientInfo.socketId).emit('notification', payload);
     }
 
@@ -56,7 +56,7 @@ export default class Notifications {
     }
 
     static #likeNotification(notifierUsername) {
-        return `${notifierUsername} just liked your profile! 💖`;
+        return `${notifierUsername} just liked you! 💖`;
     }
 
     static #viewNotification(notifierUsername) {
