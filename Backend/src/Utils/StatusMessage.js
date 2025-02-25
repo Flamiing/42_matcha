@@ -118,4 +118,11 @@ export default class StatusMessage {
     static CHAT_NOT_FOUND = 'Chat not found.';
     static ERROR_GETTING_CHATS_INFO =
         'An error occurred while retrieving chat information. Please try again later.';
+    static COULD_NOT_GET_USER = 'Could not get user from database.';
+    static COULD_NOT_GET_USER_STATUS =
+        'Could not get user status from database.';
+    static USER_STATUS_NOT_FOUND = 'User status not found.';
+    static ERROR_SAVING_NOTIFICATION_TO_DB =
+        'There was an error creating notification in the database.';
+    static ERROR_FETCHING_NOTIFICATIONS = 'There was an error fetching notifications. Please try again later.';
 }

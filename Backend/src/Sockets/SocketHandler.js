@@ -1,5 +1,5 @@
 // Third-Party Imports:
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 
 // Local Imports:
 import { socketSessionMiddleware } from '../Middlewares/socketSessionMiddleware.js';
@@ -7,8 +7,10 @@ import SocketController from './SocketController.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { authStatusSocketMiddleware } from '../Middlewares/authStatusSocketMiddleware.js';
 
-export default class SocketHandler {
+class SocketHandler {
     constructor(server) {
+        if (SocketHandler.instance) return SocketHandler.instance;
+
         this.io = new Server(server, {
             cors: {
                 origin: '*',
@@ -19,6 +21,19 @@ export default class SocketHandler {
 
         this.#setupConnectionMiddleware();
         this.#handleSocket();
+
+        SocketHandler.instance = this;
+    }
+
+    static getInstance(server) {
+        if (!SocketHandler.instance)
+            SocketHandler.instance = new SocketHandler(server);
+
+        return SocketHandler.instance;
+    }
+
+    getIo() {
+        return this.io;
     }
 
     #setupConnectionMiddleware() {
@@ -83,3 +98,5 @@ export default class SocketHandler {
         });
     }
 }
+
+export default SocketHandler;

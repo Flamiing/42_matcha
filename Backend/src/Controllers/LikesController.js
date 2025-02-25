@@ -7,6 +7,7 @@ import { returnErrorStatus } from '../Utils/errorUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { isValidUUID } from '../Validations/generalValidations.js';
 import MatchesController from './MatchesController.js';
+import Notifications from '../Sockets/Notifications.js';
 
 export default class LikesController {
     static async handleLike(req, res) {
@@ -39,6 +40,11 @@ export default class LikesController {
                 likedId
             );
             if (!removeLikeResult) return res;
+            await Notifications.sendNotification(
+                'like-removed',
+                likedId,
+                likedById
+            );
             return res.json({ msg: StatusMessage.USER_LIKED_REMOVED });
         }
 
@@ -48,7 +54,6 @@ export default class LikesController {
             likedId
         );
         if (!saveLikeResult) return res;
-
         return res.json({ msg: StatusMessage.USER_LIKED });
     }
 
@@ -113,6 +118,7 @@ export default class LikesController {
         const saveLikeResult = await likesModel.create({ input });
         if (!saveLikeResult)
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+        await Notifications.sendNotification('like', likedId, likedById);
 
         const isMatch = await likesModel.checkIfMatch(likedById, likedId);
         if (isMatch === null)
