@@ -126,4 +126,5 @@ export default class StatusMessage {
         'There was an error creating notification in the database.';
     static ERROR_FETCHING_NOTIFICATIONS =
         'There was an error fetching notifications. Please try again later.';
+    static NOT_CHAT_PARTICIPANT = 'You are not participating in this chat.'
 }
