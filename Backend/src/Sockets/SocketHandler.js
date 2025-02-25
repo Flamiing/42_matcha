@@ -1,5 +1,5 @@
 // Third-Party Imports:
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 
 // Local Imports:
 import { socketSessionMiddleware } from '../Middlewares/socketSessionMiddleware.js';
