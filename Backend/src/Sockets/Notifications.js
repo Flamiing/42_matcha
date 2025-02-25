@@ -41,7 +41,6 @@ export default class Notifications {
             createdAt: notification.created_at,
         };
 
-        // Send notification via sockets
         io.to(recipientInfo.socketId).emit('notification', payload);
     }
 
