@@ -59,7 +59,7 @@ const index: React.FC = () => {
 				setMsg({
 					type: "success",
 					message:
-						response.message + "Redirecting..." ||
+						response.message + ". Redirecting..." ||
 						"Password reset successful. Redirecting...",
 					key: Date.now(),
 				});

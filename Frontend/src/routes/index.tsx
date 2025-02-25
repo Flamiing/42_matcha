@@ -13,6 +13,7 @@ import Browse from "../pages/Browse";
 import PublicProfile from "../pages/PublicProfile";
 import Events from "../pages/Events";
 import ResetPassword from "../pages/Callbacks/ResetPassword";
+import Chat from "../pages/Chat";
 
 const protectedRoutes = {
 	profileEdit: {
@@ -52,6 +53,14 @@ const protectedRoutes = {
 		element: (
 			<ProtectedRoute>
 				<PublicProfile />
+			</ProtectedRoute>
+		),
+	},
+	chat: {
+		path: "chat",
+		element: (
+			<ProtectedRoute>
+				<Chat />
 			</ProtectedRoute>
 		),
 	},
