@@ -51,7 +51,7 @@ export default class ChatController {
                 .status(500)
                 .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
         if (rawChat.length === 0)
-            res.status(404).json({ msg: StatusMessage.CHAT_NOT_FOUND });
+            return res.status(404).json({ msg: StatusMessage.CHAT_NOT_FOUND });
 
         const chatMessages = await ChatController.getAllChatMessages(
             res,
