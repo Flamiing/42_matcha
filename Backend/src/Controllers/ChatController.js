@@ -164,6 +164,7 @@ export default class ChatController {
                 );
             });
         } catch (error) {
+            console.error('ERROR:', error);
             return null;
         }
     }
@@ -177,6 +178,7 @@ export default class ChatController {
                 );
             });
         } catch (error) {
+            console.error('ERROR:', error);
             return null;
         }
     }

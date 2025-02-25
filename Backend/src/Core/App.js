@@ -26,6 +26,7 @@ import BrowserRouter from '../Routes/BrowserRouter.js';
 import DistanceRouter from '../Routes/DistanceRouter.js';
 import ChatRouter from '../Routes/ChatRouter.js';
 import MediaRouter from '../Routes/MediaRouter.js';
+import NotificationsRouter from '../Routes/NotificationsRouter.js';
 
 export default class App {
     constructor() {
@@ -80,6 +81,7 @@ export default class App {
         this.app.use(`${this.API_PREFIX}/events`, EventsRouter.createRouter());
         this.app.use(`${this.API_PREFIX}/chat`, ChatRouter.createRouter());
         this.app.use(`${this.API_PREFIX}/media`, MediaRouter.createRouter());
+        this.app.use(`${this.API_PREFIX}/notifications`, NotificationsRouter.createRouter());
         this.app.use(
             `${this.API_PREFIX}/browser`,
             BrowserRouter.createRouter()
