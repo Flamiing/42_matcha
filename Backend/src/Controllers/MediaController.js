@@ -17,7 +17,9 @@ export default class MediaController {
             return res.status(404).json({ msg: StatusMessage.AUDIO_NOT_FOUND });
 
         if (result.sender_id !== userId && result.receiver_id !== userId)
-            return res.status(401).json({ msg: StatusMessage.MEDIA_ACCESS_NOT_AUTHORIZED })
+            return res
+                .status(401)
+                .json({ msg: StatusMessage.MEDIA_ACCESS_NOT_AUTHORIZED });
 
         const audio = result.audio_path;
         const audioPath = path.join(audio);
