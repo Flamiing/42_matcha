@@ -127,4 +127,5 @@ export default class StatusMessage {
     static ERROR_FETCHING_NOTIFICATIONS =
         'There was an error fetching notifications. Please try again later.';
     static NOT_CHAT_PARTICIPANT = 'You are not participating in this chat.';
+    static MEDIA_ACCESS_NOT_AUTHORIZED = 'You do not have permission to access this media content.';
 }
