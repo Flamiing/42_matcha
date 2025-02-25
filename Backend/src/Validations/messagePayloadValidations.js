@@ -37,9 +37,8 @@ export async function validateMessagePayload(socket, payload, msgType) {
             socket,
             StatusMessage.CANNOT_SEND_MESSAGE_WITHOUT_MATCH
         );
-    
-    if (!(await isValidChat(socket, chatId, senderId, receiverId)))
-        return null;
+
+    if (!(await isValidChat(socket, chatId, senderId, receiverId))) return null;
 
     const validPayload = {
         chatId: chatId,
@@ -70,9 +69,13 @@ function validateMessage(socket, payload, msgType) {
 
 async function isValidChat(socket, chatId, senderId, receiverId) {
     const chat = await chatsModel.getById({ id: chatId });
-    if (!chat || chat.length === 0) return emitErrorAndReturnNull(socket, StatusMessage.CHAT_NOT_FOUND);
+    if (!chat || chat.length === 0)
+        return emitErrorAndReturnNull(socket, StatusMessage.CHAT_NOT_FOUND);
 
-    if ((chat.user_id_1 === senderId && chat.user_id_2 === receiverId) || (chat.user_id_1 === receiverId && chat.user_id_2 === senderId))
+    if (
+        (chat.user_id_1 === senderId && chat.user_id_2 === receiverId) ||
+        (chat.user_id_1 === receiverId && chat.user_id_2 === senderId)
+    )
         return true;
 
     return emitErrorAndReturnNull(socket, StatusMessage.NOT_CHAT_PARTICIPANT);
