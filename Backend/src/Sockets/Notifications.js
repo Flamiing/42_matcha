@@ -84,7 +84,10 @@ export default class Notifications {
                 true
             );
             if (!userStatus) {
-                console.error('ERROR:', StatusMessage.COULD_NOT_GET_USER_STATUS);
+                console.error(
+                    'ERROR:',
+                    StatusMessage.COULD_NOT_GET_USER_STATUS
+                );
                 return null;
             } else if (userStatus.length === 0) {
                 console.info('INFO:', StatusMessage.USER_STATUS_NOT_FOUND);
