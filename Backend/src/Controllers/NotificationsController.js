@@ -16,7 +16,8 @@ export default class NotificationsController {
             return res
                 .status(500)
                 .json({ msg: StatusMessage.ERROR_FETCHING_NOTIFICATIONS });
-        if (rawNotifications.length === 0) return res.status(404).json({ msg: [] })
+        if (rawNotifications.length === 0)
+            return res.status(404).json({ msg: [] });
 
         const notifications =
             NotificationsController.getNotificationsInfo(rawNotifications);
