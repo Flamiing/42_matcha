@@ -122,7 +122,7 @@ export default class ChatController {
         }
 
         const sortedMessages = this.sortMessagesByOldest(messages);
-        return messages;
+        return sortedMessages;
     }
 
     static async getChatsInfo(userId, rawChats) {
