@@ -20,7 +20,7 @@ export default class BrowserController {
         const rawUsers = await userModel.getUsersForBrowser(publicUser);
         if (!rawUsers)
             return res.status(500).json({ msg: StatusMessage.QUERY_ERROR });
-        if (rawUsers.length === 0) return res.status(404).json({});
+        if (rawUsers.length === 0) return res.json({ msg: [] });
 
         const users = await BrowserController.filterUsers(
             res,
