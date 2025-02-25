@@ -9,6 +9,6 @@ export function returnErrorStatus(res, statusCode, errorMsg) {
 }
 
 export function emitErrorAndReturnNull(socket, errorMessage) {
-    socket.emit('error', errorMessage);
+    socket.emit('info', { msg: errorMessage });
     return null;
 }
