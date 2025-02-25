@@ -14,15 +14,14 @@ export default class Notifications {
     };
 
     static async sendNotification(io, notification, recipientId, notifierId) {
-        const recipientInfo = await this.#getUserInfo(recipientId);
+        const recipientInfo = await this.#getUserInfo(recipientId, 'status');
         if (!recipientInfo) return null;
-        const notifierInfo = await this.#getUserInfo(notifierId);
+        const notifierInfo = await this.#getUserInfo(notifierId, 'full');
         if (!notifierInfo) return null;
 
         const notificationMessage = this.NOTIFICATIONS[notification](
             notifierInfo.username
         );
-        // Save notification in db
         const notification = notificationsModel.create({
             input: {
                 user_id: recipientId,
@@ -66,34 +65,38 @@ export default class Notifications {
         return `😔 Oh no, ${notifierUsername} unliked you. But hey, you’re still awesome! 💪`;
     }
 
-    static async #getUserInfo(userId) {
-        const userData = await userModel.getById({ id: userId });
-        if (!user) {
-            console.error('ERROR:', StatusMessage.COULD_NOT_GET_USER);
-            return null;
-        } else if (user.length === 0) {
-            console.info('INFO:', StatusMessage.USER_NOT_FOUND);
-            return null;
+    static async #getUserInfo(userId, infoType) {
+        if (infoType === 'data' || infoType === 'full') {
+            const userData = await userModel.getById({ id: userId });
+            if (!user) {
+                console.error('ERROR:', StatusMessage.COULD_NOT_GET_USER);
+                return null;
+            } else if (user.length === 0) {
+                console.info('INFO:', StatusMessage.USER_NOT_FOUND);
+                return null;
+            }
         }
 
-        const userStatus = await userStatusModel.getByReference(
-            {
-                user_id: userId,
-            },
-            true
-        );
-        if (!userStatus) {
-            console.error('ERROR:', StatusMessage.COULD_NOT_GET_USER_STATUS);
-            return null;
-        } else if (userStatus.length === 0) {
-            console.info('INFO:', StatusMessage.USER_STATUS_NOT_FOUND);
-            return null;
+        if (infoType === 'status' || infoType === 'full') {
+            const userStatus = await userStatusModel.getByReference(
+                {
+                    user_id: userId,
+                },
+                true
+            );
+            if (!userStatus) {
+                console.error('ERROR:', StatusMessage.COULD_NOT_GET_USER_STATUS);
+                return null;
+            } else if (userStatus.length === 0) {
+                console.info('INFO:', StatusMessage.USER_STATUS_NOT_FOUND);
+                return null;
+            }
         }
 
         const userInfo = {
-            id: userData.id,
-            username: userData.username,
-            socketId: userStatus.socket_id,
+            id: userData ? userData.id : null,
+            username: userData ? userData.username : null,
+            socketId: userStatus ? userStatus.socket_id : null,
         };
 
         return userInfo;
