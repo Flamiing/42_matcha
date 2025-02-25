@@ -15,6 +15,7 @@ import viewsHistoryModel from '../Models/ViewsHistoryModel.js';
 import { getCurrentTimestamp } from '../Utils/timeUtils.js';
 import { parseImages } from '../Utils/imagesUtils.js';
 import { getUserLikesAndBlocks } from '../Utils/userUtils.js';
+import Notifications from '../Sockets/Notifications.js';
 
 export default class UsersController {
     static MAX_NUM_USER_IMAGES = 4;
@@ -486,6 +487,7 @@ export default class UsersController {
             const updateResult = await viewsHistoryModel.update({ input, id });
             if (!updateResult || updateResult.length === 0)
                 return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
+            await Notifications.sendNotification('view', viewedId, viewedById);
             return true;
         }
 
@@ -493,6 +495,7 @@ export default class UsersController {
         if (!viewUpdateResult || viewUpdateResult.length === 0)
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
 
+        await Notifications.sendNotification('view', viewedId, viewedById);
         return true;
     }
 

@@ -31,7 +31,7 @@ export default class App {
     constructor() {
         this.app = express();
         this.server = createServer(this.app);
-        this.socketHandler = new SocketHandler(this.server);
+        this.socketHandler = SocketHandler.getInstance(this.server);
         this.HOST = process.env.API_HOST ?? 'localhost';
         this.PORT = process.env.API_PORT ?? 3001;
         this.API_VERSION = process.env.API_VERSION;
