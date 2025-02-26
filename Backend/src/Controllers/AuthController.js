@@ -348,8 +348,7 @@ export default class AuthController {
                 httpOnly: true, // Cookie only accessible from the server
                 secure: process.env.BACKEND_NODE_ENV === 'production', // Only accessible via https
                 sameSite: 'strict', // Cookie only accessible from the same domain
-                maxAge: parseInt(30000), // Cookie only valid for 1h
-                //maxAge: parseInt(process.env.ACCESS_TOKEN_EXPIRY_COOKIE), // Cookie only valid for 1h
+                maxAge: parseInt(process.env.ACCESS_TOKEN_EXPIRY_COOKIE), // Cookie only valid for 1h
             })
             .cookie('refresh_token', refreshToken, {
                 httpOnly: true, // Cookie only accessible from the server

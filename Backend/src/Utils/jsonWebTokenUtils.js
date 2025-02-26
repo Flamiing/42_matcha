@@ -14,8 +14,7 @@ export function createAccessToken(user) {
         username: user.username,
         oauth: user.oauth ?? false,
     };
-    //const accessToken = createJWT(data, ACCESS_TOKEN_EXPIRY);
-    const accessToken = createJWT(data, '30s');
+    const accessToken = createJWT(data, ACCESS_TOKEN_EXPIRY);
 
     return accessToken;
 }
