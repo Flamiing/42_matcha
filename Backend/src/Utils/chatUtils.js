@@ -82,3 +82,16 @@ function saveAudioToFileSystem(userId, base64String) {
 
     return filePath;
 }
+
+export async function deleteAudioFile(path) {
+    try {
+        await fsExtra.remove(path);
+        console.info(
+            `Audio file with path '${path}' has been removed successfully!`
+        );
+        return true;
+    } catch (error) {
+        console.error(`Error deleting file ${path}: ${error}`);
+        return false
+    }
+}

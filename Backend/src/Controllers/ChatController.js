@@ -113,7 +113,7 @@ export default class ChatController {
             }
 
             const message = {
-                senderId: senderId,
+                senderId: rawMessage.sender_id,
                 message: audioURL ? audioURL : rawMessage.message,
                 createdAt: rawMessage.created_at,
                 type: type,
