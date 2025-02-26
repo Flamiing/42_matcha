@@ -1,6 +1,7 @@
 // Third-Party Imports:
 import nodemailer from 'nodemailer';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 // Local Imports:
 import { createConfirmationToken } from './jsonWebTokenUtils.js';
@@ -91,4 +92,13 @@ export function isIgnored(ignoredRoutes, path) {
         const regex = new RegExp('^' + pattern.replace(/\*/g, '[^/]+') + '$');
         return regex.test(path);
     });
+}
+
+export function setSession(req, accessToken) {
+    req.session = { user: null };
+    try {
+        const { JWT_SECRET_KEY } = process.env;
+        const data = jwt.verify(accessToken, JWT_SECRET_KEY);
+        req.session.user = data;
+    } catch {}
 }
