@@ -15,8 +15,7 @@ class AudioChatMessagesModel extends Model {
         let messages = await this.getByReference(reference, false);
         if (!messages) return null;
         let removeMessage = await this.deleteByReference(reference);
-        if (removeMessage === null)
-            return false;
+        if (removeMessage === null) return false;
         if (!removeMessage) {
             reference = {
                 sender_id: userIdTwo,
@@ -26,13 +25,11 @@ class AudioChatMessagesModel extends Model {
             messages = await this.getByReference(reference, false);
             if (!messages) return null;
             removeMessage = await this.deleteByReference(reference);
-            if (removeMessage.length === 0)
-                return false;
+            if (removeMessage.length === 0) return false;
         }
 
         for (const message of messages) {
-            if (!(await deleteAudioFile(message.audio_path)))
-                return false;
+            if (!(await deleteAudioFile(message.audio_path))) return false;
         }
 
         return true;

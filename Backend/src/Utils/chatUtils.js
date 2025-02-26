@@ -92,6 +92,6 @@ export async function deleteAudioFile(path) {
         return true;
     } catch (error) {
         console.error(`Error deleting file ${path}: ${error}`);
-        return false
+        return false;
     }
 }

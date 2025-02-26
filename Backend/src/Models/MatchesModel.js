@@ -57,8 +57,14 @@ class MatchesModel extends Model {
                 );
         }
 
-        if (!(await audioChatMessagesModel.deleteMessages(userIdOne, userIdTwo)))
-            return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR);
+        if (
+            !(await audioChatMessagesModel.deleteMessages(userIdOne, userIdTwo))
+        )
+            return returnErrorStatus(
+                res,
+                500,
+                StatusMessage.INTERNAL_SERVER_ERROR
+            );
 
         return true;
     }
