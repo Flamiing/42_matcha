@@ -104,18 +104,29 @@ const defaultRoute = {
 	},
 };
 
-export const router = createBrowserRouter([
+export const router = createBrowserRouter(
+	[
+		{
+			path: "/",
+			element: <Layout />,
+			children: [
+				...Object.values(publicRoutes),
+				...Object.values(protectedRoutes),
+				...Object.values(callbackRoutes),
+				...Object.values(defaultRoute),
+			],
+		},
+	],
 	{
-		path: "/",
-		element: <Layout />,
-		children: [
-			...Object.values(publicRoutes),
-			...Object.values(protectedRoutes),
-			...Object.values(callbackRoutes),
-			...Object.values(defaultRoute),
-		],
-	},
-]);
+		future: {
+			v7_relativeSplatPath: true,
+			v7_fetcherPersist: true,
+			v7_normalizeFormMethod: true,
+			v7_partialHydration: true,
+			v7_skipActionErrorRevalidation: true,
+		},
+	}
+);
 
 export const routes = {
 	...publicRoutes,

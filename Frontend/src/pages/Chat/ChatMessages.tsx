@@ -54,14 +54,15 @@ const ChatMessages: React.FC = ({ chatId, chatPartner }) => {
 					</div>
 				) : (
 					<>
-						{messages.map((message) => (
-							<MessageBubble
-								key={message.messageId}
-								message={message}
-								isOwn={message.senderId === user?.id}
-							/>
-						))}
-						<div ref={messagesEndRef} />
+						{messages.map((message, index) => {
+							return (
+								<MessageBubble
+									key={index}
+									message={message}
+									isOwn={message.senderId === user?.id}
+								/>
+							);
+						})}
 					</>
 				)}
 			</div>

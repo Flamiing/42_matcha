@@ -21,7 +21,7 @@ const MessageBubble: React.FC = ({ message, isOwn }) => {
 						: "bg-gray-100 text-gray-800 rounded-bl-none"
 				}`}
 			>
-				<p className="break-words">{message.content}</p>
+				<p className="break-words">{message.message}</p>
 				<div
 					className={`text-xs mt-1 ${
 						isOwn ? "text-white/80 text-right" : "text-gray-500"

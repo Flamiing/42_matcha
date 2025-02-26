@@ -124,7 +124,7 @@ const PasswordChange: React.FC = () => {
 										setViewPassword(!viewPassword)
 									}
 								>
-									<span
+									<i
 										className={`fa ${
 											viewPassword
 												? "fa-eye"
