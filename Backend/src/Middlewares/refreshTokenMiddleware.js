@@ -2,7 +2,7 @@
 import jwt from 'jsonwebtoken';
 
 // Local Imports:
-import { checkAuthStatus, isIgnored } from '../Utils/authUtils.js';
+import { checkAuthStatus, isIgnored, setSession } from '../Utils/authUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { createAccessToken } from '../Utils/jsonWebTokenUtils.js';
 import userModel from '../Models/UserModel.js';
@@ -15,7 +15,8 @@ export const refreshTokenMiddleware =
 
         if (isIgnored(IGNORED_ROUTES, req.path)) return next();
 
-        const refreshToken = req.cookies.refreshToken;
+        const refreshToken = req.cookies.refresh_token;
+        if (!refreshToken) return next();
         try {
             const { JWT_SECRET_KEY } = process.env;
             const data = jwt.verify(refreshToken, JWT_SECRET_KEY);
@@ -35,12 +36,13 @@ export const refreshTokenMiddleware =
                     .json({ msg: StatusMessage.REFRESH_TOKEN_REVOKED });
 
             const accessToken = createAccessToken(data);
+            setSession(req, accessToken);
 
             res.cookie('access_token', accessToken, {
                 httpOnly: true, // Cookie only accessible from the server
                 secure: process.env.BACKEND_NODE_ENV === 'production', // Only accessible via https
                 sameSite: 'strict', // Cookie only accessible from the same domain
-                maxAge: parseInt(process.env.ACCESS_TOKEN_EXPIRY_COOKIE), // Cookie only valid for 1h
+                maxAge: parseInt(process.env.ACCESS_TOKEN_EXPIRY_COOKIE),
             });
 
             return next(); // Go to the next route or middleware
