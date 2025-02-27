@@ -60,7 +60,7 @@ const index = () => {
 		};
 
 		calculateDistance();
-	}, [profile, currentUserProfile, getUserDistance, isAuthenticated]);
+	}, [profile, currentUserProfile, isAuthenticated]);
 
 	const handleProfileUpdate = (updatedData) => {
 		setUserProfile((prev) => ({ ...prev, ...updatedData }));

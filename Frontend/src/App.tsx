@@ -1,15 +1,18 @@
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes";
 import { AuthProvider } from "./context/AuthContext";
-import { StrictMode } from "react";
+import { SocketProvider } from "./context/SocketContext";
 
 function App() {
 	return (
-		<StrictMode>
-			<AuthProvider>
-				<RouterProvider router={router} />
-			</AuthProvider>
-		</StrictMode>
+		<AuthProvider>
+			<SocketProvider>
+				<RouterProvider
+					future={{ v7_startTransition: true }}
+					router={router}
+				/>
+			</SocketProvider>
+		</AuthProvider>
 	);
 }
 
