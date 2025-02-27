@@ -48,7 +48,7 @@ class SocketHandler {
     #handleSocket() {
         this.io.on('connection', async (socket) => {
             console.info(`New socket connected: ${socket.id}`);
-            socket.request.session = { user: null }
+            socket.request.session = { user: null };
 
             if (socket.request.session.user) {
                 const userStatusResult =

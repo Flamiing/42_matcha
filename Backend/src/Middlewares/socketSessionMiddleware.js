@@ -7,13 +7,13 @@ import StatusMessage from '../Utils/StatusMessage.js';
 import { handleError, refreshAccessToken } from '../Utils/socketUtils.js';
 
 export const socketSessionMiddleware = () => (socket, next) => {
-    const cookies = socket.request.headers.cookie
+    const cookies = socket.request.headers.cookie;
     let parsedCookies = null;
     try {
         parsedCookies = cookie.parse(cookies);
     } catch (error) {
         console.error('ERROR:', error);
-        handleError(socket, StatusMessage.ERROR_PARSING_COOKIES)
+        handleError(socket, StatusMessage.ERROR_PARSING_COOKIES);
     }
 
     let accessToken = parsedCookies.access_token;
