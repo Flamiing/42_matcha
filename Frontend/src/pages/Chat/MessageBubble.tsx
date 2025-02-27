@@ -1,8 +1,12 @@
 import React from "react";
 import { Message } from "../../services/api/chat";
-import { timeAgo } from "../../hooks/timeAgo";
 
-const MessageBubble: React.FC = ({ message, isOwn }) => {
+interface MessageBubbleProps {
+	message: Message;
+	isOwn: boolean;
+}
+
+const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwn }) => {
 	const messageTime = new Date(message.createdAt);
 
 	const formatTime = (date: Date) => {
@@ -10,6 +14,21 @@ const MessageBubble: React.FC = ({ message, isOwn }) => {
 			hour: "2-digit",
 			minute: "2-digit",
 		});
+	};
+
+	const renderMessageContent = () => {
+		switch (message.type) {
+			case "audio":
+				return (
+					<audio controls className="max-w-full">
+						<source src={message.message} type="audio/mpeg" />
+						Your browser does not support the audio element.
+					</audio>
+				);
+			case "text":
+			default:
+				return <p className="break-words">{message.message}</p>;
+		}
 	};
 
 	return (
@@ -21,7 +40,7 @@ const MessageBubble: React.FC = ({ message, isOwn }) => {
 						: "bg-gray-100 text-gray-800 rounded-bl-none"
 				}`}
 			>
-				<p className="break-words">{message.message}</p>
+				{renderMessageContent()}
 				<div
 					className={`text-xs mt-1 ${
 						isOwn ? "text-white/80 text-right" : "text-gray-500"

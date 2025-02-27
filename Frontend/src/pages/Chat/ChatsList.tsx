@@ -2,7 +2,13 @@ import React from "react";
 import ChatCard from "./ChatCard";
 import { ChatPreview } from "../../services/api/chat";
 
-const ChatsList: React.FC = ({
+interface ChatsListProps {
+	chats: ChatPreview[];
+	selectedChat: string | null;
+	onChangeChat: (chatId: string) => void;
+}
+
+const ChatsList: React.FC<ChatsListProps> = ({
 	chats,
 	selectedChat,
 	onChangeChat,

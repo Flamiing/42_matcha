@@ -1,12 +1,22 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import MessageBubble from "./MessageBubble";
 import { useChat } from "../../hooks/PageData/useChat";
 import { useAuth } from "../../context/AuthContext";
 import Spinner from "../../components/common/Spinner";
+import { useSocket } from "../../context/SocketContext";
 
-const ChatMessages: React.FC = ({ chatId, chatPartner }) => {
-	const { getChat, chatDetails, loading } = useChat();
+interface ChatMessagesProps {
+	chatId: string | null;
+	chatPartner?: {
+		username: string;
+		profilePicture: string;
+	};
+}
+
+const ChatMessages: React.FC<ChatMessagesProps> = ({ chatId, chatPartner }) => {
+	const { getChat, chatDetails, sendMessage, loading } = useChat();
 	const { user } = useAuth();
+	const { isConnected } = useSocket();
 	const [newMessage, setNewMessage] = useState("");
 
 	// Load chat data when chat ID changes
@@ -14,12 +24,27 @@ const ChatMessages: React.FC = ({ chatId, chatPartner }) => {
 		if (chatId) {
 			getChat(chatId);
 		}
-	}, [chatId]);
+	}, [chatId, getChat]);
 
-	const handleSendMessage = (e: React.FormEvent) => {
+	const handleSendMessage = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		// TODO: Send message logic here
+		if (!chatId || !user || !chatPartner || !newMessage.trim()) return;
+
+		try {
+			// Get the receiver ID for the current chat
+			const receiverId = chatDetails[chatId]?.receiverId;
+
+			if (!receiverId) {
+				console.error("Receiver ID not found");
+				return;
+			}
+
+			await sendMessage(chatId, receiverId, newMessage);
+			setNewMessage("");
+		} catch (error) {
+			console.error("Failed to send message:", error);
+		}
 	};
 
 	if (!chatId) {
@@ -54,15 +79,13 @@ const ChatMessages: React.FC = ({ chatId, chatPartner }) => {
 					</div>
 				) : (
 					<>
-						{messages.map((message, index) => {
-							return (
-								<MessageBubble
-									key={index}
-									message={message}
-									isOwn={message.senderId === user?.id}
-								/>
-							);
-						})}
+						{messages.map((message, index) => (
+							<MessageBubble
+								key={index}
+								message={message}
+								isOwn={message.senderId === user?.id}
+							/>
+						))}
 					</>
 				)}
 			</div>
@@ -81,7 +104,7 @@ const ChatMessages: React.FC = ({ chatId, chatPartner }) => {
 				/>
 				<button
 					type="submit"
-					disabled={!newMessage.trim()}
+					disabled={!newMessage.trim() || !isConnected}
 					className="ml-2 bg-primary text-white rounded-full w-10 h-10 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
 				>
 					<i className="fa fa-paper-plane" />

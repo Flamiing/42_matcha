@@ -2,16 +2,15 @@ import React from "react";
 import { timeAgo } from "../../hooks/timeAgo";
 import { ChatPreview } from "../../services/api/chat";
 
-const ChatCard: React.FC = ({ chat, isSelected, onClick }) => {
+interface ChatCardProps {
+	chat: ChatPreview;
+	isSelected: boolean;
+	onClick: (chatId: string) => void;
+}
+
+const ChatCard: React.FC<ChatCardProps> = ({ chat, isSelected, onClick }) => {
 	const handleClick = () => {
 		onClick(chat.chatId);
-	};
-
-	// Truncate long messages
-	const truncateMessage = (message: string, maxLength: number = 30) => {
-		if (!message || message.length <= maxLength)
-			return message || "No messages yet";
-		return `${message.substring(0, maxLength)}...`;
 	};
 
 	// Format timestamp from the API to display in timeAgo format
@@ -35,11 +34,6 @@ const ChatCard: React.FC = ({ chat, isSelected, onClick }) => {
 					src={chat.receiverProfilePicture}
 					alt={`${chat.receiverUsername}'s profile`}
 				/>
-				{chat.unreadCount && chat.unreadCount > 0 && (
-					<span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-						{chat.unreadCount > 9 ? "9+" : chat.unreadCount}
-					</span>
-				)}
 			</div>
 
 			<div className="ml-4 flex-grow">
@@ -51,10 +45,6 @@ const ChatCard: React.FC = ({ chat, isSelected, onClick }) => {
 						{getTimeDisplay()}
 					</span>
 				</div>
-
-				<p className="text-sm text-gray-600 truncate mt-1">
-					{truncateMessage(chat.lastMessage)}
-				</p>
 			</div>
 		</div>
 	);

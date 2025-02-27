@@ -44,22 +44,8 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 			return;
 		}
 
-		// Get the JWT token from the cookie
-		const cookies = document.cookie.split(";");
-		const tokenCookie = cookies.find((cookie) =>
-			cookie.trim().startsWith("accessToken=")
-		);
-		const token = tokenCookie ? tokenCookie.split("=")[1] : null;
-
-		if (!token) {
-			console.error("No token found for socket connection");
-			return;
-		}
-
 		const socketInstance = io("http://localhost:3001", {
-			extraHeaders: {
-				Authorization: `Bearer ${token}`,
-			},
+			withCredentials: true,
 		});
 
 		socketInstance.on("connect", () => {
