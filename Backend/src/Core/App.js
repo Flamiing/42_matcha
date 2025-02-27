@@ -67,8 +67,8 @@ export default class App {
         this.app.use(corsMiddleware());
         this.app.use(cookieParser());
         this.app.use(sessionMiddleware());
-        this.app.use(checkAuthStatusMiddleware(this.IGNORED_ROUTES));
         this.app.use(refreshTokenMiddleware(this.IGNORED_ROUTES));
+        this.app.use(checkAuthStatusMiddleware(this.IGNORED_ROUTES));
         this.app.use(invalidJSONMiddleware());
         this.app.use(captureResponseDataMiddleware);
     }

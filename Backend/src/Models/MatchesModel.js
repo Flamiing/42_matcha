@@ -1,6 +1,8 @@
 // Local Imports:
 import Model from '../Core/Model.js';
+import { returnErrorStatus } from '../Utils/errorUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
+import audioChatMessagesModel from './AudioChatMessagesModel.js';
 
 class MatchesModel extends Model {
     constructor() {
@@ -54,6 +56,15 @@ class MatchesModel extends Model {
                     StatusMessage.INTERNAL_SERVER_ERROR
                 );
         }
+
+        if (
+            !(await audioChatMessagesModel.deleteMessages(userIdOne, userIdTwo))
+        )
+            return returnErrorStatus(
+                res,
+                500,
+                StatusMessage.INTERNAL_SERVER_ERROR
+            );
 
         return true;
     }
