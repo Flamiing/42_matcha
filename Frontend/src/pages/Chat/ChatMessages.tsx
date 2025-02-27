@@ -24,7 +24,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ chatId, chatPartner }) => {
 		if (chatId) {
 			getChat(chatId);
 		}
-	}, [chatId, getChat]);
+	}, [chatId]);
 
 	const handleSendMessage = async (e: React.FormEvent) => {
 		e.preventDefault();
