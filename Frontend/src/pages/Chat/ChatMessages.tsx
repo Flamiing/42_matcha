@@ -19,7 +19,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 	chatPartner,
 	onSocketError,
 }) => {
-	const { getChat, chatDetails, sendMessage, loading } = useChat();
+	const { getChat, chatDetails, sendMessage, messages, loading } = useChat();
 	const { user } = useAuth();
 	const { isConnected } = useSocket();
 	const [newMessage, setNewMessage] = useState("");
@@ -70,7 +70,6 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 	}
 
 	const currentChat = chatDetails[chatId];
-	const messages = currentChat?.chatMessages || [];
 
 	return (
 		<div className="flex-grow flex flex-col bg-white rounded-lg shadow-sm border overflow-hidden h-[calc(90vh-200px)]">

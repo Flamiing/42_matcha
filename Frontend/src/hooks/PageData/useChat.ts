@@ -17,6 +17,7 @@ export const useChat = () => {
 	const [error, setError] = useState<string | null>(null);
 	const { socket, sendMessage: socketSendMessage } = useSocket();
 	const { user } = useAuth();
+	const [messages, setMessages] = useState<Message[]>([]);
 
 	const getAllChats = async () => {
 		setLoading(true);
@@ -45,6 +46,7 @@ export const useChat = () => {
 				...prev,
 				[chatId]: response.msg,
 			}));
+			setMessages(response.msg.chatMessages);
 			return response.msg;
 		} catch (err: any) {
 			const errorMessage = err.message
@@ -74,22 +76,8 @@ export const useChat = () => {
 						type: "text",
 					};
 
-					// Update chat details with the new message
-					setChatDetails((prev) => {
-						const currentChat = prev[chatId];
-						if (!currentChat) return prev;
-
-						return {
-							...prev,
-							[chatId]: {
-								...currentChat,
-								chatMessages: [
-									...currentChat.chatMessages,
-									newMessage,
-								],
-							},
-						};
-					});
+					// Update chat messages
+					setMessages((prev) => [...prev, newMessage]);
 
 					// Update chats list timestamp
 					setChats((prevChats) => {
@@ -119,28 +107,8 @@ export const useChat = () => {
 		const handleNewMessage = (
 			messageData: Message & { chatId: string }
 		) => {
-			// Update chat details if we have this chat open
-			setChatDetails((prev) => {
-				const chatId = messageData.chatId;
-				const currentChat = prev[chatId];
-				if (!currentChat) return prev;
-
-				// Create a message object that matches our interface
-				const newMessage: Message = {
-					senderId: messageData.senderId,
-					message: messageData.message,
-					createdAt: messageData.createdAt,
-					type: messageData.type || "text",
-				};
-
-				return {
-					...prev,
-					[chatId]: {
-						...currentChat,
-						chatMessages: [...currentChat.chatMessages, newMessage],
-					},
-				};
-			});
+			// update messages for the chat
+			setMessages((prev) => [...prev, messageData]);
 
 			// Update the chats list timestamp
 			setChats((prevChats) => {
@@ -156,10 +124,10 @@ export const useChat = () => {
 			});
 		};
 
-		socket.on("messages", handleNewMessage);
+		socket.on("message", handleNewMessage);
 
 		return () => {
-			socket.off("messages", handleNewMessage);
+			socket.off("message", handleNewMessage);
 		};
 	}, [socket, user]);
 
@@ -169,6 +137,7 @@ export const useChat = () => {
 		getAllChats,
 		getChat,
 		sendMessage,
+		messages,
 		loading,
 		error,
 	};
