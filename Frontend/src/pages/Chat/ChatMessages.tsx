@@ -23,6 +23,11 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 	const { user } = useAuth();
 	const { isConnected } = useSocket();
 	const [newMessage, setNewMessage] = useState("");
+	const messagesEndRef = useRef<HTMLDivElement>(null);
+
+	const scrollToBottom = () => {
+		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+	};
 
 	// Load chat data when chat ID changes
 	useEffect(() => {
@@ -34,6 +39,10 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 			}
 		}
 	}, [chatId]);
+
+	useEffect(() => {
+		scrollToBottom();
+	}, [messages, chatId]);
 
 	const handleSendMessage = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -94,6 +103,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 								isOwn={message.senderId === user?.id}
 							/>
 						))}
+						<div ref={messagesEndRef} />
 					</>
 				)}
 			</div>
