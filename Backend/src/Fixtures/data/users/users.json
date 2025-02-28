@@ -14,7 +14,12 @@
         "oauth": false,
         "gender": "female",
         "sexual_preference": "male",
-        "tags": ["35c3fd60-62e2-4de3-a89e-d5d8049b86c0", "9e9466ac-03e7-4486-89a1-46923fde7604", "b41bc5f6-a27f-4d9d-8f68-0e958344b675", "6d0470d7-151d-48e2-baad-d0b91b8a47d4"],
+        "tags": [
+            "35c3fd60-62e2-4de3-a89e-d5d8049b86c0",
+            "9e9466ac-03e7-4486-89a1-46923fde7604",
+            "b41bc5f6-a27f-4d9d-8f68-0e958344b675",
+            "6d0470d7-151d-48e2-baad-d0b91b8a47d4"
+        ],
         "location": {
             "latitude": 40.8951,
             "longitude": -77.0364,
@@ -36,7 +41,11 @@
         "oauth": false,
         "gender": "female",
         "sexual_preference": "male",
-        "tags": ["35c3fd60-62e2-4de3-a89e-d5d8049b86c0", "9e9466ac-03e7-4486-89a1-46923fde7604", "b41bc5f6-a27f-4d9d-8f68-0e958344b675"],
+        "tags": [
+            "35c3fd60-62e2-4de3-a89e-d5d8049b86c0",
+            "9e9466ac-03e7-4486-89a1-46923fde7604",
+            "b41bc5f6-a27f-4d9d-8f68-0e958344b675"
+        ],
         "location": {
             "latitude": 40.8951,
             "longitude": -77.0364,
@@ -58,7 +67,10 @@
         "oauth": false,
         "gender": "male",
         "sexual_preference": "bisexual",
-        "tags": ["35c3fd60-62e2-4de3-a89e-d5d8049b86c0", "9e9466ac-03e7-4486-89a1-46923fde7604"],
+        "tags": [
+            "35c3fd60-62e2-4de3-a89e-d5d8049b86c0",
+            "9e9466ac-03e7-4486-89a1-46923fde7604"
+        ],
         "location": {
             "latitude": 40.8951,
             "longitude": -77.0364,
@@ -102,7 +114,10 @@
         "oauth": false,
         "gender": "female",
         "sexual_preference": "bisexual",
-        "tags": ["35c3fd60-62e2-4de3-a89e-d5d8049b86c0", "9e9466ac-03e7-4486-89a1-46923fde7604"],
+        "tags": [
+            "35c3fd60-62e2-4de3-a89e-d5d8049b86c0",
+            "9e9466ac-03e7-4486-89a1-46923fde7604"
+        ],
         "location": {
             "latitude": 40.8951,
             "longitude": -77.0364,
@@ -124,7 +139,10 @@
         "oauth": false,
         "gender": "male",
         "sexual_preference": "female",
-        "tags": ["35c3fd60-62e2-4de3-a89e-d5d8049b86c0", "9e9466ac-03e7-4486-89a1-46923fde7604"],
+        "tags": [
+            "35c3fd60-62e2-4de3-a89e-d5d8049b86c0",
+            "9e9466ac-03e7-4486-89a1-46923fde7604"
+        ],
         "location": {
             "latitude": 40.8951,
             "longitude": -77.0364,
