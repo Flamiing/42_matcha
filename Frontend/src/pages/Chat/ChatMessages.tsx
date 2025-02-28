@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import MessageBubble from "./MessageBubble";
 import { useChat } from "../../hooks/PageData/useChat";
 import { useAuth } from "../../context/AuthContext";
@@ -11,9 +11,14 @@ interface ChatMessagesProps {
 		username: string;
 		profilePicture: string;
 	};
+	onSocketError?: (error: any) => void;
 }
 
-const ChatMessages: React.FC<ChatMessagesProps> = ({ chatId, chatPartner }) => {
+const ChatMessages: React.FC<ChatMessagesProps> = ({
+	chatId,
+	chatPartner,
+	onSocketError,
+}) => {
 	const { getChat, chatDetails, sendMessage, loading } = useChat();
 	const { user } = useAuth();
 	const { isConnected } = useSocket();
@@ -22,7 +27,11 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ chatId, chatPartner }) => {
 	// Load chat data when chat ID changes
 	useEffect(() => {
 		if (chatId) {
-			getChat(chatId);
+			try {
+				getChat(chatId);
+			} catch (error) {
+				onSocketError(error);
+			}
 		}
 	}, [chatId]);
 
@@ -43,7 +52,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ chatId, chatPartner }) => {
 			await sendMessage(chatId, receiverId, newMessage);
 			setNewMessage("");
 		} catch (error) {
-			console.error("Failed to send message:", error);
+			onSocketError(error);
 		}
 	};
 

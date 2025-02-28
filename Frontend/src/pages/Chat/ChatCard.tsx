@@ -41,7 +41,8 @@ const ChatCard: React.FC<ChatCardProps> = ({ chat, isSelected, onClick }) => {
 					<h3 className="font-medium text-gray-900 truncate max-w-[120px]">
 						{chat.receiverUsername}
 					</h3>
-					<span className="text-xs text-gray-500 flex-shrink-0">
+					<span className="text-xs flex-shrink-0">
+						<p className="text-gray-500">Last activity:</p>
 						{getTimeDisplay()}
 					</span>
 				</div>

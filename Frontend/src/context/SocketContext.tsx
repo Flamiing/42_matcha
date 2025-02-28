@@ -59,7 +59,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 		});
 
 		socketInstance.on("error-info", (error) => {
-			console.error("Socket error:", error);
+			throw new Error("Socket error: " + error);
 		});
 
 		setSocket(socketInstance);
@@ -84,7 +84,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 				message,
 			});
 		} else {
-			console.error("Cannot send message: Socket not connected");
+			throw new Error("Socket is not connected");
 		}
 	};
 
