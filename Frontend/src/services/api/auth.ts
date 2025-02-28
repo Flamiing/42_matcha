@@ -120,6 +120,42 @@ export const authApi = {
 			};
 		}
 	},
+
+	confirmEmail: async (code: string): Promise<AuthResponse> => {
+		try {
+			await apiRequest(`auth/confirm?token=${code}`);
+			return {
+				success: true,
+				message: "Email confirmed",
+			};
+		} catch (error: any) {
+			return {
+				success: false,
+				message: error.message || "Email confirmation failed",
+			};
+		}
+	},
+
+	resetPassword: async (
+		code: string,
+		new_password: string
+	): Promise<AuthResponse> => {
+		try {
+			await apiRequest(`auth/password/reset?token=${code}`, {
+				method: "POST",
+				body: JSON.stringify({ new_password }),
+			});
+			return {
+				success: true,
+				message: "Password reset successful",
+			};
+		} catch (error: any) {
+			return {
+				success: false,
+				message: error.message || "Password reset failed",
+			};
+		}
+	},
 };
 
 export default authApi;
