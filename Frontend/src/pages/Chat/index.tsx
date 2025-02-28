@@ -5,10 +5,12 @@ import ChatsList from "./ChatsList";
 import { useChat } from "../../hooks/PageData/useChat";
 import Spinner from "../../components/common/Spinner";
 import MsgCard from "../../components/common/MsgCard";
+import { useSocket } from "../../context/SocketContext";
 
 const index: React.FC = () => {
 	const { isMobile, isTablet, isDesktop } = useBreakpoints();
 	const { chats, getAllChats, loading, error } = useChat();
+	const { isConnected } = useSocket();
 	const [selectedChat, setSelectedChat] = useState<string | null>(null);
 	const [isChatVisible, setIsChatVisible] = useState<boolean>(isDesktop);
 
@@ -29,6 +31,7 @@ const index: React.FC = () => {
 		setIsChatVisible(false);
 	};
 
+	// Initial fetch of chats
 	useEffect(() => {
 		const fetchChats = async () => {
 			try {
@@ -45,11 +48,24 @@ const index: React.FC = () => {
 		fetchChats();
 	}, []);
 
+	// Periodic refresh of chat list to catch any updates
+	useEffect(() => {
+		const intervalId = setInterval(() => {
+			if (isConnected) {
+				getAllChats().catch((err) => {
+					console.error("Failed to refresh chats:", err);
+				});
+			}
+		}, 10000);
+
+		return () => clearInterval(intervalId);
+	}, [isConnected, getAllChats]);
+
 	useEffect(() => {
 		setIsChatVisible(isDesktop || (selectedChat !== null && !isDesktop));
 	}, [isDesktop]);
 
-	if (loading) {
+	if (loading && chats.length === 0) {
 		return (
 			<main className="flex flex-1 justify-center items-center flex-col">
 				<Spinner />
@@ -57,7 +73,7 @@ const index: React.FC = () => {
 		);
 	}
 
-	if (error) {
+	if (error && chats.length === 0) {
 		return (
 			<main className="flex flex-1 justify-center items-center flex-col">
 				<div>An error occurred when loading the chat page</div>
@@ -71,8 +87,8 @@ const index: React.FC = () => {
 
 	const chatPartner = selectedChatData
 		? {
-				username: selectedChatData.username,
-				profilePicture: selectedChatData.profilePicture,
+				username: selectedChatData.receiverUsername,
+				profilePicture: selectedChatData.receiverProfilePicture,
 		  }
 		: undefined;
 
@@ -97,7 +113,19 @@ const index: React.FC = () => {
 							<i className="fa fa-arrow-left text-2xl text-secondary-light" />
 						</button>
 					) : null}
-					Chats
+					<span>
+						Chat
+						{selectedChatData ? (
+							<>
+								{" with "}
+								<span className="underline text-primary font-extrabold">
+									{chatPartner?.username}
+								</span>
+							</>
+						) : (
+							""
+						)}
+					</span>
 				</h1>
 			</section>
 

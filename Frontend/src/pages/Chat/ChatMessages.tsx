@@ -49,7 +49,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ chatId, chatPartner }) => {
 
 	if (!chatId) {
 		return (
-			<div className="flex-grow flex items-center justify-center bg-white rounded-lg shadow-sm border">
+			<div className="flex-grow flex items-center justify-center bg-white rounded-lg shadow-sm border h-[calc(90vh-200px)]">
 				<div className="text-center p-10">
 					<i className="fa fa-comments text-5xl mb-4 text-tertiary" />
 					<h3 className="text-xl font-medium text-font-main mb-2">
@@ -64,7 +64,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ chatId, chatPartner }) => {
 	const messages = currentChat?.chatMessages || [];
 
 	return (
-		<div className="flex-grow flex flex-col bg-white rounded-lg shadow-sm border overflow-hidden">
+		<div className="flex-grow flex flex-col bg-white rounded-lg shadow-sm border overflow-hidden h-[calc(90vh-200px)]">
 			{/* Messages area */}
 			<div className="flex-grow p-4 overflow-y-auto bg-gray-50">
 				{loading && messages.length === 0 ? (
