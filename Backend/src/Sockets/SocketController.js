@@ -125,11 +125,4 @@ export default class SocketController {
         console.info('INFO:', StatusMessage.USER_STATUS_CHANGED);
         return true;
     }
-
-    static handleError(socket, errorMessage) {
-        console.log('INFO:', errorMessage);
-        socket.emit('error-info', { msg: errorMessage });
-        socket.disconnect();
-        return;
-    }
 }
