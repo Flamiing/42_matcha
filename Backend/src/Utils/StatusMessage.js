@@ -128,8 +128,7 @@ export default class StatusMessage {
     static NOT_CHAT_PARTICIPANT = 'You are not participating in this chat.';
     static MEDIA_ACCESS_NOT_AUTHORIZED =
         'You do not have permission to access this media content.';
-    static ERROR_PARSING_COOKIES =
-        'Unable to read session cookies.';
+    static ERROR_PARSING_COOKIES = 'Unable to read session cookies.';
     static ERROR_REFRESHING_ACCESS_TOKEN =
         'There was a problem refreshing your authentication token.';
 }
