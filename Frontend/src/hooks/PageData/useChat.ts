@@ -15,7 +15,11 @@ export const useChat = () => {
 	);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
-	const { socket, sendMessage: socketSendMessage } = useSocket();
+	const {
+		socket,
+		sendMessage: socketSendMessage,
+		sendAudioMessage: socketSendAudioMessage,
+	} = useSocket();
 	const { user } = useAuth();
 	const [messages, setMessages] = useState<Message[]>([]);
 
@@ -67,12 +71,13 @@ export const useChat = () => {
 				// Use the socket to send the message
 				socketSendMessage(chatId, receiverId, message);
 
-				// Optimistically update the UI with the new message
 				if (user) {
 					const newMessage: Message = {
 						senderId: user.id,
 						message,
-						createdAt: new Date().toISOString(),
+						createdAt: new Date()
+							.toISOString()
+							.replace(/\.\d+Z$/, "Z"),
 						type: "text",
 					};
 
@@ -85,7 +90,9 @@ export const useChat = () => {
 							if (chat.chatId === chatId) {
 								return {
 									...chat,
-									updatedAt: new Date().toISOString(),
+									updatedAt: new Date()
+										.toISOString()
+										.replace(/\.\d+Z$/, "Z"),
 								};
 							}
 							return chat;
@@ -99,6 +106,62 @@ export const useChat = () => {
 		},
 		[socketSendMessage, user]
 	);
+
+	const sendAudioMessage = useCallback(
+		async (chatId: string, receiverId: string, audioFile: File) => {
+			if (!socket || !user) {
+				throw new Error(
+					"Socket not connected or user not authenticated"
+				);
+			}
+
+			try {
+				const base64Audio = await fileToBase64(audioFile);
+
+				// Remove MIME prefix
+				const base64WithoutPrefix =
+					base64Audio.split(",").pop() || base64Audio;
+
+				socketSendAudioMessage(chatId, receiverId, base64WithoutPrefix);
+
+				const newMessage: Message = {
+					senderId: user.id,
+					message: base64Audio,
+					createdAt: new Date().toISOString().replace(/\.\d+Z$/, "Z"),
+					type: "audio",
+				};
+
+				setMessages((prev) => [...prev, newMessage]);
+
+				setChats((prevChats) => {
+					return prevChats.map((chat) => {
+						if (chat.chatId === chatId) {
+							return {
+								...chat,
+								updatedAt: new Date()
+									.toISOString()
+									.replace(/\.\d+Z$/, "Z"),
+							};
+						}
+						return chat;
+					});
+				});
+			} catch (error: any) {
+				setError(error.message || "Failed to send audio message");
+				throw error;
+			}
+		},
+		[socket, user, socketSendAudioMessage]
+	);
+
+	const fileToBase64 = (file: File): Promise<string> => {
+		return new Promise((resolve, reject) => {
+			const reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onload = () => resolve(reader.result as string);
+			reader.onerror = (error) => reject(error);
+		});
+	};
 
 	// Listen for new messages from the socket
 	useEffect(() => {
@@ -137,6 +200,7 @@ export const useChat = () => {
 		getAllChats,
 		getChat,
 		sendMessage,
+		sendAudioMessage,
 		messages,
 		loading,
 		error,

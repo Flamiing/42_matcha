@@ -59,7 +59,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 		});
 
 		socketInstance.on("error-info", (error) => {
-			throw new Error("Socket error: " + error);
+			console.error("Socket error:", error);
 		});
 
 		setSocket(socketInstance);
@@ -88,8 +88,26 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 		}
 	};
 
+	const sendAudioMessage = (
+		chatId: string,
+		receiverId: string,
+		message: String
+	) => {
+		if (socket && isConnected) {
+			socket.emit("send-audio-message", {
+				chatId,
+				receiverId,
+				message,
+			});
+		} else {
+			throw new Error("Socket is not connected");
+		}
+	};
+
 	return (
-		<SocketContext.Provider value={{ socket, isConnected, sendMessage }}>
+		<SocketContext.Provider
+			value={{ socket, isConnected, sendMessage, sendAudioMessage }}
+		>
 			{children}
 		</SocketContext.Provider>
 	);

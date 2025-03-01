@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, ChangeEvent } from "react";
 import MessageBubble from "./MessageBubble";
 import { useChat } from "../../hooks/PageData/useChat";
 import { useAuth } from "../../context/AuthContext";
@@ -19,11 +19,20 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 	chatPartner,
 	onSocketError,
 }) => {
-	const { getChat, chatDetails, sendMessage, messages, loading } = useChat();
+	const {
+		getChat,
+		chatDetails,
+		sendMessage,
+		sendAudioMessage,
+		messages,
+		loading,
+	} = useChat();
 	const { user } = useAuth();
 	const { isConnected } = useSocket();
 	const [newMessage, setNewMessage] = useState("");
 	const messagesEndRef = useRef<HTMLDivElement>(null);
+	const [isUploading, setIsUploading] = useState(false);
+	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const scrollToBottom = () => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -62,6 +71,70 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 			setNewMessage("");
 		} catch (error) {
 			onSocketError(error);
+		}
+	};
+
+	const handleAudioUpload = (e: ChangeEvent<HTMLInputElement>) => {
+		if (!e.target.files || !e.target.files.length) return;
+
+		const file = e.target.files[0];
+		const allowedTypes = [
+			"audio/mpeg",
+			"audio/wav",
+			"audio/ogg",
+			"audio/mp3",
+			"audio/flac",
+		];
+
+		if (!allowedTypes.includes(file.type)) {
+			onSocketError({
+				message: "Invalid audio file format",
+			});
+			return;
+		}
+
+		if (file.size > 10 * 1024 * 1024) {
+			// 10MB limit
+			onSocketError({
+				message: "Audio file size should be less than 10MB",
+			});
+			return;
+		}
+
+		handleSendAudioFile(file);
+
+		// Reset file input
+		if (fileInputRef.current) {
+			fileInputRef.current.value = "";
+		}
+	};
+
+	const handleSendAudioFile = async (file: File) => {
+		if (!chatId || !user || !chatPartner) return;
+
+		try {
+			setIsUploading(true);
+
+			// Get the receiver ID for the current chat
+			const receiverId = chatDetails[chatId]?.receiverId;
+
+			if (!receiverId) {
+				console.error("Receiver ID not found");
+				return;
+			}
+
+			// Send audio message
+			await sendAudioMessage(chatId, receiverId, file);
+		} catch (error) {
+			onSocketError(error);
+		} finally {
+			setIsUploading(false);
+		}
+	};
+
+	const handleOpenFileDialog = () => {
+		if (fileInputRef.current) {
+			fileInputRef.current.click();
 		}
 	};
 
@@ -113,6 +186,30 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 				onSubmit={handleSendMessage}
 				className="p-4 border-t flex items-center"
 			>
+				<div>
+					<input
+						type="file"
+						ref={fileInputRef}
+						onChange={handleAudioUpload}
+						accept="audio/mpeg,audio/wav,audio/ogg,audio/mp3,audio/flac"
+						className="hidden"
+					/>
+					{/* Audio upload button */}
+					<button
+						type="button"
+						onClick={handleOpenFileDialog}
+						disabled={!isConnected || isUploading}
+						className="mr-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full w-10 h-10 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+						title="Upload audio"
+					>
+						{isUploading ? (
+							<i className="fa fa-spinner fa-spin" />
+						) : (
+							<i className="fa fa-microphone" />
+						)}
+					</button>
+				</div>
+
 				<input
 					type="text"
 					value={newMessage}
