@@ -1,6 +1,6 @@
 // Local Imports:
 import eventsModel from '../Models/EventsModel.js';
-import userModel from '../Models/userModel.js';
+import userModel from '../Models/UserModel.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { validateEvent } from '../Schemas/eventSchema.js';
 import {
