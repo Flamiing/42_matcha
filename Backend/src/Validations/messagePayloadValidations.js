@@ -45,7 +45,7 @@ export async function validateMessagePayload(socket, payload, msgType) {
         chatId: chatId,
         receiverId: receiverId,
         message: validatedMessage.message,
-        createdAt: getCurrentTimestamp()
+        createdAt: getCurrentTimestamp(),
     };
 
     return validPayload;

@@ -30,7 +30,7 @@ export async function processAudioMessage(socket, senderId, payload) {
         sender_id: senderId,
         receiver_id: payload.receiverId,
         audio_path: audioPath,
-        created_at: payload.createdAt
+        created_at: payload.createdAt,
     };
 
     const savedChatMessage = await audioChatMessagesModel.create({

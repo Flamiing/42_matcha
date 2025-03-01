@@ -22,7 +22,7 @@ export default class SocketController {
             sender_id: senderId,
             receiver_id: validPayload.receiverId,
             message: validPayload.message,
-            created_at: validPayload.createdAt
+            created_at: validPayload.createdAt,
         };
         const savedChatMessage = await textChatMessagesModel.create({
             input: chatMessage,
@@ -65,7 +65,7 @@ export default class SocketController {
             type: 'text',
         };
 
-        console.log('TEST: ', payload)
+        console.log('TEST: ', payload);
         io.to(receiverUser.socket_id).emit('message', payload);
     }
 
