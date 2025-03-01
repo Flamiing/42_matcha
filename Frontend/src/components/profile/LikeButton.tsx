@@ -82,7 +82,7 @@ const LikeButton = ({
 					}`}
 				>
 					<span
-						className={`fa ${isLiked ? "fa-heart" : "fa-heart-o"}`}
+						className={`${isLiked ? "fa fa-heart" : "fa-regular fa-heart"}`}
 					/>
 					{isLiked ? "Liked" : "Like"}
 				</span>

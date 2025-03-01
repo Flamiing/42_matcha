@@ -88,9 +88,7 @@ const PasswordChange: React.FC = () => {
 								type="email"
 							/>
 							{/* Submit Button */}
-							<RegularButton
-								value="Send Reset Link"
-							/>
+							<RegularButton value="Send Reset Link" />
 						</form>
 					</div>
 				</Modal>
@@ -101,6 +99,7 @@ const PasswordChange: React.FC = () => {
 					<button
 						onClick={() => setIsModalOpen(true)}
 						className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+						disabled={loading}
 					>
 						Reset password
 					</button>
