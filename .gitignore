@@ -67,7 +67,7 @@ frontend/build/
 backend/build/
 
 # Ignore docker volumes:
-data
+/data
 
 # Ignore .vite folder from frontend
 .vite/
