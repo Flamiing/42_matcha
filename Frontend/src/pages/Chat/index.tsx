@@ -29,6 +29,15 @@ const index: React.FC = () => {
 
 	const handleBackToChatList = () => {
 		setIsChatVisible(false);
+		setSelectedChat(null);
+	};
+
+	const handleSocketError = (error: any) => {
+		setMsg({
+			type: "error",
+			message: error.message || "An error occurred",
+			key: Date.now(),
+		});
 	};
 
 	// Initial fetch of chats
@@ -110,7 +119,7 @@ const index: React.FC = () => {
 							onClick={handleBackToChatList}
 							className="mr-2 inline-flex items-center"
 						>
-							<i className="fa fa-arrow-left text-2xl text-secondary-light" />
+							<i className="fa fa-arrow-left text-2xl" />
 						</button>
 					) : null}
 					<span>
@@ -136,6 +145,7 @@ const index: React.FC = () => {
 						<ChatMessages
 							chatId={selectedChat}
 							chatPartner={chatPartner}
+							onSocketError={handleSocketError}
 						/>
 					) : (
 						<ChatsList
@@ -155,6 +165,7 @@ const index: React.FC = () => {
 						<ChatMessages
 							chatId={selectedChat}
 							chatPartner={chatPartner}
+							onSocketError={handleSocketError}
 						/>
 					</>
 				)}

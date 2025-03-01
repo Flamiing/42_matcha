@@ -16,8 +16,8 @@ export const socketSessionMiddleware = () => (socket, next) => {
         handleError(socket, StatusMessage.ERROR_PARSING_COOKIES);
     }
 
-    let accessToken = parsedCookies.access_token;
-    const refreshToken = parsedCookies.refreshToken;
+    let accessToken = parsedCookies?.access_token;
+    const refreshToken = parsedCookies?.refreshToken;
     if (!accessToken) {
         if (!refreshToken) {
             console.error('ERROR:', StatusMessage.NOT_LOGGED_IN);

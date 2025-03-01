@@ -84,12 +84,30 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 				message,
 			});
 		} else {
-			console.error("Cannot send message: Socket not connected");
+			throw new Error("Socket is not connected");
+		}
+	};
+
+	const sendAudioMessage = (
+		chatId: string,
+		receiverId: string,
+		message: String
+	) => {
+		if (socket && isConnected) {
+			socket.emit("send-audio-message", {
+				chatId,
+				receiverId,
+				message,
+			});
+		} else {
+			throw new Error("Socket is not connected");
 		}
 	};
 
 	return (
-		<SocketContext.Provider value={{ socket, isConnected, sendMessage }}>
+		<SocketContext.Provider
+			value={{ socket, isConnected, sendMessage, sendAudioMessage }}
+		>
 			{children}
 		</SocketContext.Provider>
 	);

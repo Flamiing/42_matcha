@@ -22,6 +22,7 @@ export default class SocketController {
             sender_id: senderId,
             receiver_id: validPayload.receiverId,
             message: validPayload.message,
+            created_at: validPayload.createdAt,
         };
         const savedChatMessage = await textChatMessagesModel.create({
             input: chatMessage,
@@ -59,10 +60,11 @@ export default class SocketController {
 
         const payload = {
             senderId: senderId,
-            senderUsername: socket.request.session.user.username,
             message: validPayload.message,
+            createdAt: validPayload.createdAt,
             type: 'text',
         };
+
         io.to(receiverUser.socket_id).emit('message', payload);
     }
 
@@ -97,8 +99,8 @@ export default class SocketController {
 
         const payload = {
             senderId: senderId,
-            senderUsername: socket.request.session.user.username,
             message: audioPath,
+            createdAt: validPayload.createdAt,
             type: 'audio',
         };
         io.to(receiverUser.socket_id).emit('message', payload);

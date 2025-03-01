@@ -6,6 +6,7 @@ import { validateTextMessage } from '../Schemas/textMessageSchema.js';
 import { validateUserId } from '../Validations/blockedUsersValidations.js';
 import { validateAudioMessage } from '../Schemas/audioMessageSchema.js';
 import chatsModel from '../Models/ChatsModel.js';
+import { getCurrentTimestamp } from '../Utils/timeUtils.js';
 
 export async function validateMessagePayload(socket, payload, msgType) {
     const senderId = socket.request.session.user.id;
@@ -44,6 +45,7 @@ export async function validateMessagePayload(socket, payload, msgType) {
         chatId: chatId,
         receiverId: receiverId,
         message: validatedMessage.message,
+        createdAt: getCurrentTimestamp(),
     };
 
     return validPayload;

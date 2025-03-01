@@ -15,8 +15,13 @@ export const useChat = () => {
 	);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
-	const { socket, sendMessage: socketSendMessage } = useSocket();
+	const {
+		socket,
+		sendMessage: socketSendMessage,
+		sendAudioMessage: socketSendAudioMessage,
+	} = useSocket();
 	const { user } = useAuth();
+	const [messages, setMessages] = useState<Message[]>([]);
 
 	const getAllChats = async () => {
 		setLoading(true);
@@ -45,6 +50,7 @@ export const useChat = () => {
 				...prev,
 				[chatId]: response.msg,
 			}));
+			setMessages(response.msg.chatMessages);
 			return response.msg;
 		} catch (err: any) {
 			const errorMessage = err.message
@@ -65,31 +71,18 @@ export const useChat = () => {
 				// Use the socket to send the message
 				socketSendMessage(chatId, receiverId, message);
 
-				// Optimistically update the UI with the new message
 				if (user) {
 					const newMessage: Message = {
 						senderId: user.id,
 						message,
-						createdAt: new Date().toISOString(),
+						createdAt: new Date()
+							.toISOString()
+							.replace(/\.\d+Z$/, "Z"),
 						type: "text",
 					};
 
-					// Update chat details with the new message
-					setChatDetails((prev) => {
-						const currentChat = prev[chatId];
-						if (!currentChat) return prev;
-
-						return {
-							...prev,
-							[chatId]: {
-								...currentChat,
-								chatMessages: [
-									...currentChat.chatMessages,
-									newMessage,
-								],
-							},
-						};
-					});
+					// Update chat messages
+					setMessages((prev) => [...prev, newMessage]);
 
 					// Update chats list timestamp
 					setChats((prevChats) => {
@@ -97,7 +90,9 @@ export const useChat = () => {
 							if (chat.chatId === chatId) {
 								return {
 									...chat,
-									updatedAt: new Date().toISOString(),
+									updatedAt: new Date()
+										.toISOString()
+										.replace(/\.\d+Z$/, "Z"),
 								};
 							}
 							return chat;
@@ -112,6 +107,62 @@ export const useChat = () => {
 		[socketSendMessage, user]
 	);
 
+	const sendAudioMessage = useCallback(
+		async (chatId: string, receiverId: string, audioFile: File) => {
+			if (!socket || !user) {
+				throw new Error(
+					"Socket not connected or user not authenticated"
+				);
+			}
+
+			try {
+				const base64Audio = await fileToBase64(audioFile);
+
+				// Remove MIME prefix
+				const base64WithoutPrefix =
+					base64Audio.split(",").pop() || base64Audio;
+
+				socketSendAudioMessage(chatId, receiverId, base64WithoutPrefix);
+
+				const newMessage: Message = {
+					senderId: user.id,
+					message: base64Audio,
+					createdAt: new Date().toISOString().replace(/\.\d+Z$/, "Z"),
+					type: "audio",
+				};
+
+				setMessages((prev) => [...prev, newMessage]);
+
+				setChats((prevChats) => {
+					return prevChats.map((chat) => {
+						if (chat.chatId === chatId) {
+							return {
+								...chat,
+								updatedAt: new Date()
+									.toISOString()
+									.replace(/\.\d+Z$/, "Z"),
+							};
+						}
+						return chat;
+					});
+				});
+			} catch (error: any) {
+				setError(error.message || "Failed to send audio message");
+				throw error;
+			}
+		},
+		[socket, user, socketSendAudioMessage]
+	);
+
+	const fileToBase64 = (file: File): Promise<string> => {
+		return new Promise((resolve, reject) => {
+			const reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onload = () => resolve(reader.result as string);
+			reader.onerror = (error) => reject(error);
+		});
+	};
+
 	// Listen for new messages from the socket
 	useEffect(() => {
 		if (!socket) return;
@@ -119,28 +170,8 @@ export const useChat = () => {
 		const handleNewMessage = (
 			messageData: Message & { chatId: string }
 		) => {
-			// Update chat details if we have this chat open
-			setChatDetails((prev) => {
-				const chatId = messageData.chatId;
-				const currentChat = prev[chatId];
-				if (!currentChat) return prev;
-
-				// Create a message object that matches our interface
-				const newMessage: Message = {
-					senderId: messageData.senderId,
-					message: messageData.message,
-					createdAt: messageData.createdAt,
-					type: messageData.type || "text",
-				};
-
-				return {
-					...prev,
-					[chatId]: {
-						...currentChat,
-						chatMessages: [...currentChat.chatMessages, newMessage],
-					},
-				};
-			});
+			// update messages for the chat
+			setMessages((prev) => [...prev, messageData]);
 
 			// Update the chats list timestamp
 			setChats((prevChats) => {
@@ -156,10 +187,10 @@ export const useChat = () => {
 			});
 		};
 
-		socket.on("messages", handleNewMessage);
+		socket.on("message", handleNewMessage);
 
 		return () => {
-			socket.off("messages", handleNewMessage);
+			socket.off("message", handleNewMessage);
 		};
 	}, [socket, user]);
 
@@ -169,6 +200,8 @@ export const useChat = () => {
 		getAllChats,
 		getChat,
 		sendMessage,
+		sendAudioMessage,
+		messages,
 		loading,
 		error,
 	};
