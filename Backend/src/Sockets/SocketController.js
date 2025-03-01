@@ -65,7 +65,6 @@ export default class SocketController {
             type: 'text',
         };
 
-        console.log('TEST: ', payload);
         io.to(receiverUser.socket_id).emit('message', payload);
     }
 
