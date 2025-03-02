@@ -28,7 +28,7 @@ export default class Notifications {
             input: {
                 user_id: recipientId,
                 message: notificationMessage,
-                created_at: getTimestampWithTZ()
+                created_at: getTimestampWithTZ(),
             },
         });
         if (!notification || notification.length === 0) {
