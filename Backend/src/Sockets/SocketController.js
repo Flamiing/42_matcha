@@ -7,7 +7,7 @@ import {
 } from '../Utils/chatUtils.js';
 import { emitErrorAndReturnNull } from '../Utils/errorUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
-import { getCurrentTimestamp } from '../Utils/timeUtils.js';
+import { getTimestampWithTZ } from '../Utils/timeUtils.js';
 import { validateMessagePayload } from '../Validations/messagePayloadValidations.js';
 import Notifications from './Notifications.js';
 
@@ -22,6 +22,7 @@ export default class SocketController {
             sender_id: senderId,
             receiver_id: validPayload.receiverId,
             message: validPayload.message,
+            created_at: validPayload.createdAt,
         };
         const savedChatMessage = await textChatMessagesModel.create({
             input: chatMessage,
@@ -59,10 +60,11 @@ export default class SocketController {
 
         const payload = {
             senderId: senderId,
-            senderUsername: socket.request.session.user.username,
             message: validPayload.message,
+            createdAt: validPayload.createdAt,
             type: 'text',
         };
+
         io.to(receiverUser.socket_id).emit('message', payload);
     }
 
@@ -97,8 +99,8 @@ export default class SocketController {
 
         const payload = {
             senderId: senderId,
-            senderUsername: socket.request.session.user.username,
             message: audioPath,
+            createdAt: validPayload.createdAt,
             type: 'audio',
         };
         io.to(receiverUser.socket_id).emit('message', payload);
@@ -113,7 +115,7 @@ export default class SocketController {
             user_id: userId,
             socket_id: socketId,
             status: status,
-            last_online: getCurrentTimestamp(),
+            last_online: getTimestampWithTZ(),
         };
 
         const userStatus = await userStatusModel.createOrUpdate({
@@ -124,12 +126,5 @@ export default class SocketController {
 
         console.info('INFO:', StatusMessage.USER_STATUS_CHANGED);
         return true;
-    }
-
-    static handleError(socket, errorMessage) {
-        console.log('INFO:', errorMessage);
-        socket.emit('error-info', { msg: errorMessage });
-        socket.disconnect();
-        return;
     }
 }

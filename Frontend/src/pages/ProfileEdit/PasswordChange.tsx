@@ -124,7 +124,13 @@ const PasswordChange: React.FC = () => {
 										setViewPassword(!viewPassword)
 									}
 								>
-									<span className="fa fa-eye cursor-pointer" />
+									<i
+										className={`fa ${
+											viewPassword
+												? "fa-eye"
+												: "fa-eye-slash"
+										} cursor-pointer`}
+									/>
 									View Passwords
 								</button>
 							</div>
