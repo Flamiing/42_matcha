@@ -1,11 +1,11 @@
 services:
     postgresql:
-        image: bitnami/postgresql:16.4.0
         container_name: postgresql
-        #user: ${MY_USER_ID}:${MY_GROUP_ID}
+        build:
+            context: ./Docker/PostgreSQL
+            dockerfile: Dockerfile
         volumes:
             - postgresql_volume:/var/lib/postgresql
-            - ./docker/PostgreSQL/init:/docker-entrypoint-initdb.d
         networks:
             - matcha-network
         environment:
