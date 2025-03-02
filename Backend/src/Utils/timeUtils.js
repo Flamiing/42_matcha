@@ -6,7 +6,7 @@ export function getCurrentTimestamp() {
 
 export function getTimestampWithTZ() {
     const timestamp = new Date();
-    console.log('TEST: ', timestamp)
+    console.log('TEST: ', timestamp);
     return timestamp;
 }
 
