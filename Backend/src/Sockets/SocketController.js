@@ -7,7 +7,7 @@ import {
 } from '../Utils/chatUtils.js';
 import { emitErrorAndReturnNull } from '../Utils/errorUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
-import { getCurrentTimestamp } from '../Utils/timeUtils.js';
+import { getTimestampWithTZ } from '../Utils/timeUtils.js';
 import { validateMessagePayload } from '../Validations/messagePayloadValidations.js';
 import Notifications from './Notifications.js';
 
@@ -115,7 +115,7 @@ export default class SocketController {
             user_id: userId,
             socket_id: socketId,
             status: status,
-            last_online: getCurrentTimestamp(),
+            last_online: getTimestampWithTZ(),
         };
 
         const userStatus = await userStatusModel.createOrUpdate({
