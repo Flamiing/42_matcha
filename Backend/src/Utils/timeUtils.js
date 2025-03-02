@@ -4,6 +4,12 @@ export function getCurrentTimestamp() {
     return timestamp;
 }
 
+export function getTimestampWithTZ() {
+    const timestamp = new Date();
+    console.log('TEST: ', timestamp)
+    return timestamp;
+}
+
 export function validEventDate(date) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
