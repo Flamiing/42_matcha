@@ -12,6 +12,8 @@ import ConfirmEmail from "../pages/Callbacks/ConfirmEmail";
 import Browse from "../pages/Browse";
 import PublicProfile from "../pages/PublicProfile";
 import Events from "../pages/Events";
+import ResetPassword from "../pages/Callbacks/ResetPassword";
+import Chat from "../pages/Chat";
 
 const protectedRoutes = {
 	profileEdit: {
@@ -54,6 +56,14 @@ const protectedRoutes = {
 			</ProtectedRoute>
 		),
 	},
+	chat: {
+		path: "chat",
+		element: (
+			<ProtectedRoute>
+				<Chat />
+			</ProtectedRoute>
+		),
+	},
 };
 
 const publicRoutes = {
@@ -80,6 +90,10 @@ const callbackRoutes = {
 		path: "auth/email/callback",
 		element: <ConfirmEmail />,
 	},
+	resetPassword: {
+		path: "auth/password/reset",
+		element: <ResetPassword />,
+	},
 };
 
 // 404 default route if not found
@@ -90,18 +104,29 @@ const defaultRoute = {
 	},
 };
 
-export const router = createBrowserRouter([
+export const router = createBrowserRouter(
+	[
+		{
+			path: "/",
+			element: <Layout />,
+			children: [
+				...Object.values(publicRoutes),
+				...Object.values(protectedRoutes),
+				...Object.values(callbackRoutes),
+				...Object.values(defaultRoute),
+			],
+		},
+	],
 	{
-		path: "/",
-		element: <Layout />,
-		children: [
-			...Object.values(publicRoutes),
-			...Object.values(protectedRoutes),
-			...Object.values(callbackRoutes),
-			...Object.values(defaultRoute),
-		],
-	},
-]);
+		future: {
+			v7_relativeSplatPath: true,
+			v7_fetcherPersist: true,
+			v7_normalizeFormMethod: true,
+			v7_partialHydration: true,
+			v7_skipActionErrorRevalidation: true,
+		},
+	}
+);
 
 export const routes = {
 	...publicRoutes,

@@ -99,7 +99,6 @@ export default class StatusMessage {
     static CANNOT_CALCULATE_DISTANCE =
         'Cannot calculate distance without both locations.';
     static NO_LOCATION = 'Please provide a location.';
-    static INVALID_AUTH_HEADER = 'Invalid authorization header format.';
     static ERROR_CHANGING_USER_STATUS =
         'An error occurred while updating the user status. Please try again.';
     static USER_STATUS_CHANGED = 'User status changed successfully!';
@@ -129,4 +128,7 @@ export default class StatusMessage {
     static NOT_CHAT_PARTICIPANT = 'You are not participating in this chat.';
     static MEDIA_ACCESS_NOT_AUTHORIZED =
         'You do not have permission to access this media content.';
+    static ERROR_PARSING_COOKIES = 'Unable to read session cookies.';
+    static ERROR_REFRESHING_ACCESS_TOKEN =
+        'There was a problem refreshing your authentication token.';
 }

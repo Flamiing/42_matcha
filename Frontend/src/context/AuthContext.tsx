@@ -14,7 +14,12 @@ interface AuthContextType {
 	register: (data: RegisterData) => Promise<AuthResponse>;
 	login: (data: LoginData) => Promise<AuthResponse>;
 	logout: () => Promise<AuthResponse>;
-	oauth: (code: string) => Promise<AuthResponse>;
+	oauth: (token: string) => Promise<AuthResponse>;
+	confirmEmail: (token: string) => Promise<AuthResponse>;
+	resetPassword: (
+		token: string,
+		new_password: string
+	) => Promise<AuthResponse>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -83,13 +88,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		return response;
 	};
 
-	const oauth = async (code: string, location): Promise<AuthResponse> => {
-		const response = await authApi.oauth(code, location);
+	const oauth = async (token: string, location): Promise<AuthResponse> => {
+		const response = await authApi.oauth(token, location);
 		if (response.success && response.user) {
 			setUser(response.user);
 			setIsAuthenticated(true);
 		}
 		return response;
+	};
+
+	const confirmEmail = async (code: string): Promise<AuthResponse> => {
+		try {
+			await authApi.confirmEmail(code);
+			const status = await authApi.checkAuth();
+			setUser(status.user);
+			setIsAuthenticated(true);
+			return {
+				success: true,
+				message: "Email confirmed",
+				user: status.user,
+			};
+		} catch (error: any) {
+			return {
+				success: false,
+				message: error.message || "Email confirmation failed",
+			};
+		}
+	};
+
+	const resetPassword = async (
+		token: string,
+		new_password: string
+	): Promise<AuthResponse> => {
+		return await authApi.resetPassword(token, new_password);
 	};
 
 	return (
@@ -102,6 +133,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				login,
 				logout,
 				oauth,
+				confirmEmail,
+				resetPassword,
 			}}
 		>
 			{children}

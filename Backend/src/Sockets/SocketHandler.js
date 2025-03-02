@@ -6,6 +6,7 @@ import { socketSessionMiddleware } from '../Middlewares/socketSessionMiddleware.
 import SocketController from './SocketController.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { authStatusSocketMiddleware } from '../Middlewares/authStatusSocketMiddleware.js';
+import { handleError } from '../Utils/socketUtils.js';
 
 class SocketHandler {
     constructor(server) {
@@ -13,7 +14,7 @@ class SocketHandler {
 
         this.io = new Server(server, {
             cors: {
-                origin: '*',
+                origin: 'http://localhost:3000',
                 credentials: true,
             },
         });
@@ -46,13 +47,13 @@ class SocketHandler {
 
     #handleSocket() {
         this.io.on('connection', async (socket) => {
-            console.info(`New socket connected: ${socket.id}`);
+            console.info(`INFO: New socket connected: ${socket.id}`);
 
             if (socket.request.session.user) {
                 const userStatusResult =
                     await SocketController.changeUserStatus(socket, 'online');
                 if (!userStatusResult)
-                    return SocketController.handleError(
+                    return handleError(
                         socket,
                         StatusMessage.ERROR_CHANGING_USER_STATUS
                     );
@@ -88,12 +89,12 @@ class SocketHandler {
                             'offline'
                         );
                     if (!userStatusResult)
-                        return SocketController.handleError(
+                        return handleError(
                             socket,
                             StatusMessage.ERROR_CHANGING_USER_STATUS
                         );
                 }
-                console.info(`Socket disconnected: ${socket.id}`);
+                console.info(`INFO: Socket disconnected: ${socket.id}`);
             });
         });
     }
