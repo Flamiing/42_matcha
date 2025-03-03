@@ -77,6 +77,7 @@ export default class MatchesController {
         const input = {
             user_id_1: userIdOne,
             user_id_2: userIdTwo,
+            time: getTimestampWithTZ(),
         };
 
         const matchResult = await matchesModel.create({ input });
