@@ -16,7 +16,7 @@ const ChatCard: React.FC<ChatCardProps> = ({ chat, isSelected, onClick }) => {
 	// Format timestamp from the API to display in timeAgo format
 	const getTimeDisplay = () => {
 		const timestamp = new Date(chat.updatedAt || chat.createdAt).getTime();
-		return timeAgo(timestamp, true);
+		return timeAgo(timestamp);
 	};
 
 	return (

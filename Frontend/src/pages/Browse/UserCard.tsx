@@ -27,7 +27,7 @@ const UserCard = ({ user, distance }) => {
 
 			{/* User Info Section */}
 			<div className="p-4 space-y-3">
-				{/* Username & Gender */}
+				{/* Username & Fame */}
 				<div className="flex justify-between items-center text-font-main">
 					<span className="font-semibold">
 						{capitalizeLetters(user.first_name)}{" "}
@@ -42,18 +42,14 @@ const UserCard = ({ user, distance }) => {
 						</div>
 					</div>
 				</div>
-				{/* Location & Fame Row */}
+				{/* Location & Gender */}
 				<div className="flex justify-between items-center">
-					{distance ? (
-						<div className="flex items-center space-x-1 text-font-main gap-1">
-							<i className="fa fa-map-marker font-semibold text-red-500" />
-							{distance < 1
-								? "<1 km away"
-								: Math.round(distance) + " km away"}
-						</div>
-					) : (
-						<div />
-					)}
+					<div className="flex items-center gap-1 text-font-main">
+						<i className="fa fa-map-marker font-semibold text-red-500" />
+						{distance < 1
+							? "<1 km away"
+							: Math.round(distance) + " km away"}
+					</div>
 					{user.gender ? (
 						<span className="text-font-main">
 							{capitalizeLetters(user.gender)}
