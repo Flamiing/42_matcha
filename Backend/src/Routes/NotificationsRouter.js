@@ -11,6 +11,9 @@ export default class NotificationsRouter {
         // GET:
         router.get('/', NotificationsController.getAllNotifications);
 
+        // PATCH:
+        router.patch('/mark-read', NotificationsController.markRead);
+
         return router;
     }
 }
