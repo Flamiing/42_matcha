@@ -31,7 +31,7 @@ export default class ReportsController {
         const input = {
             reported_by: reportedById,
             reported: reportedId,
-            time: getTimestampWithTZ()
+            time: getTimestampWithTZ(),
         };
         const report = await reportsModel.create({ input });
         if (!report || report.length === 0)
