@@ -6,6 +6,7 @@ import { returnErrorStatus } from '../Utils/errorUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
 import { validateUserId } from '../Validations/blockedUsersValidations.js';
 import { sendEmail } from '../Utils/authUtils.js';
+import { getTimestampWithTZ } from '../Utils/timeUtils.js';
 
 export default class ReportsController {
     static async reportUser(req, res) {
@@ -30,6 +31,7 @@ export default class ReportsController {
         const input = {
             reported_by: reportedById,
             reported: reportedId,
+            time: getTimestampWithTZ()
         };
         const report = await reportsModel.create({ input });
         if (!report || report.length === 0)

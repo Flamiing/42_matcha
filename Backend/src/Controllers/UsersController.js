@@ -12,7 +12,7 @@ import StatusMessage from '../Utils/StatusMessage.js';
 import { returnErrorWithNext, returnErrorStatus } from '../Utils/errorUtils.js';
 import imagesModel from '../Models/ImagesModel.js';
 import viewsHistoryModel from '../Models/ViewsHistoryModel.js';
-import { getCurrentTimestamp } from '../Utils/timeUtils.js';
+import { getTimestampWithTZ } from '../Utils/timeUtils.js';
 import { parseImages } from '../Utils/imagesUtils.js';
 import { getUserLikesAndBlocks } from '../Utils/userUtils.js';
 import Notifications from '../Sockets/Notifications.js';
@@ -479,7 +479,7 @@ export default class UsersController {
         let input = {
             viewed_by: viewedById,
             viewed: viewedId,
-            time: getCurrentTimestamp(),
+            time: getTimestampWithTZ(),
         };
 
         if (view && view.length !== 0) {

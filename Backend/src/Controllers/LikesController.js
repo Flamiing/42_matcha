@@ -8,6 +8,7 @@ import StatusMessage from '../Utils/StatusMessage.js';
 import { isValidUUID } from '../Validations/generalValidations.js';
 import MatchesController from './MatchesController.js';
 import Notifications from '../Sockets/Notifications.js';
+import { getTimestampWithTZ } from '../Utils/timeUtils.js';
 
 export default class LikesController {
     static async handleLike(req, res) {
@@ -114,6 +115,7 @@ export default class LikesController {
         const input = {
             liked_by: likedById,
             liked: likedId,
+            time: getTimestampWithTZ(),
         };
         const saveLikeResult = await likesModel.create({ input });
         if (!saveLikeResult)
