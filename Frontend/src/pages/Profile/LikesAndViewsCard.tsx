@@ -19,7 +19,7 @@ const LikesAndViewsCard: React.FC = ({ profile }) => {
 						{profile.username}
 					</p>
 					<p className="text-sm text-gray-500">
-						{timeAgo(profile.actionTime)}
+						{timeAgo(profile.time)}
 					</p>
 				</div>
 			</div>

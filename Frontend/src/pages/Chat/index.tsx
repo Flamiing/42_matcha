@@ -6,6 +6,7 @@ import { useChat } from "../../hooks/PageData/useChat";
 import Spinner from "../../components/common/Spinner";
 import MsgCard from "../../components/common/MsgCard";
 import { useSocket } from "../../context/SocketContext";
+import { Link } from "react-router-dom";
 
 const index: React.FC = () => {
 	const { isMobile, isTablet, isDesktop } = useBreakpoints();
@@ -128,7 +129,11 @@ const index: React.FC = () => {
 							<>
 								{" with "}
 								<span className="underline text-primary font-extrabold">
-									{chatPartner?.username}
+									<Link
+										to={`/profile/view/${chatPartner?.username}`}
+									>
+										{chatPartner?.username}
+									</Link>
 								</span>
 							</>
 						) : (
