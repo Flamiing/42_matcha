@@ -231,7 +231,7 @@ export default class UsersController {
         const { tags } = req.body;
         const input = validatedUser.data;
         const inputHasNoContent = Object.keys(input).length === 0;
-        if (inputHasNoContent && (!tags || tags.length === 0))
+        if (inputHasNoContent && !tags)
             return returnErrorStatus(
                 res,
                 400,
