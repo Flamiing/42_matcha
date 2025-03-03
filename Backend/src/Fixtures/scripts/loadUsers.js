@@ -8,7 +8,7 @@ import userLocationModel from '../../Models/UserLocationModel.js';
 import userTagsModel from '../../Models/UserTagsModel.js';
 import { hashPassword } from '../../Utils/authUtils.js';
 import userStatusModel from '../../Models/UserStatusModel.js';
-import { getCurrentTimestamp } from '../../Utils/timeUtils.js';
+import { getTimestampWithTZ } from '../../Utils/timeUtils.js';
 
 async function getUsersFromJson() {
     try {
@@ -68,7 +68,7 @@ export default async function loadUsers() {
                 user_id: createdUser.id,
                 socket_id: null,
                 status: 'offline',
-                last_online: getCurrentTimestamp(),
+                last_online: getTimestampWithTZ(),
             },
         });
 

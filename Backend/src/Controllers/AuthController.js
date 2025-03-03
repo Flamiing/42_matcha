@@ -30,7 +30,7 @@ import {
 } from '../Validations/authValidations.js';
 import { saveUserLocation } from '../Utils/userUtils.js';
 import userStatusModel from '../Models/UserStatusModel.js';
-import { getCurrentTimestamp } from '../Utils/timeUtils.js';
+import { getTimestampWithTZ } from '../Utils/timeUtils.js';
 
 export default class AuthController {
     static async login(req, res) {
@@ -417,7 +417,7 @@ export default class AuthController {
                     user_id: user.id,
                     socket_id: null,
                     status: 'online',
-                    last_online: getCurrentTimestamp(),
+                    last_online: getTimestampWithTZ(),
                 },
                 keyName: 'user_id',
             });

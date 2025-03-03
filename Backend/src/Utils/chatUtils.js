@@ -7,7 +7,7 @@ import path from 'path';
 import StatusMessage from './StatusMessage.js';
 import { emitErrorAndReturnNull } from './errorUtils.js';
 import audioChatMessagesModel from '../Models/AudioChatMessagesModel.js';
-import { getCurrentTimestamp } from './timeUtils.js';
+import { getTimestampWithTZ } from './timeUtils.js';
 import chatsModel from '../Models/ChatsModel.js';
 
 export async function processAudioMessage(socket, senderId, payload) {
@@ -56,7 +56,7 @@ export async function processAudioMessage(socket, senderId, payload) {
 
 export async function changeChatUpdatedAtTimestamp(chatId) {
     const input = {
-        updated_at: getCurrentTimestamp(),
+        updated_at: getTimestampWithTZ(),
     };
     const updatedChat = await chatsModel.update({ input, id: chatId });
     if (!updatedChat || updatedChat.length === 0) return null;
