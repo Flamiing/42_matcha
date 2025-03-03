@@ -34,6 +34,7 @@ export default class NotificationsController {
             const notification = {
                 id: rawNotification.id,
                 message: rawNotification.message,
+                read: rawNotification.read,
                 createdAt: rawNotification.created_at,
             };
 
