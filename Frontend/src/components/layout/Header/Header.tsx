@@ -15,6 +15,24 @@ const Header: React.FC = () => {
 		if (!isMobile && !isTablet) setIsMenuOpen(false);
 	}, [isTablet, isDesktop]);
 
+	useEffect(() => {
+		if (isMenuOpen) {
+			document.body.style.overflow = "hidden";
+			document.body.style.position = "fixed";
+			document.body.style.width = "100%";
+		} else {
+			document.body.style.overflow = "";
+			document.body.style.position = "";
+			document.body.style.width = "";
+		}
+
+		return () => {
+			document.body.style.overflow = "";
+			document.body.style.position = "";
+			document.body.style.width = "";
+		};
+	}, [isMenuOpen]);
+
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
 	};
@@ -167,7 +185,7 @@ const Header: React.FC = () => {
 								isMenuOpen
 									? "translate-x-0"
 									: "translate-x-full"
-							} z-40 mt-20`}
+							} z-40 mt-20 overflow-y-auto`}
 						>
 							<nav className="container flex flex-col text-white p-6">
 								<div className="flex flex-col gap-4 mb-8">
