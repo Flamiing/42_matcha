@@ -15,8 +15,8 @@ export async function removeImageOnFailureMiddleware(err, req, res, next) {
             console.error(`Error deleting file ${image.path}: ${error}`);
         }
     }
-    if (err.code === 'LIMIT_UNEXPECTED_FILE'){
-        res.status(400).json({ msg: StatusMessage.EXCEEDS_IMAGE_LIMIT })
+    if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+        res.status(400).json({ msg: StatusMessage.EXCEEDS_IMAGE_LIMIT });
         return next();
     }
     next(err);
