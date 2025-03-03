@@ -144,6 +144,7 @@ CREATE TABLE notifications (
     user_id UUID NOT NULL, 
     message VARCHAR(100) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    read BOOLEAN default FALSE, 
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
