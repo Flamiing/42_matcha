@@ -31,6 +31,11 @@ const EditLocation: React.FC = ({ user }) => {
 				allows_location: true,
 			});
 			setAllowedLocation(true);
+			setMsg({
+				type: "success",
+				message: "Location updated successfully.",
+				key: Date.now(),
+			});
 		} catch (error) {
 			setMsg({
 				type: "error",

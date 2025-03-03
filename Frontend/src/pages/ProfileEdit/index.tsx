@@ -47,6 +47,12 @@ const index = () => {
 		return newValue !== originalValue;
 	};
 
+	const haveTagsChanged = (newTags: number[], originalTags: number[]) => {
+		if (newTags.length !== originalTags.length) return true;
+		const originalTagIds = originalTags.map(tag => tag.id);
+		return newTags.some(tag => !originalTagIds.includes(tag));
+	};
+
 	// Get changed fields and always include tags
 	const getChangedFields = () => {
 		if (!formData || !originalData) return {};
@@ -119,7 +125,7 @@ const index = () => {
 		if (
 			Object.keys(changedFields).length === 1 &&
 			"tags" in changedFields &&
-			!hasValueChanged(changedFields.tags, originalData.tags)
+			!haveTagsChanged(changedFields.tags, originalData.tags)
 		)
 			return;
 
