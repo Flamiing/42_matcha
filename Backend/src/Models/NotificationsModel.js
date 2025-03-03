@@ -8,11 +8,7 @@ class NotificationsModel extends Model {
 
     async updateReadStatus(userId, readStatus) {
         const oldReadStatus = readStatus ? false : true;
-        const values = [
-            readStatus,
-            oldReadStatus,
-            userId
-        ]
+        const values = [readStatus, oldReadStatus, userId];
 
         const query = {
             text: `UPDATE ${this.table} SET read = $1 WHERE read = $2 AND user_id = $3 RETURNING *;`,

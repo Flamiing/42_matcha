@@ -64,7 +64,10 @@ export default class NotificationsController {
         const userId = req.session.user.id;
 
         const updateResult = notificationsModel.updateReadStatus(userId, true);
-        if (!updateResult) return res.status(500).json({ msg: StatusMessage.INTERNAL_SERVER_ERROR })
+        if (!updateResult)
+            return res
+                .status(500)
+                .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
 
         return res.json({});
     }
