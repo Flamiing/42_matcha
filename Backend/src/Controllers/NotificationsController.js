@@ -32,6 +32,7 @@ export default class NotificationsController {
         let notifications = [];
         for (const rawNotification of rawNotifications) {
             const notification = {
+                id: rawNotification.id,
                 message: rawNotification.message,
                 createdAt: rawNotification.created_at,
             };

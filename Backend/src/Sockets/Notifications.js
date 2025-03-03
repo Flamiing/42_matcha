@@ -38,6 +38,7 @@ export default class Notifications {
         }
 
         const payload = {
+            id: notification.id,
             message: notification.message,
             createdAt: notification.created_at,
         };
