@@ -32,7 +32,9 @@ export default class NotificationsController {
         let notifications = [];
         for (const rawNotification of rawNotifications) {
             const notification = {
+                id: rawNotification.id,
                 message: rawNotification.message,
+                read: rawNotification.read,
                 createdAt: rawNotification.created_at,
             };
 
@@ -56,5 +58,17 @@ export default class NotificationsController {
             console.error('ERROR:', error);
             return null;
         }
+    }
+
+    static async markRead(req, res) {
+        const userId = req.session.user.id;
+
+        const updateResult = notificationsModel.updateReadStatus(userId, true);
+        if (!updateResult)
+            return res
+                .status(500)
+                .json({ msg: StatusMessage.INTERNAL_SERVER_ERROR });
+
+        return res.json({});
     }
 }
