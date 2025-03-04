@@ -1,5 +1,10 @@
-export const timeAgo = (timestamp: number, regular?: boolean = false) => {
-	const seconds = Math.floor((Date.now() - timestamp) / 1000);
+export const timeAgo = (timestamp: string | number) => {
+	const date =
+		typeof timestamp === "string"
+			? new Date(timestamp).getTime()
+			: timestamp;
+
+	const seconds = Math.floor((Date.now() - date) / 1000);
 
 	const intervals = {
 		year: 31536000,
@@ -13,7 +18,6 @@ export const timeAgo = (timestamp: number, regular?: boolean = false) => {
 
 	for (const [unit, secondsInUnit] of Object.entries(intervals)) {
 		const interval = Math.floor(seconds / secondsInUnit);
-
 		if (interval >= 1) {
 			return interval === 1
 				? `1 ${unit} ago`
@@ -21,5 +25,5 @@ export const timeAgo = (timestamp: number, regular?: boolean = false) => {
 		}
 	}
 
-	return regular ? "Just now" : "Currently online";
+	return "Just now";
 };

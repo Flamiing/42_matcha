@@ -15,6 +15,24 @@ const Header: React.FC = () => {
 		if (!isMobile && !isTablet) setIsMenuOpen(false);
 	}, [isTablet, isDesktop]);
 
+	useEffect(() => {
+		if (isMenuOpen) {
+			document.body.style.overflow = "hidden";
+			document.body.style.position = "fixed";
+			document.body.style.width = "100%";
+		} else {
+			document.body.style.overflow = "";
+			document.body.style.position = "";
+			document.body.style.width = "";
+		}
+
+		return () => {
+			document.body.style.overflow = "";
+			document.body.style.position = "";
+			document.body.style.width = "";
+		};
+	}, [isMenuOpen]);
+
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
 	};
@@ -86,7 +104,7 @@ const Header: React.FC = () => {
 					{isDesktop && (
 						<>
 							<nav className="flex justify-center flex-1">
-								<div className="flex gap-4">
+								<div className="flex gap-4 flex-wrap items-center justify-center">
 									<Link to="/">
 										<button className="text-font-main font-medium btn whitespace-nowrap text-base px-6 py-2 rounded-full hover:bg-secondary-light transition-colors duration-300">
 											Home
@@ -167,7 +185,7 @@ const Header: React.FC = () => {
 								isMenuOpen
 									? "translate-x-0"
 									: "translate-x-full"
-							} z-40 mt-20`}
+							} z-40 mt-20 overflow-y-auto`}
 						>
 							<nav className="container flex flex-col text-white p-6">
 								<div className="flex flex-col gap-4 mb-8">

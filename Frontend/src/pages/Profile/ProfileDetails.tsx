@@ -1,4 +1,3 @@
-import { timeAgo } from "../../hooks/timeAgo";
 import FameRating from "../../components/common/FameRating";
 
 const ProfileDetails: React.FC = ({ user }) => {

@@ -20,12 +20,22 @@ const EditLocation: React.FC = ({ user }) => {
 	const onSubmit = async () => {
 		try {
 			const location = await getLocation();
+			if (!location)
+				throw new Error(
+					"Access to location denied. Could not update location."
+				);
+
 			await updateLocation({
 				latitude: location.latitude,
 				longitude: location.longitude,
 				allows_location: true,
 			});
 			setAllowedLocation(true);
+			setMsg({
+				type: "success",
+				message: "Location updated successfully.",
+				key: Date.now(),
+			});
 		} catch (error) {
 			setMsg({
 				type: "error",
