@@ -22,7 +22,7 @@
         ],
         "location": {
             "latitude": 40.8951,
-            "longitude": -77.0364,
+            "longitude": -3.717001,
             "allows_location": true
         }
     },
@@ -48,7 +48,7 @@
         ],
         "location": {
             "latitude": 40.8951,
-            "longitude": -77.0364,
+            "longitude": -3.717001,
             "allows_location": true
         }
     },
@@ -73,7 +73,7 @@
         ],
         "location": {
             "latitude": 40.8951,
-            "longitude": -77.0364,
+            "longitude": -3.717001,
             "allows_location": true
         }
     },
@@ -95,7 +95,7 @@
         "tags": [],
         "location": {
             "latitude": 40.8951,
-            "longitude": -77.0364,
+            "longitude": -3.717001,
             "allows_location": true
         }
     },
@@ -120,7 +120,7 @@
         ],
         "location": {
             "latitude": 40.8951,
-            "longitude": -77.0364,
+            "longitude": -3.717001,
             "allows_location": true
         }
     },
@@ -145,7 +145,7 @@
         ],
         "location": {
             "latitude": 40.8951,
-            "longitude": -77.0364,
+            "longitude": -3.717001,
             "allows_location": true
         }
     }
