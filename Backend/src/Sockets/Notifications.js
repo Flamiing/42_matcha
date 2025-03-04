@@ -3,6 +3,7 @@ import notificationsModel from '../Models/NotificationsModel.js';
 import userModel from '../Models/UserModel.js';
 import userStatusModel from '../Models/UserStatusModel.js';
 import StatusMessage from '../Utils/StatusMessage.js';
+import { getTimestampWithTZ } from '../Utils/timeUtils.js';
 import SocketHandler from './SocketHandler.js';
 
 export default class Notifications {
@@ -27,6 +28,7 @@ export default class Notifications {
             input: {
                 user_id: recipientId,
                 message: notificationMessage,
+                created_at: getTimestampWithTZ(),
             },
         });
         if (!notification || notification.length === 0) {
@@ -38,7 +40,9 @@ export default class Notifications {
         }
 
         const payload = {
+            id: notification.id,
             message: notification.message,
+            read: notification.read,
             createdAt: notification.created_at,
         };
 
