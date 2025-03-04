@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNotifications } from "../../../hooks/PageData/useNotifications";
 import Spinner from "../../common/Spinner";
 
 const Notifications: React.FC = () => {
 	const [isOpen, setIsOpen] = useState(false);
-	const handleClick = (action: () => void) => {
-		setIsOpen(false);
-	};
-	const { getAllNotifications, notifications, loading, error } =
-		useNotifications();
+	const {
+		getAllNotifications,
+		markAllAsRead,
+		notifications,
+		unreadCount,
+		loading,
+		error,
+	} = useNotifications();
+	const hasMarkedReadRef = useRef(false);
 
 	useEffect(() => {
 		try {
@@ -17,6 +21,23 @@ const Notifications: React.FC = () => {
 			console.error(error);
 		}
 	}, []);
+
+	const handleOpen = () => {
+		setIsOpen(true);
+		hasMarkedReadRef.current = false;
+	};
+
+	const handleClose = async () => {
+		setIsOpen(false);
+		if (unreadCount > 0 && !hasMarkedReadRef.current) {
+			try {
+				await markAllAsRead();
+				hasMarkedReadRef.current = true;
+			} catch (error) {
+				console.error("Failed to mark notifications as read:", error);
+			}
+		}
+	};
 
 	const formatTime = (initialDate: string) => {
 		const date = new Date(initialDate);
@@ -30,23 +51,25 @@ const Notifications: React.FC = () => {
 	return (
 		<div className="relative">
 			<button
-				onClick={() => setIsOpen(!isOpen)}
+				onClick={isOpen ? handleClose : handleOpen}
 				className="relative rounded-full bg-white shadow-md hover:shadow-lg transition-shadow duration-200 group w-10 h-10 flex justify-center items-center"
-				aria-label="Profile options"
-				title="Profile options"
+				aria-label="Notifications"
+				title="Notifications"
 			>
 				<i
 					className={`fa fa-bell text-xl ${
 						isOpen ? "text-primary-monochromatic" : "text-primary"
 					} group-hover:text-primary transition-colors`}
 				/>
+				{unreadCount > 0 && (
+					<span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+						{unreadCount > 9 ? "9+" : unreadCount}
+					</span>
+				)}
 			</button>
 			{isOpen && (
 				<div>
-					<div
-						className="fixed inset-0 z-40"
-						onClick={() => setIsOpen(false)}
-					/>
+					<div className="fixed inset-0 z-40" onClick={handleClose} />
 					<div className="absolute top-11 right-0 z-50 bg-white rounded-lg shadow-lg py-2 w-72 max-h-96 overflow-y-auto border border-gray-200">
 						<div className="px-4 py-2 border-b border-gray-100">
 							<h3 className="font-semibold text-lg text-font-main">
@@ -78,13 +101,20 @@ const Notifications: React.FC = () => {
 							<div className="divide-y divide-gray-100">
 								{notifications.map((notification, index) => (
 									<div
-										key={index}
-										className="p-3 hover:bg-gray-50 transition-colors cursor-pointer"
+										key={notification.id || index}
+										className={`p-3 hover:bg-gray-50 transition-colors cursor-pointer ${
+											!notification.read
+												? "bg-blue-50"
+												: ""
+										}`}
 									>
-										<div className="text-font-main text-sm">
-											{notification.message}
+										<div className="text-font-main text-sm flex items-start">
+											{!notification.read && (
+												<span className="h-2 w-2 rounded-full bg-blue-500 mt-1.5 mr-2 flex-shrink-0"></span>
+											)}
+											<span>{notification.message}</span>
 										</div>
-										<div className="text-xs text-gray-500 mt-1">
+										<div className="text-xs text-gray-500 mt-1 ml-4">
 											<i className="fa fa-clock-o mr-1" />
 											{formatTime(notification.createdAt)}
 										</div>

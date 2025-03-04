@@ -104,7 +104,7 @@ const Header: React.FC = () => {
 					{isDesktop && (
 						<>
 							<nav className="flex justify-center flex-1">
-								<div className="flex gap-4">
+								<div className="flex gap-4 flex-wrap items-center justify-center">
 									<Link to="/">
 										<button className="text-font-main font-medium btn whitespace-nowrap text-base px-6 py-2 rounded-full hover:bg-secondary-light transition-colors duration-300">
 											Home
