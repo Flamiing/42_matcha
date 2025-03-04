@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useBreakpoints } from "../../../hooks/useBreakpoints";
 import { useAuth } from "../../../context/AuthContext";
+import Notifications from "./Notifications";
 
 const Header: React.FC = () => {
 	const { isAuthenticated, user, logout } = useAuth();
@@ -33,6 +34,7 @@ const Header: React.FC = () => {
 	// User menu component for desktop
 	const UserMenu = () => (
 		<div className="flex items-center gap-4">
+			<Notifications />
 			<div className="flex items-center gap-2">
 				<span className="text-primary font-medium">
 					{user?.username}
@@ -122,33 +124,40 @@ const Header: React.FC = () => {
 
 					{/* Mobile menu button */}
 					{(isMobile || isTablet) && (
-						<button
-							onClick={toggleMenu}
-							className="flex rounded-full p-2 bg-white w-10 h-10 justify-center items-center"
-							aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-						>
-							<div className="flex flex-col items-center justify-center w-5 h-5">
-								<span
-									className={`h-[2px] w-5 bg-black transition-all duration-300 absolute ${
-										isMenuOpen
-											? "rotate-45"
-											: "-translate-y-2"
-									}`}
-								></span>
-								<span
-									className={`h-[2px] w-5 bg-black transition-all duration-300 ${
-										isMenuOpen ? "opacity-0" : "opacity-100"
-									}`}
-								></span>
-								<span
-									className={`h-[2px] w-5 bg-black transition-all duration-300 absolute ${
-										isMenuOpen
-											? "-rotate-45"
-											: "translate-y-2"
-									}`}
-								></span>
-							</div>
-						</button>
+						<div className="flex items-center gap-4">
+							<Notifications />
+							<button
+								onClick={toggleMenu}
+								className="flex rounded-full p-2 bg-white w-10 h-10 justify-center items-center"
+								aria-label={
+									isMenuOpen ? "Close menu" : "Open menu"
+								}
+							>
+								<div className="flex flex-col items-center justify-center w-5 h-5">
+									<span
+										className={`h-[2px] w-5 bg-black transition-all duration-300 absolute ${
+											isMenuOpen
+												? "rotate-45"
+												: "-translate-y-2"
+										}`}
+									></span>
+									<span
+										className={`h-[2px] w-5 bg-black transition-all duration-300 ${
+											isMenuOpen
+												? "opacity-0"
+												: "opacity-100"
+										}`}
+									></span>
+									<span
+										className={`h-[2px] w-5 bg-black transition-all duration-300 absolute ${
+											isMenuOpen
+												? "-rotate-45"
+												: "translate-y-2"
+										}`}
+									></span>
+								</div>
+							</button>
+						</div>
 					)}
 
 					{/* Mobile menu */}
