@@ -4,7 +4,7 @@ import chatsModel from '../Models/ChatsModel.js';
 import userModel from '../Models/UserModel.js';
 import { returnErrorStatus } from '../Utils/errorUtils.js';
 import StatusMessage from '../Utils/StatusMessage.js';
-import { getCurrentTimestamp } from '../Utils/timeUtils.js';
+import { getTimestampWithTZ } from '../Utils/timeUtils.js';
 import Notifications from '../Sockets/Notifications.js';
 
 export default class MatchesController {
@@ -77,6 +77,7 @@ export default class MatchesController {
         const input = {
             user_id_1: userIdOne,
             user_id_2: userIdTwo,
+            time: getTimestampWithTZ(),
         };
 
         const matchResult = await matchesModel.create({ input });
@@ -84,7 +85,7 @@ export default class MatchesController {
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
         console.info(`Match created with ID: ${matchResult.id}`);
 
-        const chatCreationTimestamp = getCurrentTimestamp();
+        const chatCreationTimestamp = getTimestampWithTZ();
         const chatResult = chatsModel.create({
             input: {
                 match_id: matchResult.id,
