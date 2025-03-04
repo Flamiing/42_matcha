@@ -1,9 +1,3 @@
-export function getCurrentTimestamp() {
-    const now = new Date();
-    const timestamp = now.toISOString().slice(0, 19).replace('T', ' ');
-    return timestamp;
-}
-
 export function getTimestampWithTZ() {
     const timestamp = new Date();
     return timestamp;
