@@ -1,6 +1,5 @@
 // Third-Party Imports:
 import fsExtra from 'fs-extra';
-import path from 'path';
 
 // Local Imports:
 import userModel from '../../Models/UserModel.js';
