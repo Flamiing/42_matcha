@@ -20,8 +20,8 @@ const getLocationNotAllowed = async () => {
 		} catch (error) {
 			// Default to Madrid, Spain
 			return {
-				latitude: 40.416775,
-				longitude: -3.70379,
+				latitude: 40.513305,
+				longitude: -3.663652,
 				allows_location: false,
 			};
 		}

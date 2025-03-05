@@ -107,10 +107,10 @@ const index = () => {
 			}
 
 			return order === "asc"
-				? compareA > compareB
+				? compareA < compareB
 					? 1
 					: -1
-				: compareA < compareB
+				: compareA > compareB
 				? 1
 				: -1;
 		});

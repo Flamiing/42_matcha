@@ -66,6 +66,7 @@ const MsgCard: React.FC<MessageProps> = ({
 				<p className="text-wrap">{message}</p>
 			</div>
 			<button
+				type="button"
 				onClick={handleClose}
 				className="ml-4 text-xl font-bold cursor-pointer hover:opacity-70"
 			>
