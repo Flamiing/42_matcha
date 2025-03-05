@@ -137,7 +137,7 @@ export default class AuthController {
             return await AuthController.#registerUser(res, validatedUser, true);
         } catch (error) {
             console.error(
-                'ERROR: ',
+                'ERROR:',
                 error.response?.data?.error_description ?? error
             );
             if (error.response?.status === 401)
@@ -205,7 +205,7 @@ export default class AuthController {
 
             return res.json({ msg: StatusMessage.ACC_SUCCESSFULLY_CONFIRMED });
         } catch (error) {
-            console.error('ERROR: ', error);
+            console.error('ERROR:', error);
             if (error.name === 'TokenExpiredError') {
                 const confirmationToken = req.query.token;
                 const tokenData = jwt.decode(confirmationToken);
@@ -293,7 +293,7 @@ export default class AuthController {
 
             return res.json({ msg: StatusMessage.PASSWORD_UPDATED });
         } catch (error) {
-            console.error('ERROR: ', error);
+            console.error('ERROR:', error);
             if (error.name === 'TokenExpiredError') {
                 return res
                     .status(403)
