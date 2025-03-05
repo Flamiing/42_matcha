@@ -176,7 +176,7 @@ export default class UsersController {
         const imagePath = path.join(profilePicturePath);
         res.sendFile(imagePath, (error) => {
             if (error) {
-                console.error('ERROR: ', error);
+                console.error('ERROR:', error);
                 res.status(404).json({ msg: StatusMessage.IMAGE_NOT_FOUND });
             }
         });
@@ -231,7 +231,7 @@ export default class UsersController {
         const { tags } = req.body;
         const input = validatedUser.data;
         const inputHasNoContent = Object.keys(input).length === 0;
-        if (inputHasNoContent && (!tags || tags.length === 0))
+        if (inputHasNoContent && !tags)
             return returnErrorStatus(
                 res,
                 400,
