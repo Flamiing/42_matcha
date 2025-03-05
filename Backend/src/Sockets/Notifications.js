@@ -17,7 +17,10 @@ export default class Notifications {
     };
 
     static async sendNotification(notificationType, recipientId, notifierId) {
-        const isUserBlocked = await blockedUsersModel.isUserBlocked(recipientId, notifierId);
+        const isUserBlocked = await blockedUsersModel.isUserBlocked(
+            recipientId,
+            notifierId
+        );
         if (isUserBlocked) return null;
         const recipientInfo = await this.#getUserInfo(recipientId, 'status');
         if (!recipientInfo) return null;
