@@ -49,8 +49,8 @@ const index = () => {
 
 	const haveTagsChanged = (newTags: number[], originalTags: number[]) => {
 		if (newTags.length !== originalTags.length) return true;
-		const originalTagIds = originalTags.map(tag => tag.id);
-		return newTags.some(tag => !originalTagIds.includes(tag));
+		const originalTagIds = originalTags.map((tag) => tag.id);
+		return newTags.some((tag) => !originalTagIds.includes(tag));
 	};
 
 	// Get changed fields and always include tags
@@ -156,7 +156,13 @@ const index = () => {
 	};
 
 	if (loading) return <Spinner />;
-	if (error) return <div>Error: {error}</div>;
+	if (error) {
+		return (
+			<main className="flex flex-1 justify-center items-center flex-col">
+				<div>Error: {error}</div>
+			</main>
+		);
+	}
 	if (!formData) return <div>No profile data</div>;
 
 	return (

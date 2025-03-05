@@ -60,7 +60,13 @@ const Index: React.FC = () => {
 	};
 
 	if (loading) return <Spinner />;
-	if (error) return <div>An error occurred when loading the events</div>;
+	if (error) {
+		return (
+			<main className="flex flex-1 justify-center items-center flex-col">
+				<div>An error occurred when loading the events</div>
+			</main>
+		);
+	}
 
 	return (
 		<main className="flex flex-1 justify-center items-center flex-col w-full">

@@ -80,7 +80,13 @@ const index = () => {
 
 	if (isLoading) return <Spinner />;
 	if (notFound) return <Navigate to="/404" replace />;
-	if (profileError) return <div>Error: {profileError}</div>;
+	if (profileError) {
+		return (
+			<main className="flex flex-1 justify-center items-center flex-col">
+				<div>Error: {profileError}</div>
+			</main>
+		);
+	}
 	if (!userProfile) return null;
 
 	return (
