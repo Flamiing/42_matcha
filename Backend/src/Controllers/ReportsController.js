@@ -103,7 +103,7 @@ This message was generated automatically. Do not reply to this email.`;
         try {
             await sendEmail(REPORTS_EMAIL, subject, body);
         } catch (error) {
-            console.error('ERROR: ', error);
+            console.error('ERROR:', error);
         }
     }
 }

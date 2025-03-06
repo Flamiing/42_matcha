@@ -1,6 +1,5 @@
 // Local Imports:
 import Model from '../Core/Model.js';
-import matchesModel from './MatchesModel.js';
 
 class LikesModel extends Model {
     constructor() {

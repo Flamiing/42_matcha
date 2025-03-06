@@ -1,6 +1,5 @@
 // Third-Party Imports:
 import fsExtra from 'fs-extra';
-import path from 'path';
 
 // Local Imports:
 import userModel from '../../Models/UserModel.js';
@@ -19,7 +18,7 @@ async function getUsersFromJson() {
         console.info('Users JSON file read.');
         return JSON.parse(users);
     } catch (error) {
-        console.error('ERROR: ', error);
+        console.error('ERROR:', error);
         return null;
     }
 }
@@ -36,7 +35,7 @@ async function setupProfilePicture(userId, filePath) {
         );
         console.info('Profile picture copyed successfully!');
     } catch (error) {
-        console.error('ERROR: ', error);
+        console.error('ERROR:', error);
         process.exit();
     }
 }

@@ -1,4 +1,5 @@
 // Local Imports:
+import blockedUsersModel from '../Models/BlockedUsersModel.js';
 import notificationsModel from '../Models/NotificationsModel.js';
 import userModel from '../Models/UserModel.js';
 import userStatusModel from '../Models/UserStatusModel.js';
@@ -16,6 +17,11 @@ export default class Notifications {
     };
 
     static async sendNotification(notificationType, recipientId, notifierId) {
+        const isUserBlocked = await blockedUsersModel.isUserBlocked(
+            recipientId,
+            notifierId
+        );
+        if (isUserBlocked) return null;
         const recipientInfo = await this.#getUserInfo(recipientId, 'status');
         if (!recipientInfo) return null;
         const notifierInfo = await this.#getUserInfo(notifierId, 'full');

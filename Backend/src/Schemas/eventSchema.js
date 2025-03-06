@@ -1,9 +1,6 @@
 // Third-Party Imports:
 import z from 'zod';
 
-// Local Imports:
-import StatusMessage from '../Utils/StatusMessage.js';
-
 const eventSchema = z.object({
     invitedUserId: z
         .string({

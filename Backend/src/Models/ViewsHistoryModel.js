@@ -21,7 +21,8 @@ class ViewsHistoryModel extends Model {
             ON 
                 v.viewed_by = u.id
             WHERE 
-                v.viewed = $1;`,
+                v.viewed = $1
+            ORDER BY time DESC;`,
             values: [viewedUserId],
         };
 

@@ -176,7 +176,7 @@ export default class UsersController {
         const imagePath = path.join(profilePicturePath);
         res.sendFile(imagePath, (error) => {
             if (error) {
-                console.error('ERROR: ', error);
+                console.error('ERROR:', error);
                 res.status(404).json({ msg: StatusMessage.IMAGE_NOT_FOUND });
             }
         });
