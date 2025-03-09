@@ -1,5 +1,5 @@
 // Third-Party Imports:
-import { Filter } from 'bad-words'
+import { Filter } from 'bad-words';
 
 // Local Imports:
 import textChatMessagesModel from '../Models/TextChatMessagesModel.js';
