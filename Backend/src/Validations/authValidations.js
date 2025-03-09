@@ -2,7 +2,7 @@
 import bcrypt from 'bcryptjs';
 import wordlist from 'wordlist-english';
 import { pwnedPassword } from 'hibp';
-import { Filter } from 'bad-words'
+import { Filter } from 'bad-words';
 
 // Local Imports:
 import userModel from '../Models/UserModel.js';
@@ -136,10 +136,11 @@ export async function checkPasswordVulnerabilities(password) {
 export function checkBadWords(str, field) {
     const filter = new Filter();
 
-    if (filter.isProfane(str)) return {
-        success: false,
-        message: `${field} cannot contain profane words. Please change it and try again.`
-    }
+    if (filter.isProfane(str))
+        return {
+            success: false,
+            message: `${field} cannot contain profane words. Please change it and try again.`,
+        };
 
-    return { success: true }
+    return { success: true };
 }

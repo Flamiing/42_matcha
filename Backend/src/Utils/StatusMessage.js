@@ -137,5 +137,5 @@ export default class StatusMessage {
         'Password cannot contain commonly used english words.';
     static PWNED_PASSWORD =
         'Your password is known to be compromised in security breaches. Please create a different, more secure password.';
-    static CANNOT_CONTAIN_BAD_WORDS = 'Cannot contain profane words'
+    static CANNOT_CONTAIN_BAD_WORDS = 'Cannot contain profane words';
 }

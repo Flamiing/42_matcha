@@ -3,7 +3,10 @@ import z from 'zod';
 
 // Local Imports:
 import StatusMessage from '../Utils/StatusMessage.js';
-import { checkBadWords, checkPasswordVulnerabilities } from '../Validations/authValidations.js';
+import {
+    checkBadWords,
+    checkPasswordVulnerabilities,
+} from '../Validations/authValidations.js';
 
 const disallowedUsernames = [
     'admin',
