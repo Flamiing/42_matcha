@@ -19,12 +19,19 @@ const changePasswordSchema = z.object({
             /^(?=.*[A-Z])(?=.*[a-z])(?=.*[+.\-_*$@!?%&])(?=.*\d)[A-Za-z\d+.\-_*$@!?%&]+$/,
             { message: StatusMessage.INVALID_PASSWORD }
         )
-        .superRefine(async (password, ctx) => {
-            const result = await checkPasswordVulnerabilities(password);
-            if (!result.success) ctx.addIssue({ code: z.ZodIssueCode.custom, message: result.message })
-        }, {
-            message: 'Password fails security requirements.',
-        }),
+        .superRefine(
+            async (password, ctx) => {
+                const result = await checkPasswordVulnerabilities(password);
+                if (!result.success)
+                    ctx.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message: result.message,
+                    });
+            },
+            {
+                message: 'Password fails security requirements.',
+            }
+        ),
 });
 
 export async function validatePasswords(input) {

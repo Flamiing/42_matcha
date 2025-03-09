@@ -108,16 +108,26 @@ export async function confirmAccountValidations(res, tokenData) {
 export async function checkPasswordVulnerabilities(password) {
     const commonWords = wordlist['english/10'];
 
-    const containsWord = commonWords.some(word => password.toLowerCase().includes(word) && word.length > 2)
-    if (containsWord) return { success: false, message: StatusMessage.COMMON_ENGLISH_WORDS_FOUND}
+    const containsWord = commonWords.some(
+        (word) => password.toLowerCase().includes(word) && word.length > 2
+    );
+    if (containsWord)
+        return {
+            success: false,
+            message: StatusMessage.COMMON_ENGLISH_WORDS_FOUND,
+        };
 
     try {
         const isBadPassword = await pwnedPassword(password);
         console.log('Is bad password? ', isBadPassword);
-        if (isBadPassword !== 0) return ({ success: false, message: StatusMessage.PWNED_PASSWORD })
+        if (isBadPassword !== 0)
+            return { success: false, message: StatusMessage.PWNED_PASSWORD };
     } catch (error) {
         console.error('ERROR:', error);
-        return { success: false, message: StatusMessage.ERROR_VALIDATING_PASSWORD };
+        return {
+            success: false,
+            message: StatusMessage.ERROR_VALIDATING_PASSWORD,
+        };
     }
 
     return { success: true };

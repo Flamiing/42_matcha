@@ -77,12 +77,19 @@ const userSchema = z.object({
             /^(?=.*[A-Z])(?=.*[a-z])(?=.*[+.\-_*$@!?%&])(?=.*\d)[A-Za-z\d+.\-_*$@!?%&]+$/,
             { message: StatusMessage.INVALID_PASSWORD }
         )
-        .superRefine(async (password, ctx) => {
-            const result = await checkPasswordVulnerabilities(password);
-            if (!result.success) ctx.addIssue({ code: z.ZodIssueCode.custom, message: result.message })
-        }, {
-            message: 'Password fails security requirements.',
-        }),
+        .superRefine(
+            async (password, ctx) => {
+                const result = await checkPasswordVulnerabilities(password);
+                if (!result.success)
+                    ctx.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message: result.message,
+                    });
+            },
+            {
+                message: 'Password fails security requirements.',
+            }
+        ),
     age: z
         .number({ invalid_type_error: 'Invalid age.' })
         .max(MIN_AGE, 'Age must be at least 18.')
