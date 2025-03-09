@@ -18,7 +18,7 @@ let generatedEmails = new Set();
 async function setupProfilePicture(filePath, imageId, filename) {
     console.info('Copying user profile picture...');
 
-    const imagePath = path.join(filePath, imageId + '.jpg')
+    const imagePath = path.join(filePath, imageId + '.jpg');
 
     try {
         await fsExtra.copy(
@@ -36,7 +36,11 @@ function generateUsername() {
     let username;
     do {
         username = faker.internet.username();
-    } while (generatedUsernames.has(username) || username.length > 30 || !/^[a-zA-Z0-9._]+$/.test(username))
+    } while (
+        generatedUsernames.has(username) ||
+        username.length > 30 ||
+        !/^[a-zA-Z0-9._]+$/.test(username)
+    );
 
     generatedUsernames.add(username);
     return username;
@@ -46,13 +50,15 @@ function generateBio() {
     let bio;
     do {
         bio = faker.person.bio();
-    } while (bio.length > 350)
+    } while (bio.length > 350);
 
     return bio;
 }
 
 function generateAge() {
-    const birthdate = new Date(faker.date.birthdate({ mode: 'age', min: 18, max: 55 }));
+    const birthdate = new Date(
+        faker.date.birthdate({ mode: 'age', min: 18, max: 55 })
+    );
     const age = birthdate.getTime();
     return age;
 }
@@ -60,8 +66,11 @@ function generateAge() {
 function generateEmail() {
     let email;
     do {
-        email = faker.internet.email({ provider: 'flamiing.com', allowSpecialCharacters: false })
-    } while (generatedEmails.has(email) || email.length > 50)
+        email = faker.internet.email({
+            provider: 'flamiing.com',
+            allowSpecialCharacters: false,
+        });
+    } while (generatedEmails.has(email) || email.length > 50);
 
     generatedEmails.add(email);
     return email;
@@ -72,11 +81,11 @@ async function downloadImage(imageURL, savePath, imageId) {
         const response = await axios({
             method: 'get',
             url: imageURL,
-            responseType: 'stream'
-        })
+            responseType: 'stream',
+        });
 
         fsExtra.ensureDirSync(savePath);
-        const imagePath = path.join(savePath, imageId + '.jpg')
+        const imagePath = path.join(savePath, imageId + '.jpg');
 
         const writer = fsExtra.createWriteStream(imagePath);
 
@@ -92,7 +101,7 @@ async function downloadImage(imageURL, savePath, imageId) {
             });
         });
     } catch (error) {
-        console.error("ERROR:", error)
+        console.error('ERROR:', error);
         return false;
     }
 }
@@ -112,17 +121,25 @@ async function generateProfilePicture(userId, gender) {
     ];
 
     const imageId = faker.string.uuid();
-    const profilePictureFolderPath = path.join(`/uploads/users/${userId}/images/`);
+    const profilePictureFolderPath = path.join(
+        `/uploads/users/${userId}/images/`
+    );
 
-    const imageURL = faker.image.personPortrait({ sex: gender, size: '512' })
+    const imageURL = faker.image.personPortrait({ sex: gender, size: '512' });
 
-    if ((await downloadImage(imageURL, profilePictureFolderPath, imageId)) === false) {
-        const index = faker.number.int({ min: 0, max: 9 })
+    if (
+        (await downloadImage(imageURL, profilePictureFolderPath, imageId)) ===
+        false
+    ) {
+        const index = faker.number.int({ min: 0, max: 9 });
         const image = PROFILE_PICTURES[index];
         await setupProfilePicture(profilePictureFolderPath, imageId, image);
     }
 
-    const profilePicturePath = path.join(profilePictureFolderPath, imageId + '.jpg')
+    const profilePicturePath = path.join(
+        profilePictureFolderPath,
+        imageId + '.jpg'
+    );
     return profilePicturePath;
 }
 
@@ -142,23 +159,23 @@ function generateTags() {
         '92cd8e68-a1a9-4e6f-9148-04f5f4347cc4',
         '071314e4-db94-44e3-b8a4-0d23df9e7da8',
         'a9882191-5966-4433-b3f3-40136fb28229',
-        '4849cd2e-6436-4dd6-a21c-32f8a36a38c3'
+        '4849cd2e-6436-4dd6-a21c-32f8a36a38c3',
     ];
 
     let usedTagIndex = new Set();
 
-    const numOfTags = faker.number.int({ min: 0, max: 15});
+    const numOfTags = faker.number.int({ min: 0, max: 15 });
     let userTags = [];
     for (let count = 0; count < numOfTags; count++) {
         let index;
         do {
-            index = faker.number.int({ min: 0, max: 14});
-        } while (usedTagIndex.has(index))
+            index = faker.number.int({ min: 0, max: 14 });
+        } while (usedTagIndex.has(index));
 
         usedTagIndex.add(index);
         userTags.push(TAG_IDS[index]);
     }
-    
+
     return userTags;
 }
 
@@ -166,10 +183,23 @@ function generateLocation() {
     const randomLocation = Math.random() < 0.1 ? true : false;
 
     const location = {
-        latitude: randomLocation ? faker.location.latitude({ max: 90, min: -90, precision: 4 }) : faker.location.latitude({ max: 41.7971, min: 39.9931, precision: 4 }),
-        longitude: randomLocation ? faker.location.longitude({ max: 180, min: -180, precision: 4 }) : faker.location.longitude({ max: -2.5340, min: -4.9000, precision: 4 }), 
-        allows_location: faker.number.int({ min: 1, max: 2 }) % 2 === 0 ? true : false
-    }
+        latitude: randomLocation
+            ? faker.location.latitude({ max: 90, min: -90, precision: 4 })
+            : faker.location.latitude({
+                  max: 41.7971,
+                  min: 39.9931,
+                  precision: 4,
+              }),
+        longitude: randomLocation
+            ? faker.location.longitude({ max: 180, min: -180, precision: 4 })
+            : faker.location.longitude({
+                  max: -2.534,
+                  min: -4.9,
+                  precision: 4,
+              }),
+        allows_location:
+            faker.number.int({ min: 1, max: 2 }) % 2 === 0 ? true : false,
+    };
 
     return location;
 }
@@ -184,7 +214,7 @@ async function generateUser() {
         username: generateUsername(),
         first_name: faker.person.firstName(gender),
         last_name: faker.person.lastName(),
-        password: "8Dt553Qi.",
+        password: '8Dt553Qi.',
         age: generateAge(),
         biography: generateBio(),
         profile_picture: await generateProfilePicture(userId, gender),
@@ -192,10 +222,11 @@ async function generateUser() {
         active_account: true,
         oauth: false,
         gender,
-        sexual_preference: Math.random() < 0.1 ? 'bisexual' : faker.person.sex(),
+        sexual_preference:
+            Math.random() < 0.1 ? 'bisexual' : faker.person.sex(),
         tags: generateTags(),
-        location: generateLocation()
-    }
+        location: generateLocation(),
+    };
 
     return user;
 }
