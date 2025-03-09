@@ -1,3 +1,6 @@
+// Third-Party Imports:
+import { Filter } from 'bad-words';
+
 // Local Imports:
 import textChatMessagesModel from '../Models/TextChatMessagesModel.js';
 import userStatusModel from '../Models/UserStatusModel.js';
@@ -16,12 +19,13 @@ export default class SocketController {
         const validPayload = await validateMessagePayload(socket, data, 'text');
         if (!validPayload) return;
 
+        const filter = new Filter();
         const senderId = socket.request.session.user.id;
         const chatMessage = {
             chat_id: validPayload.chatId,
             sender_id: senderId,
             receiver_id: validPayload.receiverId,
-            message: validPayload.message,
+            message: filter.clean(validPayload.message),
             created_at: validPayload.createdAt,
         };
         const savedChatMessage = await textChatMessagesModel.create({
