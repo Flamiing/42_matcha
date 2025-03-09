@@ -7,6 +7,7 @@ import {
 } from "../../services/api/chat";
 import { useSocket } from "../../context/SocketContext";
 import { useAuth } from "../../context/AuthContext";
+import { Filter } from 'bad-words'
 
 export const useChat = () => {
 	const [chats, setChats] = useState<ChatPreview[]>([]);
@@ -71,10 +72,11 @@ export const useChat = () => {
 				// Use the socket to send the message
 				socketSendMessage(chatId, receiverId, message);
 
+                const filter = new Filter();
 				if (user) {
 					const newMessage: Message = {
 						senderId: user.id,
-						message,
+						message: filter.clean(message),
 						createdAt: new Date()
 							.toISOString()
 							.replace(/\.\d+Z$/, "Z"),
