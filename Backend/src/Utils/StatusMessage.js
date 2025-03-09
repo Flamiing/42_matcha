@@ -131,4 +131,7 @@ export default class StatusMessage {
     static ERROR_PARSING_COOKIES = 'Unable to read session cookies.';
     static ERROR_REFRESHING_ACCESS_TOKEN =
         'There was a problem refreshing your authentication token.';
+    static ERROR_VALIDATING_PASSWORD = 'There was a problem validating your password. Please try again later.'
+    static COMMON_ENGLISH_WORDS_FOUND = 'Password cannot contain commonly used english words.';
+    static PWNED_PASSWORD = 'Your password is known to be compromised in security breaches. Please create a different, more secure password.'
 }

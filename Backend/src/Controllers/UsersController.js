@@ -222,7 +222,7 @@ export default class UsersController {
     }
 
     static async validateData(req, res) {
-        const validatedUser = validatePartialUser(req.body);
+        const validatedUser = await validatePartialUser(req.body);
         if (!validatedUser.success) {
             const errorMessage = validatedUser.error.errors[0].message;
             return returnErrorStatus(res, 400, errorMessage);
