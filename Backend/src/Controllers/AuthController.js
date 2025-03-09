@@ -84,7 +84,7 @@ export default class AuthController {
                 .json({ msg: StatusMessage.ALREADY_LOGGED_IN });
 
         // Validate and clean input
-        let validatedUser = validateUser(req.body);
+        let validatedUser = await validateUser(req.body);
         if (!validatedUser.success) {
             const errorMessage = validatedUser.error.errors[0].message;
             return res.status(400).json({ msg: errorMessage });
@@ -131,7 +131,7 @@ export default class AuthController {
                 location: location,
             };
 
-            const validatedUser = validatePartialUser(data);
+            const validatedUser = await validatePartialUser(data);
             validatedUser.data.active_account = true;
             validatedUser.data.oauth = true;
             return await AuthController.#registerUser(res, validatedUser, true);
@@ -272,7 +272,7 @@ export default class AuthController {
         if (!token)
             return res.status(400).json({ msg: StatusMessage.BAD_REQUEST });
 
-        const validationResult = validatePartialPasswords(req.body);
+        const validationResult = await validatePartialPasswords(req.body);
         if (!validationResult.success) {
             const errorMessage = validationResult.error.errors[0].message;
             return res.status(400).json({ msg: errorMessage });
@@ -310,7 +310,7 @@ export default class AuthController {
                 .status(403)
                 .json({ msg: StatusMessage.CANNOT_CHANGE_PASS });
 
-        const validationResult = validatePasswords(req.body);
+        const validationResult = await validatePasswords(req.body);
         if (!validationResult.success) {
             const errorMessage = validationResult.error.errors[0].message;
             return res.status(400).json({ msg: errorMessage });

@@ -1,5 +1,7 @@
 // Third-Party Imports:
 import bcrypt from 'bcryptjs';
+import wordlist from 'wordlist-english';
+import { pwnedPassword } from 'hibp';
 
 // Local Imports:
 import userModel from '../Models/UserModel.js';
@@ -60,7 +62,7 @@ export async function passwordValidations(data) {
 
 export async function loginValidations(reqBody, res) {
     // Validate and clean input
-    const validatedUser = validatePartialUser(reqBody);
+    const validatedUser = await validatePartialUser(reqBody);
     if (!validatedUser.success) {
         const errorMessage = validatedUser.error.errors[0].message;
         return res.status(400).json({ msg: errorMessage });
@@ -101,4 +103,22 @@ export async function confirmAccountValidations(res, tokenData) {
         return returnErrorStatus(res, 400, StatusMessage.ACC_ALREADY_CONFIRMED);
 
     return true;
+}
+
+export async function checkPasswordVulnerabilities(password) {
+    const commonWords = wordlist['english/10'];
+
+    const containsWord = commonWords.some(word => password.toLowerCase().includes(word) && word.length > 2)
+    if (containsWord) return { success: false, message: StatusMessage.COMMON_ENGLISH_WORDS_FOUND}
+
+    try {
+        const isBadPassword = await pwnedPassword(password);
+        console.log('Is bad password? ', isBadPassword);
+        if (isBadPassword !== 0) return ({ success: false, message: StatusMessage.PWNED_PASSWORD })
+    } catch (error) {
+        console.error('ERROR:', error);
+        return { success: false, message: StatusMessage.ERROR_VALIDATING_PASSWORD };
+    }
+
+    return { success: true };
 }

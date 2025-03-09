@@ -3,6 +3,7 @@ import z from 'zod';
 
 // Local Imports:
 import StatusMessage from '../Utils/StatusMessage.js';
+import { checkPasswordVulnerabilities } from '../Validations/authValidations.js';
 
 const disallowedUsernames = [
     'admin',
@@ -75,7 +76,13 @@ const userSchema = z.object({
         .regex(
             /^(?=.*[A-Z])(?=.*[a-z])(?=.*[+.\-_*$@!?%&])(?=.*\d)[A-Za-z\d+.\-_*$@!?%&]+$/,
             { message: StatusMessage.INVALID_PASSWORD }
-        ),
+        )
+        .superRefine(async (password, ctx) => {
+            const result = await checkPasswordVulnerabilities(password);
+            if (!result.success) ctx.addIssue({ code: z.ZodIssueCode.custom, message: result.message })
+        }, {
+            message: 'Password fails security requirements.',
+        }),
     age: z
         .number({ invalid_type_error: 'Invalid age.' })
         .max(MIN_AGE, 'Age must be at least 18.')
@@ -123,10 +130,10 @@ const userSchema = z.object({
         .optional(),
 });
 
-export function validateUser(input) {
-    return userSchema.safeParse(input);
+export async function validateUser(input) {
+    return userSchema.safeParseAsync(input);
 }
 
-export function validatePartialUser(input) {
-    return userSchema.partial().safeParse(input);
+export async function validatePartialUser(input) {
+    return userSchema.partial().safeParseAsync(input);
 }
