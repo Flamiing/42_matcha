@@ -143,7 +143,7 @@ const Header: React.FC = () => {
 					{/* Mobile menu button */}
 					{(isMobile || isTablet) && (
 						<div className="flex items-center gap-4">
-							<Notifications />
+							{isAuthenticated && user && <Notifications />}
 							<button
 								onClick={toggleMenu}
 								className="flex rounded-full p-2 bg-white w-10 h-10 justify-center items-center"
