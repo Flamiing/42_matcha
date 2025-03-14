@@ -28,7 +28,6 @@ export default class Notifications {
             recipientId,
             notifierId
         );
-        console.log('TEST DISLIKE RESULT:', isUserDisliked);
         if (isUserDisliked) return null;
 
         const recipientInfo = await this.#getUserInfo(recipientId, 'status');
