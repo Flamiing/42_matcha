@@ -81,6 +81,14 @@ CREATE TABLE likes (
 	UNIQUE(liked_by, liked)
 );
 
+CREATE TABLE dislikes (
+	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+	disliked_by UUID REFERENCES users(id) ON DELETE CASCADE,
+	disliked UUID REFERENCES users(id) ON DELETE CASCADE,
+	time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	UNIQUE(disliked_by, disliked)
+);
+
 CREATE TABLE views_history (
 	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
 	viewed_by UUID REFERENCES users(id) ON DELETE CASCADE,
