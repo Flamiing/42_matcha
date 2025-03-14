@@ -24,8 +24,11 @@ export default class Notifications {
         );
         if (isUserBlocked) return null;
 
-        const isUserDisliked = await dislikesModel.isUserDisliked(recipientId, notifierId);
-        console.log('TEST DISLIKE RESULT:', isUserDisliked)
+        const isUserDisliked = await dislikesModel.isUserDisliked(
+            recipientId,
+            notifierId
+        );
+        console.log('TEST DISLIKE RESULT:', isUserDisliked);
         if (isUserDisliked) return null;
 
         const recipientInfo = await this.#getUserInfo(recipientId, 'status');

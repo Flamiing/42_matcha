@@ -12,7 +12,7 @@ class DislikesModel extends Model {
             disliked: dislikedId,
         };
 
-        console.log('TEST REFERENCE:', reference)
+        console.log('TEST REFERENCE:', reference);
 
         const dislikedUser = await this.getByReference(reference, false);
         if (dislikedUser === null) return null;
