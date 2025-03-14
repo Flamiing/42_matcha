@@ -9,6 +9,7 @@ import { isValidUUID } from '../Validations/generalValidations.js';
 import MatchesController from './MatchesController.js';
 import Notifications from '../Sockets/Notifications.js';
 import { getTimestampWithTZ } from '../Utils/timeUtils.js';
+import dislikesModel from '../Models/DislikesModel.js';
 
 export default class LikesController {
     static async handleLike(req, res) {
@@ -122,6 +123,13 @@ export default class LikesController {
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
         await Notifications.sendNotification('like', likedId, likedById);
 
+        const dislikeRemoved = await dislikesModel.deleteByReference({
+            disliked_by: likedById,
+            disliked: likedId
+        });
+        if (dislikeRemoved === null) return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR)
+
+
         const isMatch = await likesModel.checkIfMatch(likedById, likedId);
         if (isMatch === null)
             return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
@@ -163,6 +171,14 @@ export default class LikesController {
                     StatusMessage.INTERNAL_SERVER_ERROR
                 );
         }
+
+        const dislikeResult = await dislikesModel.create({ input: {
+            disliked_by: likedById,
+            disliked: likedId,
+            time: getTimestampWithTZ() 
+        }})
+        if (dislikeResult === null || dislikeResult.length === 0)
+            return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR);
 
         return true;
     }
