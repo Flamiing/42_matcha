@@ -125,10 +125,10 @@ export default class LikesController {
 
         const dislikeRemoved = await dislikesModel.deleteByReference({
             disliked_by: likedById,
-            disliked: likedId
+            disliked: likedId,
         });
-        if (dislikeRemoved === null) return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR)
-
+        if (dislikeRemoved === null)
+            return returnErrorStatus(res, 500, StatusMessage.QUERY_ERROR);
 
         const isMatch = await likesModel.checkIfMatch(likedById, likedId);
         if (isMatch === null)
@@ -172,13 +172,19 @@ export default class LikesController {
                 );
         }
 
-        const dislikeResult = await dislikesModel.create({ input: {
-            disliked_by: likedById,
-            disliked: likedId,
-            time: getTimestampWithTZ() 
-        }})
+        const dislikeResult = await dislikesModel.create({
+            input: {
+                disliked_by: likedById,
+                disliked: likedId,
+                time: getTimestampWithTZ(),
+            },
+        });
         if (dislikeResult === null || dislikeResult.length === 0)
-            return returnErrorStatus(res, 500, StatusMessage.INTERNAL_SERVER_ERROR);
+            return returnErrorStatus(
+                res,
+                500,
+                StatusMessage.INTERNAL_SERVER_ERROR
+            );
 
         return true;
     }
