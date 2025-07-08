@@ -35,12 +35,18 @@ Because, love too can be industrialized
   - 🗄️ Database initialization scripts and persistent volumes for PostgreSQL.
   - 🔑 Environment variable management for secure configuration.
 
+### GitHub Actions ⚙️
+
+- **Automated Workflows:**
+  - 🤖 Automated code formatting for the backend using Prettier, triggered on pull requests.
+  - Ensures code style consistency and reduces manual formatting effort.
+
 ---
 
 ## Authorship 🙌
 
-> **Backend and Docker Structure:**  
-> The backend implementation and the core Docker-based infrastructure were designed and developed by **flamiing** (me).
+> **Backend, Docker Structure, and GitHub Actions:**  
+> The backend implementation, the core Docker-based infrastructure, and all GitHub Actions workflows were designed and developed by **flamiing (me)**.
 
 > **Frontend and Additional Docker Contributions:**  
 > The frontend application and several enhancements to the Docker infrastructure were developed by **magnitopic**.
