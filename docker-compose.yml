@@ -25,9 +25,9 @@ services:
             retries: 5
         restart: on-failure
         ports:
-            - "5432:5432"
+            - "${POSTGRESQL_PORT}:${POSTGRESQL_PORT}"
         expose:
-            - "5432"
+            - "${POSTGRESQL_PORT}"
 
     backend:
         container_name: backend
@@ -46,7 +46,7 @@ services:
                 condition: service_healthy
         env_file: .env
         ports:
-            - "3001:3001"
+            - "${API_PORT}:${API_PORT}"
         restart: on-failure
 
     frontend:
@@ -62,9 +62,9 @@ services:
             TZ: ${TIMEZONE}
         env_file: .env
         ports:
-            - "3000:3000"
+            - "${FRONTEND_PORT}:${FRONTEND_PORT}"
         expose:
-            - "3000"
+            - "${FRONTEND_PORT}"
         restart: on-failure
 
 volumes:
