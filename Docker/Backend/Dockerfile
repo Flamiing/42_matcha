@@ -1,8 +1,10 @@
 FROM node:22.11.0-bookworm
 
-COPY ./tools/ .
-RUN chmod +x /setup.sh
+COPY ./tools/ /tools/
+RUN chmod +x /tools/setup.sh
 
 WORKDIR /backend
 
-ENTRYPOINT [ "bash", "/setup.sh" ]
+COPY ./Backend/ .
+
+ENTRYPOINT ["bash", "/tools/setup.sh"]
