@@ -2,8 +2,8 @@ services:
     postgresql:
         container_name: postgresql
         build:
-            context: ./Docker/PostgreSQL
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./Docker/PostgreSQL/Dockerfile
         volumes:
             - postgresql_volume:/var/lib/postgresql
         networks:
@@ -32,8 +32,8 @@ services:
     backend:
         container_name: backend
         build:
-            context: ./Docker/Backend
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./Docker/Backend/Dockerfile
         volumes:
             - ./Backend:/backend
             - ./uploads:/uploads
@@ -52,8 +52,8 @@ services:
     frontend:
         container_name: frontend
         build:
-            context: ./Docker/Frontend
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./Docker/Frontend/Dockerfile
         volumes:
             - ./Frontend:/Frontend
         networks:
