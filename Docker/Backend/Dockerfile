@@ -1,7 +1,7 @@
 FROM node:22.11.0-bookworm
 
 COPY ./tools/ .
-COPY ../../Backend /backend
+COPY Backend /backend
 RUN chmod +x /setup.sh
 
 WORKDIR /backend
