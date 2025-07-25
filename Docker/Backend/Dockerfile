@@ -5,6 +5,6 @@ RUN chmod +x /tools/setup.sh
 
 WORKDIR /backend
 
-COPY ./Backend/ .
+COPY ../../../Backend .
 
 ENTRYPOINT ["bash", "/tools/setup.sh"]
