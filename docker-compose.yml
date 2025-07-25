@@ -35,6 +35,7 @@ services:
             context: ./Docker/Backend
             dockerfile: Dockerfile
         volumes:
+            - ./Backend:/backend
             - uploads_volume:/uploads
         networks:
             - matcha-network
