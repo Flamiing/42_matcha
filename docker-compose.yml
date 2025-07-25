@@ -34,9 +34,6 @@ services:
         build:
             context: ./Docker/Backend
             dockerfile: Dockerfile
-        volumes:
-            - ./Backend:/backend
-            - uploads_volume:/uploads
         networks:
             - matcha-network
         environment:
@@ -54,8 +51,6 @@ services:
         build:
             context: ./Docker/Frontend
             dockerfile: Dockerfile
-        volumes:
-            - ./Frontend:/Frontend
         networks:
             - matcha-network
         environment:
