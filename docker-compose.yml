@@ -35,7 +35,7 @@ services:
             context: .
             dockerfile: ./Docker/Backend/Dockerfile
         volumes:
-            - ./uploads:/uploads
+            - uploads_volume:/uploads
         networks:
             - matcha-network
         environment:
@@ -66,11 +66,8 @@ services:
 
 volumes:
     postgresql_volume:
-        driver: local
-        driver_opts:
-            type: "none"
-            o: "bind"
-            device: "${POSTGRESQL_VOLUME_PATH}"
+    uploads_volume:
+        
 networks:
     matcha-network:
         driver: bridge
