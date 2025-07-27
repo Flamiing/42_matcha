@@ -8,4 +8,4 @@ if [ "$BACKEND_NODE_ENV" = "development" ]; then
   echo "Fixtures loaded successfully!"
 fi
 
-npm run dev
+npm run start
