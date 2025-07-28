@@ -35,6 +35,10 @@ services:
             context: .
             dockerfile: ./Docker/Backend/Dockerfile
         volumes:
+<<<<<<< HEAD
+=======
+            - ./Backend:/backend
+>>>>>>> 097573c (prepare for deployment)
             - uploads_volume:/uploads
         networks:
             - matcha-network
@@ -66,8 +70,9 @@ services:
 
 volumes:
     postgresql_volume:
+        name: matcha_postgresql_volume
     uploads_volume:
-        
+        name: matcha_uploads_volume
 networks:
     matcha-network:
         driver: bridge
