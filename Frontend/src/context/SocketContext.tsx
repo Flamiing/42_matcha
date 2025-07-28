@@ -44,7 +44,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 			return;
 		}
 
-		const socketInstance = io("http://localhost:3001", {
+		const socketInstance = io("https://api.matcha.flamiing.com", {
 			withCredentials: true,
 		});
 
