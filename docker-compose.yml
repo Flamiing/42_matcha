@@ -35,10 +35,7 @@ services:
             context: .
             dockerfile: ./Docker/Backend/Dockerfile
         volumes:
-<<<<<<< HEAD
-=======
             - ./Backend:/backend
->>>>>>> 097573c (prepare for deployment)
             - uploads_volume:/uploads
         networks:
             - matcha-network
