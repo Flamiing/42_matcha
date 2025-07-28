@@ -24,8 +24,6 @@ services:
             timeout: 5s
             retries: 5
         restart: on-failure
-        ports:
-            - "${POSTGRESQL_PORT}:${POSTGRESQL_PORT}"
         expose:
             - "${POSTGRESQL_PORT}"
 
@@ -45,8 +43,8 @@ services:
             postgresql:
                 condition: service_healthy
         env_file: .env
-        ports:
-            - "${API_PORT}:${API_PORT}"
+        expose:
+            - "${API_PORT}"
         restart: on-failure
 
     frontend:
