@@ -11,7 +11,7 @@ const Oauth42Button: React.FC<Oauth42ButtonProps> = ({
 }) => {
 	const handleRedirect = () => {
 		window.location.href =
-			"https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-d8c2e27924a8f2dbb2e40b427c410bb700a13d1cce5dcc471206b7671ed2e633&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Foauth%2Fcallback&response_type=code";
+			"https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-d8c2e27924a8f2dbb2e40b427c410bb700a13d1cce5dcc471206b7671ed2e633&redirect_uri=https%3A%2F%2Fmatcha.flamiing.com%2Fauth%2Foauth%2Fcallback&response_type=code";
 	};
 
 	return (
