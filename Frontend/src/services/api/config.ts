@@ -1,5 +1,5 @@
 const API_VERSION = import.meta.env.API_VERSION || "1";
-const API_BASE_URL = `https://matcha-api.flamiing.com/api/v${API_VERSION}`;
+const API_BASE_URL = `http://matcha-api.flamiing.com/api/v${API_VERSION}`;
 
 export const apiRequest = async (
 	endpoint: string,
