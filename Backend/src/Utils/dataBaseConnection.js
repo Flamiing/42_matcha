@@ -9,7 +9,6 @@ const db = new Client({
     password: process.env.POSTGRESQL_PASSWORD,
     database: process.env.POSTGRESQL_DATABASE,
     port: parseInt(process.env.POSTGRESQL_PORT ?? '5432'),
-    ssl: false,
 });
 
 async function connectToDatabase() {
