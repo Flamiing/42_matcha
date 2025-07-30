@@ -23,7 +23,7 @@ export async function processAudioMessage(socket, senderId, payload) {
     const audioId = audioPath
         .split('/')
         .pop()
-        .replace(/\.mp3$/i, '');
+        .replace(/\.webm$/i, '');
     const chatMessage = {
         id: audioId,
         chat_id: payload.chatId,
@@ -68,17 +68,20 @@ function saveAudioToFileSystem(userId, base64String) {
     const { USER_UPLOADS_PATH } = process.env;
 
     const audioBuffer = Buffer.from(base64String, 'base64');
-    const audioName = randomUUID() + '.mp3';
+
+    // Determine file extension based on the audio format
+    // For now, we'll use .webm as default since that's what we're recording
+    const audioName = randomUUID() + '.webm';
     const folderPath = path.join(USER_UPLOADS_PATH, userId, 'audios');
     const filePath = path.join(USER_UPLOADS_PATH, userId, 'audios', audioName);
     fsExtra.ensureDirSync(folderPath);
 
     fsExtra.writeFile(filePath, audioBuffer, (error) => {
         if (error) {
-            console.error('Error saving MP3 file:', error);
+            console.error('Error saving audio file:', error);
             return null;
         }
-        console.info('INFO: MP3 file saved successfully! -', filePath);
+        console.info('INFO: Audio file saved successfully! -', filePath);
     });
 
     return filePath;

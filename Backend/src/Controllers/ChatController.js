@@ -108,7 +108,7 @@ export default class ChatController {
                 const audioId = rawMessage.audio_path
                     .split('/')
                     .pop()
-                    .replace(/\.mp3$/i, '');
+                    .replace(/\.webm$/i, '');
                 audioURL = `${API_DOMAIN}/api/v${API_VERSION}/media/audio/${audioId}`;
             }
 

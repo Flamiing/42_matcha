@@ -110,7 +110,7 @@ export const useChat = () => {
 	);
 
 	const sendAudioMessage = useCallback(
-		async (chatId: string, receiverId: string, audioFile: File) => {
+		async (chatId: string, receiverId: string, base64Audio: string) => {
 			if (!socket || !user) {
 				throw new Error(
 					"Socket not connected or user not authenticated"
@@ -118,13 +118,7 @@ export const useChat = () => {
 			}
 
 			try {
-				const base64Audio = await fileToBase64(audioFile);
-
-				// Remove MIME prefix
-				const base64WithoutPrefix =
-					base64Audio.split(",").pop() || base64Audio;
-
-				socketSendAudioMessage(chatId, receiverId, base64WithoutPrefix);
+				socketSendAudioMessage(chatId, receiverId, base64Audio);
 
 				const newMessage: Message = {
 					senderId: user.id,
@@ -156,14 +150,7 @@ export const useChat = () => {
 		[socket, user, socketSendAudioMessage]
 	);
 
-	const fileToBase64 = (file: File): Promise<string> => {
-		return new Promise((resolve, reject) => {
-			const reader = new FileReader();
-			reader.readAsDataURL(file);
-			reader.onload = () => resolve(reader.result as string);
-			reader.onerror = (error) => reject(error);
-		});
-	};
+
 
 	// Listen for new messages from the socket
 	useEffect(() => {
