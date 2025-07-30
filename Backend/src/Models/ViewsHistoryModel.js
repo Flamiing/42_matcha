@@ -7,7 +7,7 @@ class ViewsHistoryModel extends Model {
     }
 
     async getUserViewsHistory(viewedUserId) {
-        const { API_HOST, API_PORT, API_VERSION } = process.env;
+        const { API_DOMAIN, API_VERSION } = process.env;
 
         const query = {
             text: `SELECT 
@@ -31,7 +31,7 @@ class ViewsHistoryModel extends Model {
             if (result.rows.length === 0) return [];
             let views = [];
             for (const view of result.rows) {
-                const profilePictureURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${view.id}/profile-picture`;
+                const profilePictureURL = `${API_DOMAIN}/api/v${API_VERSION}/users/${view.id}/profile-picture`;
                 view.profilePicture = profilePictureURL;
                 delete view.id;
                 views.push(view);

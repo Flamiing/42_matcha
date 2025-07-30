@@ -75,7 +75,7 @@ export default class ChatController {
     }
 
     static async getAllChatMessages(res, chatId, senderId) {
-        const { API_HOST, API_PORT, API_VERSION } = process.env;
+        const { API_DOMAIN, API_VERSION } = process.env;
 
         const textMessages = await textChatMessagesModel.getByReference(
             { chat_id: chatId },
@@ -109,7 +109,7 @@ export default class ChatController {
                     .split('/')
                     .pop()
                     .replace(/\.mp3$/i, '');
-                audioURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/media/audio/${audioId}`;
+                audioURL = `${API_DOMAIN}/api/v${API_VERSION}/media/audio/${audioId}`;
             }
 
             const message = {
@@ -127,7 +127,7 @@ export default class ChatController {
     }
 
     static async getChatsInfo(userId, rawChats) {
-        const { API_HOST, API_PORT, API_VERSION } = process.env;
+        const { API_DOMAIN, API_VERSION } = process.env;
 
         let chats = [];
 
@@ -136,7 +136,7 @@ export default class ChatController {
                 userId !== rawChat.user_id_1
                     ? rawChat.user_id_1
                     : rawChat.user_id_2;
-            const profilePicture = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${receiverId}/profile-picture`;
+            const profilePicture = `${API_DOMAIN}/api/v${API_VERSION}/users/${receiverId}/profile-picture`;
             const receiverUser = await userModel.getById({ id: receiverId });
             if (!receiverUser || receiverUser.length === 0) return null;
 

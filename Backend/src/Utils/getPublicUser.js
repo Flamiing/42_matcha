@@ -6,11 +6,11 @@ import geolocationModel from '../Models/UserLocationModel.js';
 import userStatusModel from '../Models/UserStatusModel.js';
 
 export default async function getPublicUser(user) {
-    const { API_HOST, API_PORT, API_VERSION } = process.env;
+    const { API_DOMAIN, API_VERSION } = process.env;
 
     const userTags = await userTagsModel.getUserTags(user.id);
     if (!userTags) return null;
-    const profilePicture = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${user.id}/profile-picture`;
+    const profilePicture = `${API_DOMAIN}/api/v${API_VERSION}/users/${user.id}/profile-picture`;
 
     const reference = { user_id: user.id };
     const imagesToParse = await imagesModel.getByReference(reference, false);

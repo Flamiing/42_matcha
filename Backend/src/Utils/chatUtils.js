@@ -11,7 +11,7 @@ import { getTimestampWithTZ } from './timeUtils.js';
 import chatsModel from '../Models/ChatsModel.js';
 
 export async function processAudioMessage(socket, senderId, payload) {
-    const { API_HOST, API_PORT, API_VERSION } = process.env;
+    const { API_DOMAIN, API_VERSION } = process.env;
 
     const audioPath = saveAudioToFileSystem(senderId, payload.message);
     if (!audioPath)
@@ -49,7 +49,7 @@ export async function processAudioMessage(socket, senderId, payload) {
             StatusMessage.FAILED_SENDING_CHAT_MESSAGE
         );
 
-    const audioURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/media/audio/${savedChatMessage.id}`;
+    const audioURL = `${API_DOMAIN}/api/v${API_VERSION}/media/audio/${savedChatMessage.id}`;
 
     return audioURL;
 }

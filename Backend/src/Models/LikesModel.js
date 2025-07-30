@@ -7,7 +7,7 @@ class LikesModel extends Model {
     }
 
     async getUserLikes(likedUserId) {
-        const { API_HOST, API_PORT, API_VERSION } = process.env;
+        const { API_DOMAIN, API_VERSION } = process.env;
 
         const query = {
             text: `SELECT 
@@ -30,7 +30,7 @@ class LikesModel extends Model {
             if (result.rows.length === 0) return [];
             let likes = [];
             for (const like of result.rows) {
-                const profilePictureURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${like.id}/profile-picture`;
+                const profilePictureURL = `${API_DOMAIN}/api/v${API_VERSION}/users/${like.id}/profile-picture`;
                 like.profilePicture = profilePictureURL;
                 delete like.id;
                 likes.push(like);

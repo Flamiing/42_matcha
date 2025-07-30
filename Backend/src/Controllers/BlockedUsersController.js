@@ -139,7 +139,7 @@ export default class BlockedUsersController {
     }
 
     static async getBlockedUsersInfo(req, res, rawBlockedUsers) {
-        const { API_HOST, API_PORT, API_VERSION } = process.env;
+        const { API_DOMAIN, API_VERSION } = process.env;
 
         let blockeUsers = [];
 
@@ -153,7 +153,7 @@ export default class BlockedUsersController {
                     StatusMessage.INTERNAL_SERVER_ERROR
                 );
 
-            const profilePictureURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${id}/profile-picture`;
+            const profilePictureURL = `${API_DOMAIN}/api/v${API_VERSION}/users/${id}/profile-picture`;
 
             const newBlockedUser = {
                 userId: id,

@@ -42,7 +42,7 @@ export default class MatchesController {
     }
 
     static async getMatchesInfo(req, res, rawMatches) {
-        const { API_HOST, API_PORT, API_VERSION } = process.env;
+        const { API_DOMAIN, API_VERSION } = process.env;
 
         let matches = [];
 
@@ -59,7 +59,7 @@ export default class MatchesController {
                     StatusMessage.INTERNAL_SERVER_ERROR
                 );
 
-            const profilePictureURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${id}/profile-picture`;
+            const profilePictureURL = `${API_DOMAIN}/api/v${API_VERSION}/users/${id}/profile-picture`;
 
             const newMatch = {
                 userId: id,

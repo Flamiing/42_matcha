@@ -270,7 +270,7 @@ export default class UsersController {
     }
 
     static async changeProfilePicture(req, res, next) {
-        const { API_HOST, API_PORT, API_VERSION } = process.env;
+        const { API_DOMAIN, API_VERSION } = process.env;
 
         try {
             const { id } = req.params;
@@ -310,7 +310,7 @@ export default class UsersController {
                     StatusMessage.USER_NOT_FOUND
                 );
             return res.json({
-                msg: `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${id}/profile-picture`,
+                msg: `${API_DOMAIN}/api/v${API_VERSION}/users/${id}/profile-picture`,
             });
         } catch (error) {
             console.error('Error uploading file: ', error);
@@ -341,7 +341,7 @@ export default class UsersController {
     }
 
     static async uploadImages(req, res, next) {
-        const { API_HOST, API_PORT, API_VERSION } = process.env;
+        const { API_DOMAIN, API_VERSION } = process.env;
 
         const { id } = req.params;
 
@@ -362,7 +362,7 @@ export default class UsersController {
         let images = [];
         for (const image of req.files) {
             const imageId = path.parse(image.filename).name;
-            const imageURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${id}/images/${imageId}`;
+            const imageURL = `${API_DOMAIN}/api/v${API_VERSION}/users/${id}/images/${imageId}`;
             const imageInfo = {
                 imageId: imageId,
                 imageURL: imageURL,

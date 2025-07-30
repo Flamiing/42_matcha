@@ -45,7 +45,7 @@ export default class EventsController {
     }
 
     static async getEventsInfo(req, res, rawEvents) {
-        const { API_HOST, API_PORT, API_VERSION } = process.env;
+        const { API_DOMAIN, API_VERSION } = process.env;
 
         let events = [];
 
@@ -68,8 +68,8 @@ export default class EventsController {
                     StatusMessage.INTERNAL_SERVER_ERROR
                 );
 
-            const profilePictureOneURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${attendeeOne.id}/profile-picture`;
-            const profilePictureTwoURL = `http://${API_HOST}:${API_PORT}/api/v${API_VERSION}/users/${attendeeTwo.id}/profile-picture`;
+            const profilePictureOneURL = `${API_DOMAIN}/api/v${API_VERSION}/users/${attendeeOne.id}/profile-picture`;
+            const profilePictureTwoURL = `${API_DOMAIN}/api/v${API_VERSION}/users/${attendeeTwo.id}/profile-picture`;
 
             const newEvent = {
                 eventId: event.id,
