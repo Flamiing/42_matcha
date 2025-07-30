@@ -58,7 +58,7 @@ export async function sendResetPasswordEmail({
 }
 
 export async function sendEmail(email, subject, body) {
-    const { EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASSWORD } = process.env;
+    const { EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASSWORD, EMAIL_FROM } = process.env;
 
     const transporter = nodemailer.createTransport({
         host: EMAIL_HOST,
@@ -71,7 +71,7 @@ export async function sendEmail(email, subject, body) {
     });
 
     const mail = {
-        from: '"Matcha" <no-reply@matcha.flamiing.com>',
+        from: EMAIL_FROM,
         to: email,
         replyTo: 'no-reply@matcha.flamiing.com',
         subject: subject,
