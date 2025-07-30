@@ -71,8 +71,9 @@ export async function sendEmail(email, subject, body) {
     });
 
     const mail = {
-        from: EMAIL_FROM,
+        from: '"Matcha" <no-reply@matcha.flamiing.com>',
         to: email,
+        replyTo: 'no-reply@matcha.flamiing.com',
         subject: subject,
         text: body,
     };
