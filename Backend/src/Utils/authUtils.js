@@ -71,7 +71,7 @@ export async function sendEmail(email, subject, body) {
     });
 
     const mail = {
-        from: EMAIL_USER,
+        from: EMAIL_FROM,
         to: email,
         subject: subject,
         text: body,
