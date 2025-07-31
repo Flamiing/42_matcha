@@ -214,7 +214,7 @@ async function generateUser() {
         username: generateUsername(),
         first_name: faker.person.firstName(gender),
         last_name: faker.person.lastName(),
-        password: '8Dt553Qi.',
+        password: process.env.FIXTURE_USERS_PASSWORD,
         age: generateAge(),
         biography: generateBio(),
         profile_picture: await generateProfilePicture(userId, gender),
