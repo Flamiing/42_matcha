@@ -120,9 +120,19 @@ export const useChat = () => {
 			try {
 				socketSendAudioMessage(chatId, receiverId, base64Audio);
 
+				// Add message immediately for sender to see
+				// Convert base64 to blob URL for immediate playback
+				const binaryString = atob(base64Audio);
+				const bytes = new Uint8Array(binaryString.length);
+				for (let i = 0; i < binaryString.length; i++) {
+					bytes[i] = binaryString.charCodeAt(i);
+				}
+				const audioBlob = new Blob([bytes], { type: 'audio/webm' });
+				const blobUrl = URL.createObjectURL(audioBlob);
+				
 				const newMessage: Message = {
 					senderId: user.id,
-					message: base64Audio,
+					message: blobUrl,
 					createdAt: new Date().toISOString().replace(/\.\d+Z$/, "Z"),
 					type: "audio",
 				};
@@ -159,8 +169,28 @@ export const useChat = () => {
 		const handleNewMessage = (
 			messageData: Message & { chatId: string }
 		) => {
-			// update messages for the chat
-			setMessages((prev) => [...prev, messageData]);
+			// Check if this is an update to an existing audio message
+			setMessages((prev) => {
+				if (messageData.type === 'audio') {
+					// Find existing audio message with same timestamp (within 5 seconds)
+					const existingIndex = prev.findIndex(
+						(msg) => 
+							msg.type === 'audio' && 
+							msg.senderId === messageData.senderId &&
+							Math.abs(new Date(msg.createdAt).getTime() - new Date(messageData.createdAt).getTime()) < 5000
+					);
+					
+					if (existingIndex !== -1) {
+						// Update existing message with correct URL
+						const updated = [...prev];
+						updated[existingIndex] = messageData;
+						return updated;
+					}
+				}
+				
+				// Add as new message if no existing message found
+				return [...prev, messageData];
+			});
 
 			// Update the chats list timestamp
 			setChats((prevChats) => {
